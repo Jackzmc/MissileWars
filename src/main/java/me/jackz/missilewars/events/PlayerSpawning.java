@@ -13,8 +13,10 @@ import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import me.jackz.missilewars.lib.MissileClipboardLoader;
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,6 +34,7 @@ import org.bukkit.scoreboard.Team;
 public class PlayerSpawning implements Listener {
     private MissileClipboardLoader clipboardLoader;
     private MissileWars plugin;
+
     public PlayerSpawning(MissileWars plugin) {
         this.plugin = plugin;
         clipboardLoader = new MissileClipboardLoader(plugin);
@@ -40,15 +43,12 @@ public class PlayerSpawning implements Listener {
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
         Player player = e.getPlayer();
+        if(MissileWars.gameManager.isLegacyMissilesEnabled()) return;
 
-        if(e.getHand() == EquipmentSlot.HAND && player.getGameMode() == GameMode.SURVIVAL) {
+        if(e.getHand() == EquipmentSlot.HAND && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.CREATIVE)) {
             if(e.getItem() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
-                Team team = player.getScoreboard().getEntryTeam(player.getName());
-                String teamName = team != null ? team.getName() : "";
-                if(teamName.equalsIgnoreCase("Green") || teamName.equalsIgnoreCase("Red")) {
-
+                if(Util.IsInTeam(player)) {
                     if (e.getClickedBlock() != null) {
-
                         switch (e.getItem().getType()) {
                             case GUARDIAN_SPAWN_EGG:
                                 e.setCancelled(true);
@@ -70,6 +70,16 @@ public class PlayerSpawning implements Listener {
                             case CREEPER_SPAWN_EGG:
                                 e.setCancelled(true);
                                 spawnMissile("tomohawk", player, e.getClickedBlock());
+                            case BLAZE_SPAWN_EGG:
+                                e.setCancelled(true);
+                            case BLAZE_ROD:
+                                if(MissileWars.gameManager.isDebug()) {
+                                    boolean red = isPortalInLocation(e.getClickedBlock().getLocation(),true);
+                                    boolean green = isPortalInLocation(e.getClickedBlock().getLocation(),false);
+                                    String formatted = String.format("§c%b | §a%b",red,green);
+                                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.valueOf(formatted)));
+                                    break;
+                                }
                             case SNOWBALL:
                                 e.setCancelled(true);
                                 //spawnShield(player);
@@ -92,13 +102,7 @@ public class PlayerSpawning implements Listener {
 
                             e.setCancelled(true);
 
-                            ItemStack item = player.getInventory().getItemInMainHand();
-                            int new_size = item.getAmount() - 1;
-                            if(new_size < 0) {
-                                item.setType(Material.AIR);
-                            }else{
-                                item.setAmount(new_size);
-                            }
+                            Util.RemoveOneFromHand(player);
                         }
                     }
                 }else{
@@ -119,15 +123,9 @@ public class PlayerSpawning implements Listener {
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 boolean success = paste(player,team.getName() + "-shield",projectile.getLocation(),0);
                 if(success) {
-                    ItemStack item = player.getInventory().getItemInMainHand();
-                    int new_size = item.getAmount() - 1;
-                    if (new_size < 0) {
-                        item.setType(Material.AIR);
-                    } else {
-                        item.setAmount(new_size);
-                    }
+                    Util.RemoveOneFromHand(player);
                 }
-                projectile.getLocation().getBlock().setType(Material.DIRT);
+                //projectile.getLocation().getBlock().setType(Material.DIRT);
             },20);
         }
     }
@@ -137,46 +135,43 @@ public class PlayerSpawning implements Listener {
         boolean isLightning = type.equalsIgnoreCase("lightning");
         boolean isGreenTeam = team.getName().equalsIgnoreCase("Green");
         //lightning schematics are inverted...
-        int distance_from_block = isLightning ? 5 : 4;
+        int distance_from_block = isLightning ? 3 : 2;
         int rotation_amount = isLightning  ? 180 : 0;
 
         int team_block_add = isGreenTeam ? -distance_from_block : distance_from_block;
-        int center_block_add = isGreenTeam ? -5 : 5;
 
-       //if(type.equalsIgnoreCase("lightning"))
-        Location spawnBlock = clickedBlock.getLocation().add(0,0,team_block_add);
-        Location centerBlock = spawnBlock.add(0,0,center_block_add);
-        if(hasPortal(centerBlock,5)) {
+        Location spawnBlock = clickedBlock.getLocation().add(0,-2,team_block_add);
+        if(MissileWars.gameManager.isDebug()) Util.HighlightBlock(spawnBlock,Material.SEA_LANTERN,20 * 5);
+        if(isPortalInLocation(spawnBlock,isGreenTeam)) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cCan't spawn a missile in the portal area!"));
             return;
         }
-        int x = spawnBlock.getBlockX();
-        int y = spawnBlock.getBlockY();
-        int z = spawnBlock.getBlockZ();
 
         String schemName = team.getName() + "-" + type;
         boolean success = paste(player,schemName,spawnBlock,rotation_amount);
         if(success) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§0Spawned a §9" + type));
+            Util.RemoveOneFromHand(player);
         }else {
-            ItemStack item = player.getInventory().getItemInMainHand();
-            int new_size = item.getAmount() - 1;
-            if (new_size < 0) {
-                item.setType(Material.AIR);
-            } else {
-                item.setAmount(new_size);
-            }
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cMissile spawn failed"));
         }
     }
-    private boolean hasPortal(Location start, int radius){
-        for(double x = start.getX() - radius; x <= start.getX() + radius; x++){
-            for(double y = start.getY() - radius; y <= start.getY() + radius; y++){
-                for(double z = start.getZ() - radius; z <= start.getZ() + radius; z++){
-                    Location loc = new Location(start.getWorld(), x, y, z);
-                    Material material = loc.getBlock().getType();
-                    if(material == Material.NETHER_PORTAL || material == Material.OBSIDIAN) {
-                        return true;
-                    }
+    private boolean isPortalInLocation(Location start, boolean negZ) {
+        final int z_radius = 15;
+        final int y_radius = 4;
+        //0 -> -15 or 0 -> 15
+        //negZ: -15 to 0 | posZ: 0 -> 15
+        double startBlock = negZ ? start.getZ() - z_radius : start.getZ(); //-15 or 0
+        for(double z = startBlock; z <= startBlock + z_radius; z++) {
+            //check below
+            for(double y = start.getY() - y_radius; y < start.getY(); y++) {
+                Location loc = new Location(start.getWorld(), start.getX(), y, z);
+                if(MissileWars.gameManager.isDebug()) Util.HighlightBlock(loc,Material.RED_WOOL);
+                Material material = loc.getBlock().getType();
+                if(material == Material.NETHER_PORTAL || material == Material.OBSIDIAN) {
+                    Bukkit.getLogger().info("locaiton:" + loc.getX() + "," + loc.getY() + "," + loc.getZ());
+                    if(MissileWars.gameManager.isDebug()) Util.HighlightBlock(loc.getBlock());
+                    return true;
                 }
             }
         }

@@ -37,8 +37,8 @@ public class TeamDisplayManager {
         sidebar.getScore(" ").setScore(2);
         sidebar.getScore("§c§nRed Team Players").setScore(1);
     }
-    public void refreshSidebar() {
-        if(green_team_size != greenTeam.getSize() || red_team_size != redTeam.getSize()) {
+    public void refreshSidebar(boolean force) {
+        if(force || green_team_size != greenTeam.getSize() || red_team_size != redTeam.getSize()) {
             sidebar.unregister();
             createObjective();
 
@@ -55,6 +55,9 @@ public class TeamDisplayManager {
             green_team_size = greenTeam.getSize();
             red_team_size = redTeam.getSize();
         }
+    }
+    public void refreshSidebar() {
+        refreshSidebar(false);
     }
 
     public void unregister() {

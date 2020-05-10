@@ -4,6 +4,7 @@ import me.jackz.missilewars.commands.*;
 import me.jackz.missilewars.events.ChatListener;
 import me.jackz.missilewars.events.PlayerMoveEvent;
 import me.jackz.missilewars.events.PlayerSpawning;
+import me.jackz.missilewars.lib.GameManager;
 import me.jackz.missilewars.lib.TeamDisplayManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,11 +17,16 @@ public final class MissileWars extends JavaPlugin {
     private boolean PENDING_RESTART = false;
     private final Long RESTART_DELAY_SECONDS = 172800L;
 
+    private static MissileWars main;
+    public static GameManager gameManager;
     private TeamDisplayManager displayManager;
+
 
     @Override
     public void onEnable() {
+        main = this;
         // Plugin startup logic
+        gameManager = new GameManager(this);
         getServer().getPluginManager().registerEvents(new ChatListener(),this);
         getCommand("spectate").setExecutor(new SpectateCommand());
         getCommand("game").setExecutor(new GameCommand(this));
@@ -73,6 +79,11 @@ public final class MissileWars extends JavaPlugin {
             displayManager.unregister();
             displayManager = null;
         }
+        if(gameManager != null) {
+            gameManager.shutdown();
+            gameManager = null;
+        }
+        main = null;
 
         // Plugin shutdown logic
     }
@@ -82,6 +93,9 @@ public final class MissileWars extends JavaPlugin {
     }
     public TeamDisplayManager getDisplayManager() {
         return displayManager;
+    }
+    public static MissileWars getInstance() {
+        return main;
     }
 
 }

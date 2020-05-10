@@ -110,6 +110,9 @@ public class AdminCommand implements CommandExecutor {
                 }
                 break;
             }
+            case "teams": {
+                //todo: AdminTeamCommand
+            }
             case "choose": {
                 if(args.length >= 2) {
                     String query = args[1].toLowerCase().trim();
