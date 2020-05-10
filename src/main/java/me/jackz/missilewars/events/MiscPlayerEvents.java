@@ -1,4 +1,4 @@
-package me.jackz.missilewars;
+package me.jackz.missilewars.events;
 
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;

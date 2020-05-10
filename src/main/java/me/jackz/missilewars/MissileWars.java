@@ -1,14 +1,15 @@
 package me.jackz.missilewars;
 
-import com.sk89q.worldedit.WorldEdit;
+import me.jackz.missilewars.commands.*;
+import me.jackz.missilewars.events.ChatListener;
+import me.jackz.missilewars.events.PlayerMoveEvent;
+import me.jackz.missilewars.events.PlayerSpawning;
+import me.jackz.missilewars.lib.TeamDisplayManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
-
-import java.util.Set;
 
 public final class MissileWars extends JavaPlugin {
 

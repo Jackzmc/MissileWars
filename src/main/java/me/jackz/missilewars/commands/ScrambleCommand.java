@@ -1,5 +1,6 @@
-package me.jackz.missilewars;
+package me.jackz.missilewars.commands;
 
+import me.jackz.missilewars.MissileWars;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,7 +21,7 @@ public class ScrambleCommand implements CommandExecutor {
     private Team redTeam;
     private Team greenTeam;
 
-    ScrambleCommand(MissileWars plugin) {
+    public ScrambleCommand(MissileWars plugin) {
         this.plugin = plugin;
         this.sb = plugin.getServer().getScoreboardManager().getMainScoreboard();
 

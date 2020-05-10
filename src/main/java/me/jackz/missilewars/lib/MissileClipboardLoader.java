@@ -1,9 +1,10 @@
-package me.jackz.missilewars;
+package me.jackz.missilewars.lib;
 
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import me.jackz.missilewars.MissileWars;
 
 import java.io.File;
 import java.io.FileInputStream;

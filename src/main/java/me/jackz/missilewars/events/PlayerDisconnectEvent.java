@@ -1,5 +1,6 @@
-package me.jackz.missilewars;
+package me.jackz.missilewars.events;
 
+import me.jackz.missilewars.MissileWars;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

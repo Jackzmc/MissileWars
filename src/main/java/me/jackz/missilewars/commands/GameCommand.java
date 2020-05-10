@@ -1,5 +1,6 @@
-package me.jackz.missilewars;
+package me.jackz.missilewars.commands;
 
+import me.jackz.missilewars.MissileWars;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;

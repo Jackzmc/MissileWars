@@ -1,5 +1,6 @@
-package me.jackz.missilewars;
+package me.jackz.missilewars.lib;
 
+import me.jackz.missilewars.MissileWars;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -20,7 +21,7 @@ public class TeamDisplayManager {
 
     private int refreshTimerID;
 
-    TeamDisplayManager(MissileWars plugin) {
+    public TeamDisplayManager(MissileWars plugin) {
         this.plugin = plugin;
         this.sb = plugin.getServer().getScoreboardManager().getMainScoreboard();
         redTeam = sb.getTeam("Red");
@@ -36,7 +37,7 @@ public class TeamDisplayManager {
         sidebar.getScore(" ").setScore(2);
         sidebar.getScore("§c§nRed Team Players").setScore(1);
     }
-    void refreshSidebar() {
+    public void refreshSidebar() {
         if(green_team_size != greenTeam.getSize() || red_team_size != redTeam.getSize()) {
             sidebar.unregister();
             createObjective();
@@ -56,7 +57,7 @@ public class TeamDisplayManager {
         }
     }
 
-    void unregister() {
+    public void unregister() {
         Bukkit.getScheduler().cancelTask(refreshTimerID);
         sidebar.unregister();
     }

@@ -1,4 +1,4 @@
-package me.jackz.missilewars;
+package me.jackz.missilewars.events;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;

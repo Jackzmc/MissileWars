@@ -1,5 +1,6 @@
-package me.jackz.missilewars;
+package me.jackz.missilewars.commands;
 
+import me.jackz.missilewars.MissileWars;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
