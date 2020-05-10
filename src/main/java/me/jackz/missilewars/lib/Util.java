@@ -1,6 +1,9 @@
 package me.jackz.missilewars.lib;
 
 import me.jackz.missilewars.MissileWars;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -10,15 +13,17 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
-import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Util {
-    public static boolean IsInTeam(Player player) {
+    public static boolean isInTeam(Player player) {
         Team team = player.getScoreboard().getEntryTeam(player.getName());
         if(team == null) return false;
         return team.getName().equalsIgnoreCase("Green") || team.getName().equalsIgnoreCase("Red");
     }
-    public static void RemoveOneFromHand(Player player) {
+    public static void removeOneFromHand(Player player) {
         if(player.getGameMode() == GameMode.CREATIVE) return;
         ItemStack item = player.getInventory().getItemInMainHand();
         int new_size = item.getAmount() - 1;
@@ -28,7 +33,7 @@ public class Util {
             item.setAmount(new_size);
         }
     }
-    public static void HighlightBlock(Location location, Material material, int ticks) {
+    public static void highlightBlock(Location location, Material material, int ticks) {
         location.setZ(location.getZ()+.5);
         FallingBlock block = location.getWorld().spawnFallingBlock(location,material.createBlockData());
         block.setGravity(false);
@@ -37,16 +42,39 @@ public class Util {
         block.setSilent(true);
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), block::remove,ticks);
     }
-    public static void HighlightBlock(Location loc) {
-        HighlightBlock(loc,Material.GLOWSTONE,20 * 5);
+    public static void highlightBlock(Location loc) {
+        highlightBlock(loc,Material.GLOWSTONE,20 * 5);
     }
-    public static void HighlightBlock(Block block) {
-        HighlightBlock(block.getLocation(),Material.GLOWSTONE,20 * 5);
+    public static void highlightBlock(Block block) {
+        highlightBlock(block.getLocation(),Material.GLOWSTONE,20 * 5);
     }
-    public static void HighlightBlock(Location loc, Material material) {
-        HighlightBlock(loc,material,20 * 5);
+    public static void highlightBlock(Location loc, Material material) {
+        highlightBlock(loc,material,20 * 5);
     }
-    public static void HighlightBlock(Location loc, int ticks) {
-        HighlightBlock(loc,Material.GLOWSTONE,ticks);
+    public static void highlightBlock(Location loc, int ticks) {
+        highlightBlock(loc,Material.GLOWSTONE,ticks);
+    }
+
+    public static TextComponent getButtonComponent(String text, boolean suggestCommand, String command, String... hovertext) {
+        TextComponent base = new TextComponent(text);
+        ClickEvent.Action action = suggestCommand ? ClickEvent.Action.SUGGEST_COMMAND : ClickEvent.Action.RUN_COMMAND;
+        base.setClickEvent(new ClickEvent(action,command));
+
+        List<TextComponent> components = new ArrayList<>();
+        for (String s : hovertext) {
+            components.add(new TextComponent(s));
+        }
+        TextComponent[] componentArray = new TextComponent[components.size()];
+        components.toArray(componentArray);
+        base.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,componentArray));
+        return base;
+    }
+    public static TextComponent addButtons(TextComponent... buttons) {
+        TextComponent base = new TextComponent();
+        for (TextComponent button : buttons) {
+            base.addExtra(button);
+            base.addExtra(" ");
+        }
+        return base;
     }
 }

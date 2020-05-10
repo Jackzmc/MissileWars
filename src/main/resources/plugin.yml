@@ -20,5 +20,3 @@ commands:
     aliases: [mwa]
     description: admin
     usage: /mwa help
-  scramble:
-    description: Scramble the teams

@@ -2,6 +2,7 @@ package me.jackz.missilewars;
 
 import me.jackz.missilewars.commands.*;
 import me.jackz.missilewars.events.ChatListener;
+import me.jackz.missilewars.events.MiscPlayerEvents;
 import me.jackz.missilewars.events.PlayerMoveEvent;
 import me.jackz.missilewars.events.PlayerSpawning;
 import me.jackz.missilewars.lib.GameManager;
@@ -9,6 +10,7 @@ import me.jackz.missilewars.lib.RestartManager;
 import me.jackz.missilewars.lib.TeamDisplayManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -40,12 +42,13 @@ public final class MissileWars extends JavaPlugin {
         getCommand("game").setExecutor(new GameCommand(this));
         getCommand("stats").setExecutor(new PlayerStatsCommand(this));
         getCommand("missilewarsadmin").setExecutor(new AdminCommand(this));
-        getCommand("scramble").setExecutor(new ScrambleCommand(this));
     }
     private void registerListeners() {
-        getServer().getPluginManager().registerEvents(new ChatListener(),this);
-        getServer().getPluginManager().registerEvents(new PlayerMoveEvent(),this);
-        getServer().getPluginManager().registerEvents(new PlayerSpawning(this),this);
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents(new ChatListener(),this);
+        pm.registerEvents(new PlayerMoveEvent(),this);
+        pm.registerEvents(new PlayerSpawning(this),this);
+        pm.registerEvents(new MiscPlayerEvents(),this);
     }
 
     @Override

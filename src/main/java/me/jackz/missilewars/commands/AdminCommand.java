@@ -4,11 +4,13 @@ import me.jackz.missilewars.MissileWars;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.util.*;
@@ -17,10 +19,14 @@ import java.util.stream.Collectors;
 public class AdminCommand implements CommandExecutor {
     private MissileWars plugin;
     private ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-
+    private Team redTeam;
+    private Team greenTeam;
 
     public AdminCommand(MissileWars plugin) {
         this.plugin = plugin;
+        Scoreboard sb = plugin.getServer().getScoreboardManager().getMainScoreboard();
+        redTeam = sb.getTeam("Red");
+        greenTeam = sb.getTeam("Green");
     }
 
     Map<String, String> ITEMS = new HashMap<String, String>() {{
@@ -111,6 +117,52 @@ public class AdminCommand implements CommandExecutor {
                 break;
             }
             case "teams": {
+                if(args.length >= 2) {
+                    if(args[1].equalsIgnoreCase("scramble")) {
+                        List<Player> players = new ArrayList<>();
+                        for (Player player : plugin.getServer().getOnlinePlayers()) {
+                            if(player.getGameMode().equals(GameMode.CREATIVE) || player.getGameMode().equals(GameMode.SPECTATOR)) continue;
+                            Team team = player.getScoreboard().getEntryTeam(player.getName());
+                            if(team != null && (team.getName().equalsIgnoreCase("red") || team.getName().equalsIgnoreCase("green"))) {
+                                team.removeEntry(player.getName());
+                                team = null;
+                            }
+                            //If not in a team (like spectator)
+                            if(team == null) {
+                                players.add(player);
+                            }
+                        }
+                        //2 / 2.0 -> 1
+                        int first_team_size = (int) Math.floor(players.size() / 2.0);
+                        boolean greenTeamOverflow = Math.random() > .5;
+
+                        Collections.shuffle(players);
+                        int first_team_players = 0;
+                        Team firstTeam = greenTeamOverflow ? greenTeam : redTeam;
+                        Team secondTeam = greenTeamOverflow ? redTeam : greenTeam;
+
+                        for (Player player : players) {
+                            if(first_team_players < first_team_size) {
+                                first_team_players++;
+                                firstTeam.addEntry(player.getName());
+                            }else{
+                                secondTeam.addEntry(player.getName());
+                            }
+                        }
+                        plugin.getDisplayManager().refreshSidebar();
+                        int second_team_players = players.size() - first_team_players;
+                        if(greenTeamOverflow) {
+                            sender.sendMessage(String.format("§eTeams have been scrambled! §a%d Green §6- §c%d Red",first_team_players,second_team_players));
+                        }else{
+                            sender.sendMessage(String.format("§eTeams have been scrambled! §a%d Green §6- §c%d Red",second_team_players,first_team_players));
+                        }
+                        return true;
+                    }else{
+                        sender.sendMessage("§cUnknown option, /mwa teams for help");
+                    }
+                }else{
+                    sender.sendMessage("§cTeams options: /mwa teams scramble");
+                }
                 //todo: AdminTeamCommand
             }
             case "choose": {

@@ -28,7 +28,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 
 public class PlayerSpawning implements Listener {
@@ -47,7 +46,7 @@ public class PlayerSpawning implements Listener {
 
         if(e.getHand() == EquipmentSlot.HAND && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.CREATIVE)) {
             if(e.getItem() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
-                if(Util.IsInTeam(player)) {
+                if(Util.isInTeam(player)) {
                     if (e.getClickedBlock() != null) {
                         switch (e.getItem().getType()) {
                             case GUARDIAN_SPAWN_EGG:
@@ -102,7 +101,7 @@ public class PlayerSpawning implements Listener {
 
                             e.setCancelled(true);
 
-                            Util.RemoveOneFromHand(player);
+                            Util.removeOneFromHand(player);
                         }
                     }
                 }else{
@@ -125,7 +124,7 @@ public class PlayerSpawning implements Listener {
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 boolean success = paste(player,team.getName() + "-shield",projectile.getLocation(),0);
                 if(success) {
-                    Util.RemoveOneFromHand(player);
+                    Util.removeOneFromHand(player);
                 }
                 //projectile.getLocation().getBlock().setType(Material.DIRT);
             },20);
@@ -143,7 +142,7 @@ public class PlayerSpawning implements Listener {
         int team_block_add = isGreenTeam ? -distance_from_block : distance_from_block;
 
         Location spawnBlock = clickedBlock.getLocation().add(0,-2,team_block_add);
-        if(MissileWars.gameManager.isDebug()) Util.HighlightBlock(spawnBlock,Material.SEA_LANTERN,20 * 5);
+        if(MissileWars.gameManager.isDebug()) Util.highlightBlock(spawnBlock,Material.SEA_LANTERN,20 * 5);
         if(isPortalInLocation(spawnBlock,isGreenTeam)) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cCan't spawn a missile in the portal area!"));
             return;
@@ -153,7 +152,7 @@ public class PlayerSpawning implements Listener {
         boolean success = paste(player,schemName,spawnBlock,rotation_amount);
         if(success) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§0Spawned a §9" + type));
-            Util.RemoveOneFromHand(player);
+            Util.removeOneFromHand(player);
         }else {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cMissile spawn failed"));
         }
@@ -168,11 +167,11 @@ public class PlayerSpawning implements Listener {
             //check below
             for(double y = start.getY() - y_radius; y < start.getY(); y++) {
                 Location loc = new Location(start.getWorld(), start.getX(), y, z);
-                if(MissileWars.gameManager.isDebug()) Util.HighlightBlock(loc,Material.RED_WOOL);
+                if(MissileWars.gameManager.isDebug()) Util.highlightBlock(loc,Material.RED_WOOL);
                 Material material = loc.getBlock().getType();
                 if(material == Material.NETHER_PORTAL || material == Material.OBSIDIAN) {
                     Bukkit.getLogger().info("locaiton:" + loc.getX() + "," + loc.getY() + "," + loc.getZ());
-                    if(MissileWars.gameManager.isDebug()) Util.HighlightBlock(loc.getBlock());
+                    if(MissileWars.gameManager.isDebug()) Util.highlightBlock(loc.getBlock());
                     return true;
                 }
             }
