@@ -1,0 +1,24 @@
+name: MissileWars
+version: ${project.version}
+depend: [WorldEdit,WorldGuard]
+main: me.jackz.missilewars.MissileWars
+load: POSTWORLD
+api-version: 1.13
+commands:
+  spectate:
+    description: Join the spectators
+    usage: /spectate
+  game:
+    aliases: [gameinfo]
+    description: view game statistics and information
+    usage: /game
+  stats:
+    aliases: [wins,loses,stat]
+    description: View game stats for a player
+    usage: /stats [player]
+  missilewarsadmin:
+    aliases: [mwa]
+    description: admin
+    usage: /mwa help
+  scramble:
+    description: Scramble the teams
