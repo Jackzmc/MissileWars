@@ -106,8 +106,10 @@ public class PlayerSpawning implements Listener {
                         }
                     }
                 }else{
-                    player.sendMessage("§cYou must be on a team to use this.");
-                    e.setCancelled(true);
+                    if(player.getGameMode() == GameMode.SURVIVAL) {
+                        player.sendMessage("§cYou must be on a team to use this.");
+                        e.setCancelled(true);
+                    }
                 }
             }
         }

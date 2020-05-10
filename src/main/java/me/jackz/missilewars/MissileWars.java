@@ -5,6 +5,7 @@ import me.jackz.missilewars.events.ChatListener;
 import me.jackz.missilewars.events.PlayerMoveEvent;
 import me.jackz.missilewars.events.PlayerSpawning;
 import me.jackz.missilewars.lib.GameManager;
+import me.jackz.missilewars.lib.RestartManager;
 import me.jackz.missilewars.lib.TeamDisplayManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,62 +15,37 @@ import org.bukkit.scoreboard.Team;
 
 public final class MissileWars extends JavaPlugin {
 
-    private boolean PENDING_RESTART = false;
-    private final Long RESTART_DELAY_SECONDS = 172800L;
 
     private static MissileWars main;
     public static GameManager gameManager;
     private TeamDisplayManager displayManager;
+    private RestartManager restartManager;
 
 
     @Override
     public void onEnable() {
         main = this;
+        getDataFolder().mkdirs();
         // Plugin startup logic
         gameManager = new GameManager(this);
-        getServer().getPluginManager().registerEvents(new ChatListener(),this);
+        restartManager = new RestartManager();
+        displayManager = new TeamDisplayManager(this);
+
+        registerCommands();
+        registerListeners();
+    }
+
+    private void registerCommands() {
         getCommand("spectate").setExecutor(new SpectateCommand());
         getCommand("game").setExecutor(new GameCommand(this));
         getCommand("stats").setExecutor(new PlayerStatsCommand(this));
         getCommand("missilewarsadmin").setExecutor(new AdminCommand(this));
         getCommand("scramble").setExecutor(new ScrambleCommand(this));
-
+    }
+    private void registerListeners() {
+        getServer().getPluginManager().registerEvents(new ChatListener(),this);
         getServer().getPluginManager().registerEvents(new PlayerMoveEvent(),this);
         getServer().getPluginManager().registerEvents(new PlayerSpawning(this),this);
-
-        Scoreboard main = getServer().getScoreboardManager().getMainScoreboard();
-        if(main.getTeam("Red") == null) {
-            Team red = main.registerNewTeam("Red");
-
-            red.setColor(ChatColor.RED);
-            red.setAllowFriendlyFire(false);
-            red.setCanSeeFriendlyInvisibles(true);
-            red.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OTHER_TEAMS);
-        }
-        if(main.getTeam("Green") == null) {
-            Team green = main.registerNewTeam("Green");
-
-            green.setColor(ChatColor.GREEN);
-            green.setAllowFriendlyFire(false);
-            green.setCanSeeFriendlyInvisibles(true);
-            green.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OTHER_TEAMS);
-        }
-
-        if(main.getObjective("wins") == null ) main.registerNewObjective("wins", "dummy", "Wins");
-        if(main.getObjective("loses") == null ) main.registerNewObjective("loses", "dummy", "Loses");
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(this, () -> {
-            if(getServer().getOnlinePlayers().size() > 0) {
-                PENDING_RESTART = true;
-                getServer().broadcastMessage("§2[Missilewars] §eNotice: Server will being restarting when all players leave.");
-            }else{
-                getServer().broadcastMessage("§2[MissileWars] §cServer is now auto restarting.");
-                getServer().shutdown();
-            }
-        },20 * RESTART_DELAY_SECONDS);
-
-        getDataFolder().mkdirs();
-        displayManager = new TeamDisplayManager(this);
     }
 
     @Override
@@ -83,17 +59,17 @@ public final class MissileWars extends JavaPlugin {
             gameManager.shutdown();
             gameManager = null;
         }
+        if(restartManager != null) restartManager = null;
         main = null;
 
         // Plugin shutdown logic
     }
 
-    public boolean isPendingRestart() {
-        return PENDING_RESTART;
-    }
+
     public TeamDisplayManager getDisplayManager() {
         return displayManager;
     }
+    public RestartManager getRestartManager() { return restartManager; }
     public static MissileWars getInstance() {
         return main;
     }

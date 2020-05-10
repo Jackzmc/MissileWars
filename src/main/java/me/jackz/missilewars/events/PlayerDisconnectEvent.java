@@ -17,7 +17,7 @@ public class PlayerDisconnectEvent implements Listener {
     public void onDisconnect(PlayerQuitEvent e) {
         Player player = e.getPlayer();
         plugin.getDisplayManager().refreshSidebar(true);
-        if(plugin.isPendingRestart() && plugin.getServer().getOnlinePlayers().isEmpty()) {
+        if(plugin.getRestartManager().isPendingRestart() && plugin.getServer().getOnlinePlayers().isEmpty()) {
             plugin.getServer().broadcastMessage("§2[Missilewars] §7Last player has left, will restart if no one joins in 30 seconds.");
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 if(plugin.getServer().getOnlinePlayers().isEmpty()) {
