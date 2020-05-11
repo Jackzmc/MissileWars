@@ -1,6 +1,7 @@
 package me.jackz.missilewars.commands;
 
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GamePlayers;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -67,52 +68,48 @@ public class AdminCommand implements CommandExecutor {
             case "give": {
                 if(args.length >= 3) {
                     if(args[1].equalsIgnoreCase("red")) {
-                        List<Player> players = getPlayerEntries("Red");
-                        if(players != null) {
+                        List<Player> players = MissileWars.gameManager.players().get(GamePlayers.MWTeam.RED);
+                        String itemgive = GIVE_ITEMS.get(args[2].toLowerCase().trim());
+                        if (itemgive != null) {
                             for (Player player : players) {
-                                String itemgive = GIVE_ITEMS.get(args[2].toLowerCase().trim());
-                                if (itemgive != null) {
-                                    Bukkit.dispatchCommand(console, itemgive.replace("%PLAYER%", player.getName()));
-                                } else {
-                                    player.sendMessage("§cUnknown item. Try /mwa items");
-                                }
+                                Bukkit.dispatchCommand(console, itemgive.replace("%PLAYER%", player.getName()));
                             }
                             sender.sendMessage("§aGave the §cred team §aa " + args[2].toLowerCase().trim());
-                        }else{
-                            sender.sendMessage("§cThe team 'red' was not found");
+
+                        }else {
+                            sender.sendMessage("§cUnknown item. Try /mwa items");
                         }
                     }else if(args[1].equalsIgnoreCase("green")) {
-                        List<Player> players = getPlayerEntries("Green");
-                        if(players != null) {
+                        List<Player> players = MissileWars.gameManager.players().get(GamePlayers.MWTeam.GREEN);
+                        String itemgive = GIVE_ITEMS.get(args[2].toLowerCase().trim());
+                        if (itemgive != null) {
                             for (Player player : players) {
-                                String itemgive = GIVE_ITEMS.get(args[2].toLowerCase().trim());
-                                if (itemgive != null) {
-                                    Bukkit.dispatchCommand(console, itemgive.replace("%PLAYER%", player.getName()));
-                                } else {
-                                    player.sendMessage("§cUnknown item. Try /mwa items");
-                                }
+                                Bukkit.dispatchCommand(console, itemgive.replace("%PLAYER%", player.getName()));
                             }
-                            sender.sendMessage("§aGave the green team a " + args[2].toLowerCase().trim());
-                        }else{
-                            sender.sendMessage("§cThe team 'green' was not found");
+                            sender.sendMessage("§aGave the green team §aa " + args[2].toLowerCase().trim());
+
+                        }else {
+                            sender.sendMessage("§cUnknown item. Try /mwa items");
                         }
                     }else {
                         Player player = Bukkit.getPlayer(args[1]);
                         if (player != null) {
-                            if (isInGame(player)) {
+                            if (MissileWars.gameManager.players().has(player)) {
                                 String itemgive = GIVE_ITEMS.get(args[2].toLowerCase().trim());
                                 if (itemgive != null) {
                                     Bukkit.dispatchCommand(console, itemgive.replace("%PLAYER%", player.getName()));
                                 } else {
                                     player.sendMessage("§cUnknown item. Try /mwa items");
                                 }
+                            }else{
+                                sender.sendMessage("§cPlayer is not in game.");
                             }
                         } else {
                             sender.sendMessage("§cThat player could not be found. ");
                         }
                     }
                 }else{
-                    sender.sendMessage("§cInvalid usage. /mwa give <player/red/green> <item>");
+                    sender.sendMessage("§cInvalid usage. /mwa give <red/green/[player]> <item>");
                 }
                 break;
             }
@@ -122,12 +119,11 @@ public class AdminCommand implements CommandExecutor {
                         List<Player> players = new ArrayList<>();
                         for (Player player : plugin.getServer().getOnlinePlayers()) {
                             if(player.getGameMode().equals(GameMode.CREATIVE) || player.getGameMode().equals(GameMode.SPECTATOR)) continue;
-                            Team team = player.getScoreboard().getEntryTeam(player.getName());
-                            if(team != null && (team.getName().equalsIgnoreCase("red") || team.getName().equalsIgnoreCase("green"))) {
-                                team.removeEntry(player.getName());
-                                team = null;
+                            if(MissileWars.gameManager.players().has(player)) {
+                                MissileWars.gameManager.players().remove(player);
+                                players.add(player);
                             }
-                            //If not in a team (like spectator)
+                            Team team = player.getScoreboard().getEntryTeam(player.getName());
                             if(team == null) {
                                 players.add(player);
                             }
@@ -208,28 +204,5 @@ public class AdminCommand implements CommandExecutor {
                 sender.sendMessage("§cUnknown command, please try /mwa help");
         }
         return true;
-    }
-
-    private boolean isInGame(Player player) {
-        Team entryTeam = player.getScoreboard().getEntryTeam(player.getName());
-        if(entryTeam != null) {
-            String name = entryTeam.getName().toLowerCase().trim();
-            return name.equals("green") || name.equals("red");
-        }
-        return false;
-    }
-    private List<Player> getPlayerEntries(String team) {
-        Team team1 = Bukkit.getScoreboardManager().getMainScoreboard().getTeam(team);
-        if(team1 != null) {
-            List<Player> players = new ArrayList<>();
-            for (String entry : team1.getEntries()) {
-                Player player = Bukkit.getPlayer(entry);
-                if(player != null) {
-                    players.add(player);
-                }
-            }
-            return players;
-        }
-        return null;
     }
 }
