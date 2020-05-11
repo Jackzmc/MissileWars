@@ -1,5 +1,7 @@
 package me.jackz.missilewars.lib;
 
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.jackz.missilewars.MissileWars;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -8,12 +10,14 @@ import org.bukkit.scoreboard.Team;
 
 public class GameManager {
     private MissileWars plugin;
-    private boolean activeState = false;
-    private boolean legacy_missiles = false;
-    private boolean debug_enabled = false;
+    private GameState state;
+    private GamePlayers players;
+
+    private final String red_portal_region = "redportal";
+    private final String green_portal_region = "greenportal";
 
     public GameManager(MissileWars plugin) {
-
+        this.state = new GameState();
         this.plugin = plugin;
         initalizeScoreboard();
     }
@@ -42,27 +46,24 @@ public class GameManager {
         if(main.getObjective("loses") == null ) main.registerNewObjective("loses", "dummy", "Loses");
     }
     //#endregion
-
+    public void testWin(ApplicableRegionSet regions) {
+        for (ProtectedRegion region : regions) {
+            if(region.getId().equalsIgnoreCase(green_portal_region)) {
+                //green wins
+            }else if(region.getId().equalsIgnoreCase(red_portal_region)){
+                //red wins
+            }
+        }
+    }
     public void shutdown() {
 
     }
 
-    //#region getters
-    public boolean isGameActive() {
-        return activeState;
+    public GameState getState() {
+        return state;
     }
 
-    public boolean isLegacyMissilesEnabled() {
-        return legacy_missiles;
+    public GamePlayers players() {
+        return players;
     }
-    //#endregion
-    //#region setters
-    public void setLegacyMissiles(boolean legacy_missiles) {
-        this.legacy_missiles = legacy_missiles;
-    }
-
-    public boolean isDebug() {
-        return debug_enabled;
-    }
-    //#endregion
 }

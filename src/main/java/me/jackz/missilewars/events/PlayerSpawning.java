@@ -42,7 +42,7 @@ public class PlayerSpawning implements Listener {
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if(MissileWars.gameManager.isLegacyMissilesEnabled()) return;
+        if(MissileWars.gameManager.getState().isLegacyMissilesEnabled()) return;
 
         if(e.getHand() == EquipmentSlot.HAND && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.CREATIVE)) {
             if(e.getItem() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
@@ -72,7 +72,7 @@ public class PlayerSpawning implements Listener {
                             case BLAZE_SPAWN_EGG:
                                 e.setCancelled(true);
                             case BLAZE_ROD:
-                                if(MissileWars.gameManager.isDebug()) {
+                                if(MissileWars.gameManager.getState().isDebug()) {
                                     boolean red = isPortalInLocation(e.getClickedBlock().getLocation(),true);
                                     boolean green = isPortalInLocation(e.getClickedBlock().getLocation(),false);
                                     String formatted = String.format("§c%b | §a%b",red,green);
@@ -142,7 +142,7 @@ public class PlayerSpawning implements Listener {
         int team_block_add = isGreenTeam ? -distance_from_block : distance_from_block;
 
         Location spawnBlock = clickedBlock.getLocation().add(0,-2,team_block_add);
-        if(MissileWars.gameManager.isDebug()) Util.highlightBlock(spawnBlock,Material.SEA_LANTERN,20 * 5);
+        if(MissileWars.gameManager.getState().isDebug()) Util.highlightBlock(spawnBlock,Material.SEA_LANTERN,20 * 5);
         if(isPortalInLocation(spawnBlock,isGreenTeam)) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cCan't spawn a missile in the portal area!"));
             return;
@@ -167,11 +167,11 @@ public class PlayerSpawning implements Listener {
             //check below
             for(double y = start.getY() - y_radius; y < start.getY(); y++) {
                 Location loc = new Location(start.getWorld(), start.getX(), y, z);
-                if(MissileWars.gameManager.isDebug()) Util.highlightBlock(loc,Material.RED_WOOL);
+                if(MissileWars.gameManager.getState().isDebug()) Util.highlightBlock(loc,Material.RED_WOOL);
                 Material material = loc.getBlock().getType();
                 if(material == Material.NETHER_PORTAL || material == Material.OBSIDIAN) {
                     Bukkit.getLogger().info("locaiton:" + loc.getX() + "," + loc.getY() + "," + loc.getZ());
-                    if(MissileWars.gameManager.isDebug()) Util.highlightBlock(loc.getBlock());
+                    if(MissileWars.gameManager.getState().isDebug()) Util.highlightBlock(loc.getBlock());
                     return true;
                 }
             }
