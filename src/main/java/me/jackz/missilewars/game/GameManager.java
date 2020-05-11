@@ -3,8 +3,10 @@ package me.jackz.missilewars.game;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.jackz.missilewars.MissileWars;
+import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -13,10 +15,6 @@ public class GameManager {
     private GameState state;
     private GamePlayers players;
     private static GameConfig config;
-    private static ItemSystem itemSystem;
-
-    private final String red_portal_region = "redportal";
-    private final String green_portal_region = "greenportal";
 
     public GameManager(MissileWars plugin) {
         this.state = new GameState();
@@ -24,7 +22,6 @@ public class GameManager {
         players = new GamePlayers();
         config = new GameConfig();
         initalizeScoreboard();
-        itemSystem = new ItemSystem();
     }
 
     //#region privatemethods
@@ -51,14 +48,9 @@ public class GameManager {
         if(main.getObjective("loses") == null ) main.registerNewObjective("loses", "dummy", "Loses");
     }
     //#endregion
-    public void testWin(ApplicableRegionSet regions) {
-        for (ProtectedRegion region : regions) {
-            if(region.getId().equalsIgnoreCase(green_portal_region)) {
-                //green wins
-            }else if(region.getId().equalsIgnoreCase(red_portal_region)){
-                //red wins
-            }
-        }
+
+    public void reset() {
+        //todo: run reset, copy regions, and reset gamestate, and players list
     }
 
     public void shutdown() {
