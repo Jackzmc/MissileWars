@@ -12,10 +12,13 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Util {
     public static boolean isInTeam(Player player) {
@@ -83,5 +86,22 @@ public class Util {
     }
     public static Polygonal2DRegion getWorldEditRegionFromWorldGuard(ProtectedRegion wgRegion) {
         return getWorldEditRegionFromWorldguard(wgRegion,Bukkit.getWorld("world"));
+    }public static ItemStack getCustomItem(Material mt, String name) {
+        return getCustomItem(mt,name,new ArrayList<>());
     }
+    public static ItemStack getCustomItem(Material mt, String name, List<String> lore) {
+        ItemStack item = new ItemStack(mt);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&',name));
+        lore = lore.stream().map(v -> ChatColor.translateAlternateColorCodes('&',v)).collect(Collectors.toList());;
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
+    }
+    public static ItemStack getCustomItem(Material mt, String name, String... lores) {
+        List<String> lore = new ArrayList<>();
+        Collections.addAll(lore, lores);
+        return getCustomItem(mt, name, lore);
+    }
+
 }
