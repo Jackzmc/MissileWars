@@ -1,9 +1,16 @@
 package me.jackz.missilewars.events;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.lib.GamePlayers;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -35,6 +42,12 @@ public class MiscPlayerEvents implements Listener {
 
         base.addExtra(Util.addButtons(btn_spectate,btn_green,btn_red));
         player.spigot().sendMessage(base);
+        player.sendMessage("");
+
+        GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
+        if(team != GamePlayers.MWTeam.NONE && !MissileWars.gameManager.getState().isGameActive()) {
+            MissileWars.gameManager.players().remove(player,team);
+        }
     }
 
     @EventHandler
