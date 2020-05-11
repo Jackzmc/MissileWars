@@ -36,7 +36,7 @@ public class MissileClipboardLoader {
         directory.mkdirs();
         schematics = directory.listFiles();
 
-        loadList("guardian","lightning","shieldbuster","tomohawk","juggernaut","shield");
+        loadList("guardian","lightning","shieldbuster","tomahawk","juggernaut","shield");
 
     }
 

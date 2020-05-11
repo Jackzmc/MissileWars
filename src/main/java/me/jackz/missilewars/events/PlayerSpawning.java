@@ -68,7 +68,7 @@ public class PlayerSpawning implements Listener {
                                 break;
                             case CREEPER_SPAWN_EGG:
                                 e.setCancelled(true);
-                                spawnMissile("tomohawk", player, e.getClickedBlock());
+                                spawnMissile("tomahawk", player, e.getClickedBlock());
                             case BLAZE_SPAWN_EGG:
                                 e.setCancelled(true);
                             case BLAZE_ROD:

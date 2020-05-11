@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ItemSystem {
-    private final static List<String> ITEM_TYPES = new ArrayList<>(Arrays.asList("fireball","arrows","barrier","tomohawk","shieldbuster","juggernaut","lightning","guardian"));
+    private final static List<String> ITEM_TYPES = new ArrayList<>(Arrays.asList("fireball","arrows","barrier","tomahawk","shieldbuster","juggernaut","lightning","guardian"));
 
     ItemSystem() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(MissileWars.getInstance(),
@@ -58,8 +58,8 @@ public class ItemSystem {
                 return arrows;
             case "barrier":
                 return Util.getCustomItem(Material.SNOWBALL,"&9Deploy Barrier","&7Deploys a barrier after 1 second.");
-            case "tomohawk":
-                return Util.getCustomItem(Material.CREEPER_SPAWN_EGG,"&9Deploy Tomohawk","&7Spawns a tomohawk missile");
+            case "tomahawk":
+                return Util.getCustomItem(Material.CREEPER_SPAWN_EGG,"&9Deploy Tomahawk","&7Spawns a tomahawk missile");
             case "shieldbuster":
                 return Util.getCustomItem(Material.WITCH_SPAWN_EGG,"&9Deploy ShieldBuster","&7Spawns a Shieldbuster missile.","","&eWill go straight through barriers");
             case "juggernaut":
