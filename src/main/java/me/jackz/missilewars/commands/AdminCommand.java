@@ -29,7 +29,7 @@ public class AdminCommand implements CommandExecutor {
         greenTeam = sb.getTeam("Green");
     }
 
-    Map<String, String> ITEMS = new HashMap<String, String>() {{
+    private final Map<String, String> ITEMS = new HashMap<String, String>() {{
         put("Fireball", "fill -121 45 -21 -119 45 -21 redstone_block");
         put("Arrows", "fill -121 45 -16 -119 45 -16 redstone_block");
         put("Barrier","fill -121 45 -11 -119 45 -11 redstone_block");
@@ -39,7 +39,7 @@ public class AdminCommand implements CommandExecutor {
         put("Lightning","fill -121 45 9 -119 45 9 redstone_block");
         put("Guardian","fill -121 45 14 -119 45 14 redstone_block");
     }};
-    Map<String, String> GIVE_ITEMS = new HashMap<String,String>() {{
+    private final Map<String, String> GIVE_ITEMS = new HashMap<String,String>() {{
         put("fireball","give %PLAYER% blaze_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Fireball\\\"}\",Lore:[\"Spawns a Fireball.\",\"Punch it to aim/launch at target.\"]}} 1");
         put("arrows","give %PLAYER% arrow{display:{Name:\"{\\\"text\\\":\\\"Flame Arrow\\\"}\",Lore:[\"Shoot to ignite TNT.\"]}} 3");
         put("barrier","give %PLAYER% snowball{display:{Name:\"{\\\"text\\\":\\\"Deploy Barrier\\\"}\",Lore:[\"Deploys a barrier after 1 second.\"]}} 1");
@@ -149,6 +149,7 @@ public class AdminCommand implements CommandExecutor {
                                 secondTeam.addEntry(player.getName());
                             }
                         }
+                        //TODO: add players to gamemanager gameplayers
                         plugin.getDisplayManager().refreshSidebar();
                         int second_team_players = players.size() - first_team_players;
                         if(greenTeamOverflow) {
