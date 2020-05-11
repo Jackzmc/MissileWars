@@ -1,4 +1,4 @@
-package me.jackz.missilewars.lib;
+package me.jackz.missilewars.game;
 
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -12,6 +12,8 @@ public class GameManager {
     private MissileWars plugin;
     private GameState state;
     private GamePlayers players;
+    private static GameConfig config;
+    private static ItemSystem itemSystem;
 
     private final String red_portal_region = "redportal";
     private final String green_portal_region = "greenportal";
@@ -19,7 +21,10 @@ public class GameManager {
     public GameManager(MissileWars plugin) {
         this.state = new GameState();
         this.plugin = plugin;
+        players = new GamePlayers();
+        config = new GameConfig();
         initalizeScoreboard();
+        itemSystem = new ItemSystem();
     }
 
     //#region privatemethods
@@ -55,6 +60,7 @@ public class GameManager {
             }
         }
     }
+
     public void shutdown() {
 
     }
@@ -65,5 +71,8 @@ public class GameManager {
 
     public GamePlayers players() {
         return players;
+    }
+    public GameConfig getConfig() {
+        return config;
     }
 }

@@ -1,4 +1,4 @@
-package me.jackz.missilewars.lib;
+package me.jackz.missilewars.game;
 
 import org.bukkit.entity.Player;
 

@@ -11,8 +11,9 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import me.jackz.missilewars.lib.MissileClipboardLoader;
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GameManager;
+import me.jackz.missilewars.lib.MissileClipboardLoader;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -43,7 +44,6 @@ public class PlayerSpawning implements Listener {
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         if(MissileWars.gameManager.getState().isLegacyMissilesEnabled()) return;
-
         if(e.getHand() == EquipmentSlot.HAND && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.CREATIVE)) {
             if(e.getItem() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
                 if(Util.isInTeam(player)) {
@@ -100,7 +100,6 @@ public class PlayerSpawning implements Listener {
                             }
 
                             e.setCancelled(true);
-
                             Util.removeOneFromHand(player);
                         }
                     }

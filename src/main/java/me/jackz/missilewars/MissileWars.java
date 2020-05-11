@@ -5,15 +5,12 @@ import me.jackz.missilewars.events.ChatListener;
 import me.jackz.missilewars.events.MiscPlayerEvents;
 import me.jackz.missilewars.events.PlayerMoveEvent;
 import me.jackz.missilewars.events.PlayerSpawning;
-import me.jackz.missilewars.lib.GameManager;
+import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.lib.RestartManager;
 import me.jackz.missilewars.lib.TeamDisplayManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 public final class MissileWars extends JavaPlugin {
 
