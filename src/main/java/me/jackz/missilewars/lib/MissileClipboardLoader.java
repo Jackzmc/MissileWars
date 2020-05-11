@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class MissileClipboardLoader {
     private MissileWars plugin;
@@ -25,7 +24,11 @@ public class MissileClipboardLoader {
     }
 
     public Clipboard getClipboard(String name) {
-        return clips.get(name);
+        if(clips.containsKey(name)) {
+            return clips.get(name);
+        }else{
+            return fetchClipboard(name);
+        }
     }
 
     private void loadSchematics() {
@@ -41,24 +44,24 @@ public class MissileClipboardLoader {
         for (String schematic : args) {
             String greenName = "Green-" + schematic;
             String redName = "Red-" + schematic;
-            clips.put(greenName,getSchematic(greenName));
-            clips.put(redName,getSchematic(redName));
+            clips.put(greenName, fetchClipboard(greenName));
+            clips.put(redName, fetchClipboard(redName));
         }
     }
 
 
-    private Clipboard getSchematic(String name) {
+    private Clipboard fetchClipboard(String name) {
         //name can be 'Green-guardian' -> try Green-guardian.schem and Green-guardian.schematic
         for (File schematic : schematics) {
             if(schematic.getName().equalsIgnoreCase(name + ".schem")) {
-                return getClipboardInternal(schematic);
+                return getClipboard(schematic);
             }else if(schematic.getName().equalsIgnoreCase(name + ".schematic")) {
-                return getClipboardInternal(schematic);
+                return getClipboard(schematic);
             }
         }
         return null;
     }
-    private Clipboard getClipboardInternal(File schematic) {
+    private Clipboard getClipboard(File schematic) {
         ClipboardFormat format = ClipboardFormats.findByFile(schematic);
         try (ClipboardReader reader = format.getReader(new FileInputStream(schematic))) {
             return reader.read();
