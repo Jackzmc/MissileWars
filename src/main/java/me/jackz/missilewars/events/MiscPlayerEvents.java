@@ -21,8 +21,8 @@ public class MiscPlayerEvents implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,999,1,true,false,false));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION,999,2,true,false,false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,99999,2,true,false,false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION,99999,2,true,false,false));
         player.getInventory().clear();
 
         player.sendMessage("");
