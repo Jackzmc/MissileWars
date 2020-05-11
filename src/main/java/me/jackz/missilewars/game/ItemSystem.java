@@ -52,6 +52,8 @@ public class ItemSystem {
         switch(name.toLowerCase()) {
             case "fireball":
                 return Util.getCustomItem(Material.BLAZE_SPAWN_EGG,"&9Launch Fireball","&7Spawns a Fireball.","&7Rightclick to shoot fireball in direction you are facing");
+            case "arrow":
+                return Util.getCustomItem(Material.ARROW,"&9Flame Arrow","&7Shoot to ignite TNT.");
             case "arrows":
                 ItemStack arrows = Util.getCustomItem(Material.ARROW,"&9Flame Arrow","&7Shoot to ignite TNT.");
                 arrows.setAmount(3);
