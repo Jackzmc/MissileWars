@@ -47,6 +47,16 @@ public class GamePlayers {
             redTeamPlayers.remove(player);
         }
     }
+    public void remove(Player player) {
+        MWTeam team = getTeam(player);
+        if(team.equals(MWTeam.GREEN)) {
+            greenTeam.removeEntry(player.getName());
+            greenTeamPlayers.remove(player);
+        }else{
+            redTeam.removeEntry(player.getName());
+            redTeamPlayers.remove(player);
+        }
+    }
 
     public List<Player> get(MWTeam team) {
         if(team == MWTeam.RED) {
