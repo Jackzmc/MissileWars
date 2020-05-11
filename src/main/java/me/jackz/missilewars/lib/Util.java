@@ -1,13 +1,13 @@
 package me.jackz.missilewars.lib;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.regions.Polygonal2DRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.jackz.missilewars.MissileWars;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
@@ -76,5 +76,12 @@ public class Util {
             base.addExtra(" ");
         }
         return base;
+    }
+    public static Polygonal2DRegion getWorldEditRegionFromWorldguard(ProtectedRegion wgRegion, World bukkitWorld) {
+        com.sk89q.worldedit.world.World world = BukkitAdapter.adapt(bukkitWorld);
+        return new Polygonal2DRegion(world, wgRegion.getPoints(), wgRegion.getMinimumPoint().getBlockY(), wgRegion.getMaximumPoint().getBlockY());
+    }
+    public static Polygonal2DRegion getWorldEditRegionFromWorldGuard(ProtectedRegion wgRegion) {
+        return getWorldEditRegionFromWorldguard(wgRegion,Bukkit.getWorld("world"));
     }
 }
