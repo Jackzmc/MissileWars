@@ -1,5 +1,8 @@
 package me.jackz.missilewars.events;
 
+import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GamePlayers;
+import me.jackz.missilewars.game.ItemSystem;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -7,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerPickupArrowEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 
 public class PlayerMoveEvent implements Listener {
@@ -22,14 +27,23 @@ public class PlayerMoveEvent implements Listener {
     @EventHandler
     public void onDrop(PlayerDropItemEvent e) {
         Player player = e.getPlayer();
-        if(player.getGameMode().equals(GameMode.SURVIVAL)) {
-            Team team = player.getScoreboard().getEntryTeam(player.getName());
-            if(team != null && (team.getName().equalsIgnoreCase("Red") || team.getName().equalsIgnoreCase("Green"))) {
+        if(player.getGameMode().equals(GameMode.SURVIVAL) && !e.isCancelled()) {
+            GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
+            if(team != GamePlayers.MWTeam.NONE) {
                 if(e.getItemDrop().getItemStack().getType().equals(Material.BOW)) {
                     e.setCancelled(true);
                 }
                 //e.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onPickup(PlayerPickupArrowEvent e) {
+        if(!e.isCancelled()) {
+            e.getItem().remove();
+            ItemStack arrow = ItemSystem.getItem("arrow");
+            e.getPlayer().getInventory().addItem(arrow);
         }
     }
 
