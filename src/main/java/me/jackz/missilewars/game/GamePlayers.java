@@ -7,6 +7,7 @@ import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class GamePlayers {
@@ -60,12 +61,24 @@ public class GamePlayers {
 
     public List<Player> get(MWTeam team) {
         if(team == MWTeam.RED) {
-            return redTeam.getEntries().stream().map(Bukkit::getPlayerExact).collect(Collectors.toList());
+            return redTeam.getEntries().stream().map(Bukkit::getPlayerExact).filter(Objects::nonNull).collect(Collectors.toList());
         }else if(team == MWTeam.GREEN) {
-            return greenTeam.getEntries().stream().map(Bukkit::getPlayerExact).collect(Collectors.toList());
+            return greenTeam.getEntries().stream().map(Bukkit::getPlayerExact).filter(Objects::nonNull).collect(Collectors.toList());
         }else{
             return new ArrayList<>();
         }
+    }
+    public List<Player> getAll() {
+        List<Player> players = new ArrayList<>();
+        for (String entry : redTeam.getEntries()) {
+            Player p = Bukkit.getPlayerExact(entry);
+            if(p != null) players.add(p);
+        }
+        for (String entry : greenTeam.getEntries()) {
+            Player p = Bukkit.getPlayerExact(entry);
+            if(p != null) players.add(p);
+        }
+        return players;
     }
     public MWTeam getTeam(Player player) {
         Team scoreboardTeam = scoreboard.getEntryTeam(player.getName());
