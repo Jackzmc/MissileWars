@@ -7,22 +7,26 @@ import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 
 public class MiscPlayerEvents implements Listener {
+    private final static PotionEffect nightVision = new PotionEffect(PotionEffectType.NIGHT_VISION,99999,2,true,false,false);
+    private final static PotionEffect saturation = new PotionEffect(PotionEffectType.SATURATION,99999,2,true,false,false);
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION,99999,2,true,false,false));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION,99999,2,true,false,false));
+        player.addPotionEffect(nightVision);
+        player.addPotionEffect(saturation);
         player.getInventory().clear();
 
         player.sendMessage("");
@@ -56,5 +60,14 @@ public class MiscPlayerEvents implements Listener {
             }
 
         }
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent e) {
+        Player player = e.getPlayer();
+        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+            player.addPotionEffect(nightVision);
+            player.addPotionEffect(saturation);
+        },5);
     }
 }
