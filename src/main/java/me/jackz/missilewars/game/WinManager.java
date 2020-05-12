@@ -14,23 +14,23 @@ public class WinManager {
     public static void testWin(ApplicableRegionSet regions) {
         for (ProtectedRegion region : regions) {
             if(region.getId().equalsIgnoreCase(green_portal_region)) {
-                announceWin(GamePlayers.MWTeam.GREEN);
+                announceWin(GamePlayers.MWTeam.RED);
                 //green wins
             }else if(region.getId().equalsIgnoreCase(red_portal_region)){
                 //red wins
-                announceWin(GamePlayers.MWTeam.RED);
+                announceWin(GamePlayers.MWTeam.GREEN);
             }
         }
     }
-    static void announceWin(GamePlayers.MWTeam team) {
+    private static void announceWin(GamePlayers.MWTeam team) {
         ChatColor color = team == GamePlayers.MWTeam.GREEN ? ChatColor.GREEN : ChatColor.RED;
         String name = team == GamePlayers.MWTeam.GREEN ? "Green" : "Red";
+        String loserTeamName = (team == GamePlayers.MWTeam.GREEN) ? "red" : "green";
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            onlinePlayer.sendTitle(color.toString() + name + " Wins!","",0,100,0);
+            onlinePlayer.sendTitle(color.toString() + name + " Team Wins!","The " + loserTeamName + "'s portal has been destroyed",0,160,0);
         }
-        Bukkit.broadcastMessage(color.toString() + name + " §9team has won the game!");
-        //wait 30s
-        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> MissileWars.gameManager.reset(),20 * 30);
+        Bukkit.broadcastMessage(color.toString() + name + " team §9has won the game!");
+        MissileWars.gameManager.reset();
     }
 }
