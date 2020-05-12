@@ -36,6 +36,7 @@ public class AdminCommand implements CommandExecutor {
         put("Fireball", "fill -121 45 -21 -119 45 -21 redstone_block");
         put("Arrows", "fill -121 45 -16 -119 45 -16 redstone_block");
         put("Barrier","fill -121 45 -11 -119 45 -11 redstone_block");
+
         put("Tomahawk","fill -121 45 -6 -119 45 -6 redstone_block");
         put("ShieldBuster","fill -121 45 -1 -119 45 -1 redstone_block");
         put("Juggernaut","fill -121 45 4 -119 45 4 redstone_block");
@@ -46,8 +47,9 @@ public class AdminCommand implements CommandExecutor {
         put("fireball","give %PLAYER% blaze_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Fireball\\\"}\",Lore:[\"Spawns a Fireball.\",\"Punch it to aim/launch at target.\"]}} 1");
         put("arrows","give %PLAYER% arrow{display:{Name:\"{\\\"text\\\":\\\"Flame Arrow\\\"}\",Lore:[\"Shoot to ignite TNT.\"]}} 3");
         put("barrier","give %PLAYER% snowball{display:{Name:\"{\\\"text\\\":\\\"Deploy Barrier\\\"}\",Lore:[\"Deploys a barrier after 1 second.\"]}} 1");
-        put("tomahawk","give %PLAYER% creeper_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Red Tomahawk\\\"}\",Lore:[\"Spawns a Tomahawk missile.\"]}} 1");
+
         put("shieldbuster","give %PLAYER% witch_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Red ShieldBuster\\\"}\",Lore:[\"Spawns a Shield Buster missile.\"]}} 1");
+        put("tomahawk","give %PLAYER% creeper_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Red Tomahawk\\\"}\",Lore:[\"Spawns a Tomahawk missile.\"]}} 1");
         put("juggernaut","give %PLAYER% ghast_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Red Juggernaut\\\"}\",Lore:[\"Spawns a Juggernaut missile.\"]}} 1");
         put("lightning","give %PLAYER% ocelot_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Red Lightning\\\"}\",Lore:[\"Spawns a Lightning missile.\"]}} 1");
         put("guardian","give %PLAYER% guardian_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Red Guardian\\\"}\",Lore:[\"Spawns a Guardian missile.\"]}} 1");
@@ -199,6 +201,10 @@ public class AdminCommand implements CommandExecutor {
                     tc.addExtra(giveallgreen);
                     sender.spigot().sendMessage(tc);
                 }
+                break;
+            }
+            case "start": {
+                MissileWars.gameManager.start();
                 break;
             }
             case "reset": {
