@@ -8,6 +8,7 @@ import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,6 +23,7 @@ import org.bukkit.potion.PotionEffectType;
 public class MiscPlayerEvents implements Listener {
     private final static PotionEffect nightVision = new PotionEffect(PotionEffectType.NIGHT_VISION,99999,2,true,false,false);
     private final static PotionEffect saturation = new PotionEffect(PotionEffectType.SATURATION,99999,2,true,false,false);
+    private final static Location spawnLocation = new Location(Bukkit.getWorld("world"),-100.5 ,71,.5);
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
@@ -44,6 +46,7 @@ public class MiscPlayerEvents implements Listener {
         GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
         if(team != GamePlayers.MWTeam.NONE && !MissileWars.gameManager.getState().isGameActive()) {
             MissileWars.gameManager.players().remove(player,team);
+            player.teleport(spawnLocation);
         }
     }
 

@@ -7,6 +7,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -14,6 +15,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager {
@@ -25,6 +27,7 @@ public class GameManager {
 
     private final static PotionEffect nightVision = new PotionEffect(PotionEffectType.NIGHT_VISION, 9999, 2, true, false, false);
     private final static PotionEffect saturation = new PotionEffect(PotionEffectType.SATURATION, 9999, 2, true, false, false);
+    private final static Location spawnLocation = new Location(Bukkit.getWorld("world"),-100.5 ,71,.5);
 
     public GameManager(MissileWars plugin) {
         this.state = new GameState();
@@ -74,16 +77,26 @@ public class GameManager {
         itemSystem.start();
     }
     public void reset() {
-        for (Player player : players.getAll()) {
-            player.setGameMode(GameMode.SPECTATOR);
+        List<Player> allPlayers = players.getAll();
+        for (Player player : allPlayers) {
             player.getInventory().clear();
+            player.setGameMode(GameMode.SPECTATOR);
             player.addPotionEffect(nightVision);
             player.addPotionEffect(saturation);
             player.setHealth(20);
         }
+
         state.setActive(false);
-        Reset.reset();
+        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> Reset.reset(), 20 * 20);
+
         itemSystem.stop();
+        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+            for(Player player : allPlayers) {
+                player.getInventory().clear();
+                player.teleport(spawnLocation);
+                player.setGameMode(GameMode.ADVENTURE);
+            }
+        }, 20 * 30);
         //todo: run reset, copy regions, and reset gamestate, and players list
     }
 
