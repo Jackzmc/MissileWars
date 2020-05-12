@@ -5,6 +5,7 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import me.jackz.missilewars.MissileWars;
+import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,18 +13,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MissileClipboardLoader {
-    private MissileWars plugin;
-    private File[] schematics;
+public class ClipboardLoader {
+    private static File[] schematics;
+    private static Map<String,Clipboard> clips = new HashMap<>();
 
-    private Map<String,Clipboard> clips = new HashMap<>();
-
-    public MissileClipboardLoader(MissileWars plugin) {
-        this.plugin = plugin;
+    public ClipboardLoader(MissileWars plugin) {
         loadSchematics();
     }
 
-    public Clipboard getClipboard(String name) {
+    public static Clipboard getClipboard(String name) {
         if(clips.containsKey(name)) {
             return clips.get(name);
         }else{
@@ -31,8 +29,8 @@ public class MissileClipboardLoader {
         }
     }
 
-    private void loadSchematics() {
-        File directory = new File(plugin.getDataFolder() + File.separator + "schematics");
+    private static void loadSchematics() {
+        File directory = new File(MissileWars.getInstance().getDataFolder() + File.separator + "schematics");
         directory.mkdirs();
         schematics = directory.listFiles();
 
@@ -40,7 +38,7 @@ public class MissileClipboardLoader {
 
     }
 
-    private void loadList(String... args) {
+    private static void loadList(String... args) {
         for (String schematic : args) {
             String greenName = "Green-" + schematic;
             String redName = "Red-" + schematic;
@@ -50,7 +48,7 @@ public class MissileClipboardLoader {
     }
 
 
-    private Clipboard fetchClipboard(String name) {
+    private static Clipboard fetchClipboard(String name) {
         //name can be 'Green-guardian' -> try Green-guardian.schem and Green-guardian.schematic
         for (File schematic : schematics) {
             if(schematic.getName().equalsIgnoreCase(name + ".schem")) {
@@ -61,12 +59,12 @@ public class MissileClipboardLoader {
         }
         return null;
     }
-    private Clipboard getClipboard(File schematic) {
+    private static Clipboard getClipboard(File schematic) {
         ClipboardFormat format = ClipboardFormats.findByFile(schematic);
         try (ClipboardReader reader = format.getReader(new FileInputStream(schematic))) {
             return reader.read();
         } catch (IOException e) {
-            plugin.getLogger().warning("Failed to load schematic file " + schematic.getName());
+            Bukkit.getLogger().warning("Failed to load schematic file " + schematic.getName());
             return null;
         }
     }
