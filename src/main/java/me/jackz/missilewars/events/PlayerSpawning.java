@@ -12,8 +12,8 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import me.jackz.missilewars.MissileWars;
-import me.jackz.missilewars.game.GameManager;
-import me.jackz.missilewars.lib.MissileClipboardLoader;
+import me.jackz.missilewars.game.ItemSystem;
+import me.jackz.missilewars.lib.ClipboardLoader;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -32,12 +32,12 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scoreboard.Team;
 
 public class PlayerSpawning implements Listener {
-    private MissileClipboardLoader clipboardLoader;
+    private ClipboardLoader clipboardLoader;
     private MissileWars plugin;
 
     public PlayerSpawning(MissileWars plugin) {
         this.plugin = plugin;
-        clipboardLoader = new MissileClipboardLoader(plugin);
+        clipboardLoader = new ClipboardLoader(plugin);
     }
 
     @EventHandler
@@ -118,14 +118,21 @@ public class PlayerSpawning implements Listener {
         if(projectile.getType() == EntityType.SNOWBALL) {
             Player player = (Player) projectile.getShooter();
             Team team = player.getScoreboard().getEntryTeam(player.getName());
-
             projectile.setBounce(false);
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-                boolean success = paste(player,team.getName() + "-shield",projectile.getLocation(),0);
-                if(success) {
-                    Util.removeOneFromHand(player);
+                if(projectile.getLocation().getY() >= 90 || projectile.getLocation().getY() <= 35) {
+                    //Fail barrier spawn
+                    if(player.getGameMode() == GameMode.SURVIVAL) {
+                        ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), 1);
+                    }
+                    projectile.remove();
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR,TextComponent.fromLegacyText("§cCan't deploy barrier out of bounds."));
+                }else {
+                    boolean success = paste(player, team.getName() + "-shield", projectile.getLocation(), 0);
+                    if (success) {
+                        Util.removeOneFromHand(player);
+                    }
                 }
-                //projectile.getLocation().getBlock().setType(Material.DIRT);
             },20);
         }
     }
@@ -135,7 +142,7 @@ public class PlayerSpawning implements Listener {
         boolean isLightning = type.equalsIgnoreCase("lightning");
         boolean isGreenTeam = team.getName().equalsIgnoreCase("Green");
         //lightning schematics are inverted...
-        int distance_from_block = isLightning ? 3 : 2;
+        int distance_from_block = isLightning ? 5 : 4;
         int rotation_amount = isLightning  ? 180 : 0;
 
         int team_block_add = isGreenTeam ? -distance_from_block : distance_from_block;
@@ -193,6 +200,7 @@ public class PlayerSpawning implements Listener {
             AffineTransform transform = new AffineTransform();
             transform = transform.rotateY(rotation_amount);
             try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(wePlayer.getWorld(), 200)) {
+                //editSession.setFastMode(true);
                 ClipboardHolder holder = new ClipboardHolder(clipboard);
                 holder.setTransform(holder.getTransform().combine(transform));
                 Operation operation = holder
