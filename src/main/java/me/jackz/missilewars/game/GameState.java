@@ -18,7 +18,9 @@ public class GameState {
     public boolean isGameActive() {
         return activeState;
     }
-
+    public boolean isDebug() {
+        return debug_enabled;
+    }
     public boolean isLegacyMissilesEnabled() {
         return legacy_missiles;
     }
@@ -27,9 +29,8 @@ public class GameState {
     public void setLegacyMissiles(boolean legacy_missiles) {
         this.legacy_missiles = legacy_missiles;
     }
-
-    public boolean isDebug() {
-        return debug_enabled;
+    public void setActive(boolean bool) {
+        activeState = bool;
     }
     //#endregion
 

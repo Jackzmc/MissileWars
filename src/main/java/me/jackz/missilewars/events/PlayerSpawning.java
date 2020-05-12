@@ -147,7 +147,7 @@ public class PlayerSpawning implements Listener {
 
         int team_block_add = isGreenTeam ? -distance_from_block : distance_from_block;
 
-        Location spawnBlock = clickedBlock.getLocation().add(0,-2,team_block_add);
+        Location spawnBlock = clickedBlock.getLocation().add(0,-3,team_block_add);
         if(MissileWars.gameManager.getState().isDebug()) Util.highlightBlock(spawnBlock,Material.SEA_LANTERN,20 * 5);
         if(isPortalInLocation(spawnBlock,isGreenTeam)) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cCan't spawn a missile in the portal area!"));

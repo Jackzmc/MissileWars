@@ -1,7 +1,7 @@
 package me.jackz.missilewars.game;
 
 public class GameConfig {
-    private int item_interval_sec = 5;
+    private int item_interval_sec = 30;
     private boolean prioritize_defense = false;
     private int max_items = 1;
 
