@@ -80,13 +80,16 @@ public class Util {
         }
         return base;
     }
-    public static Polygonal2DRegion getWorldEditRegionFromWorldguard(ProtectedRegion wgRegion, World bukkitWorld) {
-        com.sk89q.worldedit.world.World world = BukkitAdapter.adapt(bukkitWorld);
+    public static Polygonal2DRegion getWorldEditRegionFromWorldGuard(ProtectedRegion wgRegion, com.sk89q.worldedit.world.World world) {
         return new Polygonal2DRegion(world, wgRegion.getPoints(), wgRegion.getMinimumPoint().getBlockY(), wgRegion.getMaximumPoint().getBlockY());
     }
+    public static Polygonal2DRegion getWorldEditRegionFromWorldGuard(ProtectedRegion wgRegion, World bukkitWorld) {
+        return getWorldEditRegionFromWorldGuard(wgRegion, BukkitAdapter.adapt(bukkitWorld));
+    }
     public static Polygonal2DRegion getWorldEditRegionFromWorldGuard(ProtectedRegion wgRegion) {
-        return getWorldEditRegionFromWorldguard(wgRegion,Bukkit.getWorld("world"));
-    }public static ItemStack getCustomItem(Material mt, String name) {
+        return getWorldEditRegionFromWorldGuard(wgRegion,Bukkit.getWorld("world"));
+    }
+    public static ItemStack getCustomItem(Material mt, String name) {
         return getCustomItem(mt,name,new ArrayList<>());
     }
     public static ItemStack getCustomItem(Material mt, String name, List<String> lore) {
