@@ -1,10 +1,7 @@
 package me.jackz.missilewars;
 
 import me.jackz.missilewars.commands.*;
-import me.jackz.missilewars.events.ChatListener;
-import me.jackz.missilewars.events.MiscPlayerEvents;
-import me.jackz.missilewars.events.PlayerMoveEvent;
-import me.jackz.missilewars.events.PlayerSpawning;
+import me.jackz.missilewars.events.*;
 import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.lib.RestartManager;
 import me.jackz.missilewars.lib.TeamDisplayManager;
@@ -46,6 +43,7 @@ public final class MissileWars extends JavaPlugin {
         pm.registerEvents(new PlayerMoveEvent(),this);
         pm.registerEvents(new PlayerSpawning(this),this);
         pm.registerEvents(new MiscPlayerEvents(),this);
+        pm.registerEvents(new Explosion(),this);
     }
 
     @Override

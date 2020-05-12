@@ -8,7 +8,7 @@ import java.util.List;
 public class GameState {
 
 
-    private boolean activeState = false;
+    private boolean activeState = true;
     private boolean legacy_missiles = false;
     private boolean debug_enabled = false;
 

@@ -50,6 +50,7 @@ public class GameManager {
     //#endregion
 
     public void reset() {
+        Reset.reset();
         //todo: run reset, copy regions, and reset gamestate, and players list
     }
 

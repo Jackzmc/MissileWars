@@ -29,6 +29,8 @@ public class WinManager {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.sendTitle(color.toString() + name + " Wins!","",0,100,0);
         }
-        MissileWars.gameManager.reset();
+        Bukkit.broadcastMessage(color.toString() + name + " §9team has won the game!");
+        //wait 30s
+        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> MissileWars.gameManager.reset(),20 * 30);
     }
 }
