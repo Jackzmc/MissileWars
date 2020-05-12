@@ -2,6 +2,7 @@ package me.jackz.missilewars.commands;
 
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GamePlayers;
+import me.jackz.missilewars.game.ItemSystem;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -11,6 +12,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
@@ -69,10 +71,10 @@ public class AdminCommand implements CommandExecutor {
                 if(args.length >= 3) {
                     if(args[1].equalsIgnoreCase("red")) {
                         List<Player> players = MissileWars.gameManager.players().get(GamePlayers.MWTeam.RED);
-                        String itemgive = GIVE_ITEMS.get(args[2].toLowerCase().trim());
-                        if (itemgive != null) {
+                        ItemStack item = ItemSystem.getItem(args[2].toLowerCase().trim());
+                        if (item != null) {
                             for (Player player : players) {
-                                Bukkit.dispatchCommand(console, itemgive.replace("%PLAYER%", player.getName()));
+                                ItemSystem.giveItem(player,item,1);
                             }
                             sender.sendMessage("§aGave the §cred team §aa " + args[2].toLowerCase().trim());
 
@@ -81,13 +83,12 @@ public class AdminCommand implements CommandExecutor {
                         }
                     }else if(args[1].equalsIgnoreCase("green")) {
                         List<Player> players = MissileWars.gameManager.players().get(GamePlayers.MWTeam.GREEN);
-                        String itemgive = GIVE_ITEMS.get(args[2].toLowerCase().trim());
-                        if (itemgive != null) {
+                        ItemStack item = ItemSystem.getItem(args[2].toLowerCase().trim());
+                        if (item != null) {
                             for (Player player : players) {
-                                Bukkit.dispatchCommand(console, itemgive.replace("%PLAYER%", player.getName()));
+                                ItemSystem.giveItem(player,item,1);
                             }
                             sender.sendMessage("§aGave the green team §aa " + args[2].toLowerCase().trim());
-
                         }else {
                             sender.sendMessage("§cUnknown item. Try /mwa items");
                         }
@@ -95,10 +96,10 @@ public class AdminCommand implements CommandExecutor {
                         Player player = Bukkit.getPlayer(args[1]);
                         if (player != null) {
                             if (MissileWars.gameManager.players().has(player)) {
-                                String itemgive = GIVE_ITEMS.get(args[2].toLowerCase().trim());
-                                if (itemgive != null) {
-                                    Bukkit.dispatchCommand(console, itemgive.replace("%PLAYER%", player.getName()));
-                                } else {
+                                ItemStack item = ItemSystem.getItem(args[2].toLowerCase().trim());
+                                if(item != null) {
+                                    ItemSystem.giveItem(player,item,1);
+                                }else{
                                     player.sendMessage("§cUnknown item. Try /mwa items");
                                 }
                             }else{
@@ -198,6 +199,10 @@ public class AdminCommand implements CommandExecutor {
                     tc.addExtra(giveallgreen);
                     sender.spigot().sendMessage(tc);
                 }
+                break;
+            }
+            case "reset": {
+                MissileWars.gameManager.reset();
                 break;
             }
             default:
