@@ -63,10 +63,10 @@ public class AdminCommand implements CommandExecutor {
         }
         if(args.length == 0 || args[0].equalsIgnoreCase("help") ) {
             sender.sendMessage("§6Missile Wars - Admin Menu");
-            sender.sendMessage("§e/mwa give <player/red/green> <item> §7- gives player or team an item");
+            sender.sendMessage("§e/mwa give <player/red/green> <item> [bypass]§7- gives player or team an item");
             sender.sendMessage("§e/mwa choose <item> §7- activate item spawn manually");
             sender.sendMessage("§e/mwa items §7- get all items");
-            sender.sendMessage("§e/mwa scramble §7- SCramble the teams");
+            sender.sendMessage("§e/mwa scramble §7- Scramble the teams");
             sender.sendMessage("§e/mwa start §7- Force start the game");
             sender.sendMessage("§e/mwa reset §7- Force reset the game");
             sender.sendMessage("§e/mwa config §7- Change game rules and configs");
@@ -75,12 +75,13 @@ public class AdminCommand implements CommandExecutor {
         switch(args[0].toLowerCase()) {
             case "give": {
                 if(args.length >= 3) {
+                    boolean bypass = (args.length >= 4) && args[3].equalsIgnoreCase("bypass");
                     if(args[1].equalsIgnoreCase("red")) {
                         List<Player> players = MissileWars.gameManager.players().get(GamePlayers.MWTeam.RED);
                         ItemStack item = ItemSystem.getItem(args[2].toLowerCase().trim());
                         if (item != null) {
                             for (Player player : players) {
-                                ItemSystem.giveItem(player,item,1);
+                                ItemSystem.giveItem(player, item, bypass);
                             }
                             sender.sendMessage("§aGave the §cred team §aa " + args[2].toLowerCase().trim());
 
@@ -92,7 +93,7 @@ public class AdminCommand implements CommandExecutor {
                         ItemStack item = ItemSystem.getItem(args[2].toLowerCase().trim());
                         if (item != null) {
                             for (Player player : players) {
-                                ItemSystem.giveItem(player,item,1);
+                                ItemSystem.giveItem(player, item, bypass);
                             }
                             sender.sendMessage("§aGave the green team §aa " + args[2].toLowerCase().trim());
                         }else {
@@ -104,7 +105,7 @@ public class AdminCommand implements CommandExecutor {
                             if (MissileWars.gameManager.players().has(player)) {
                                 ItemStack item = ItemSystem.getItem(args[2].toLowerCase().trim());
                                 if(item != null) {
-                                    ItemSystem.giveItem(player,item,1);
+                                    ItemSystem.giveItem(player, item, bypass);
                                 }else{
                                     player.sendMessage("§cUnknown item. Try /mwa items");
                                 }
@@ -173,16 +174,16 @@ public class AdminCommand implements CommandExecutor {
             case "choose": {
                 if(args.length >= 2) {
                     String query = args[1].toLowerCase().trim();
-                    int max_of_item = MissileWars.gameManager.getConfig().getMaxItems();
+                    boolean bypass = (args.length >= 3) && args[2].equalsIgnoreCase("bypass");
                     ItemStack item = ItemSystem.getItem(query);
                     if(item == null) {
                         sender.sendMessage("§cUnknown item type specified");
                     }else {
                         for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.GREEN)) {
-                            ItemSystem.giveItem(player, item, max_of_item);
+                            ItemSystem.giveItem(player, item, bypass);
                         }
                         for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.RED)) {
-                            ItemSystem.giveItem(player, item, max_of_item);
+                            ItemSystem.giveItem(player, item, bypass);
                         }
                     }
                 }else{

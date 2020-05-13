@@ -87,7 +87,7 @@ public class GameManager {
             players.setupPlayer(player);
             //todo: tp to spawnpoint
             player.setHealth(20);
-            ItemSystem.giveItem(player, bow, 1);
+            ItemSystem.giveItem(player, bow, false);
         }
         itemSystem.start();
     }

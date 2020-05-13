@@ -146,14 +146,16 @@ public class PlayerSpawning implements Listener {
                 if(projectile.getLocation().getY() >= 90 || projectile.getLocation().getY() <= 35) {
                     //Fail barrier spawn
                     if(player.getGameMode() == GameMode.SURVIVAL) {
-                        ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), 1);
+                        ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
                     }
                     projectile.remove();
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR,TextComponent.fromLegacyText("§cCan't deploy barrier out of bounds."));
                 }else {
                     boolean success = paste(player, team.getName() + "-shield", projectile.getLocation(), 0);
-                    if (success) {
-                        Util.removeOneFromHand(player);
+                    if (!success) {
+                        if(player.getGameMode() == GameMode.SURVIVAL) {
+                            ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
+                        }
                     }
                 }
             },20);

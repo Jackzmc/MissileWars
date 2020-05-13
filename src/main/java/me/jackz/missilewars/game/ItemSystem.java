@@ -52,17 +52,17 @@ public class ItemSystem {
             int max_of_item = MissileWars.gameManager.getConfig().getMaxItems();
 
             for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.GREEN)) {
-                giveItem(player, item, max_of_item);
+                giveItem(player, item, false);
             }
             for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.RED)) {
-                giveItem(player, item, max_of_item);
+                giveItem(player, item, false);
             }
         }
     }
 
-    public static void giveItem(Player player, ItemStack itemstack, int maxAmount) {
+    public static void giveItem(Player player, ItemStack itemstack, boolean bypassLimit) {
         //maxAmount being -1 disables limit
-        if(maxAmount >= 0 && player.getInventory().contains(itemstack, maxAmount)) {
+        if(!bypassLimit && player.getInventory().contains(itemstack, MissileWars.gameManager.getConfig().getMaxItems())) {
             player.sendMessage("§cYou already have a " + itemstack.getItemMeta().getDisplayName());
         }else{
             player.getInventory().addItem(itemstack);
