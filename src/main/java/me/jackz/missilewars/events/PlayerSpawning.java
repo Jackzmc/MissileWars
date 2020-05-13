@@ -13,6 +13,7 @@ import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameConfig;
+import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.game.ItemSystem;
 import me.jackz.missilewars.lib.ClipboardLoader;
 import me.jackz.missilewars.lib.Util;
@@ -54,6 +55,14 @@ public class PlayerSpawning implements Listener {
                 MissileWars.gameManager.players().remove(player);
                 Bukkit.broadcastMessage(player.getName() + " returned to the lobby.");
             }else if(lines[2].contains("ready")) {
+                GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
+                if(team == GamePlayers.MWTeam.GREEN) {
+                    MissileWars.gameManager.ready(GamePlayers.MWTeam.GREEN);
+                }else if(team == GamePlayers.MWTeam.RED) {
+                    MissileWars.gameManager.ready(GamePlayers.MWTeam.RED);
+                }else{
+                    player.sendMessage("§cYou must be in a team to ready up!");
+                }
                 //todo: implement ready logic
             }
             return;

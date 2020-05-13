@@ -57,6 +57,14 @@ public class GameManager {
         if(main.getObjective("wins") == null ) main.registerNewObjective("wins", "dummy", "Wins");
         if(main.getObjective("loses") == null ) main.registerNewObjective("loses", "dummy", "Loses");
     }
+    public void ready(GamePlayers.MWTeam team) {
+        state.setTeamReady(team,true);
+        String name = (team == GamePlayers.MWTeam.RED) ? "§cRed" : "§aGreen";
+        Bukkit.broadcastMessage(name + "team §eis ready to go!");
+        if(state.isGameReady()) {
+            start();
+        }
+    }
     //#endregion
     public void start() {
         state.setActive(true);
@@ -66,9 +74,15 @@ public class GameManager {
             GamePlayers.MWTeam team = entry.getValue();
             if(team == GamePlayers.MWTeam.GREEN) {
                 player.teleport(GameConfig.GREEN_SPAWNPOINT);
+                player.setBedSpawnLocation(GameConfig.GREEN_SPAWNPOINT);
             }else if(team == GamePlayers.MWTeam.RED) {
                 player.teleport(GameConfig.RED_SPAWNPOINT);
+                player.setBedSpawnLocation(GameConfig.RED_SPAWNPOINT);
+            }else{
+                continue;
             }
+            player.sendMessage("§eMissile Wars game has started!");
+            player.sendMessage("§9Tip: §7Use §e/teammsg §7to chat with your team");
 
             players.setupPlayer(player);
             //todo: tp to spawnpoint
@@ -82,6 +96,7 @@ public class GameManager {
         Set<Player> allPlayers = players.getAllPlayers();
         for (Player player : allPlayers) {
             players.setupPlayer(player);
+            player.setGameMode(GameMode.SPECTATOR);
         }
         state.setActive(false);
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), this::reset , 20 * 20);
