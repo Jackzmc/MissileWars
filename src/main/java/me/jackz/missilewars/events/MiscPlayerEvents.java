@@ -4,6 +4,7 @@ import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GameConfig;
 import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -72,5 +73,11 @@ public class MiscPlayerEvents implements Listener {
             player.addPotionEffect(nightVision);
             player.addPotionEffect(saturation);
         },5);
+        GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
+        if(team == GamePlayers.MWTeam.RED) {
+            player.teleport(GameConfig.RED_SPAWNPOINT);
+        }else if(team == GamePlayers.MWTeam.GREEN) {
+            player.teleport(GameConfig.GREEN_SPAWNPOINT);
+        }
     }
 }
