@@ -90,6 +90,7 @@ public class ItemSystem {
                 ItemStack arrows = ITEM_ARROW.clone();
                 arrows.setAmount(4);
                 return arrows;
+            case "shield":
             case "barrier":
                 return ITEM_BARRIER;
             case "tomahawk":

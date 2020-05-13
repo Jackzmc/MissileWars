@@ -7,6 +7,8 @@ You can't change any the configuration unless you recompile right now. Not meant
 ### Requires:
 * WorldEdit
 * WorldGuard
+* AsyncWorldEdit (not required, **recommended**)
+
 (and the hardcoded region names)
 
 ### Features:

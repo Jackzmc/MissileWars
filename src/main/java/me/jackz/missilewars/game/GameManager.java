@@ -99,7 +99,7 @@ public class GameManager {
             player.setGameMode(GameMode.SPECTATOR);
         }
         state.setActive(false);
-        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), this::reset , 20 * 20);
+        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), this::reset , 20 * 15);
     }
 
     public void reset() {
