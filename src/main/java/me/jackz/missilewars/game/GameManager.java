@@ -78,23 +78,27 @@ public class GameManager {
         itemSystem.start();
     }
 
-    public void reset() {
+    public void end() {
         Set<Player> allPlayers = players.getAllPlayers();
         for (Player player : allPlayers) {
             players.setupPlayer(player);
         }
-
         state.setActive(false);
-        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> Reset.reset(), 20 * 20);
+        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), this::reset , 20 * 20);
+    }
 
+    public void reset() {
+        Reset.reset();
         itemSystem.stop();
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+            Set<Player> allPlayers = players.getAllPlayers();
             for(Player player : allPlayers) {
                 player.getInventory().clear();
                 player.teleport(GameConfig.SPAWN_LOCATION);
                 player.setGameMode(GameMode.ADVENTURE);
+                players.remove(player);
             }
-        }, 20 * 30);
+        }, 20 * 20);
         //todo: run reset, copy regions, and reset gamestate, and players list
     }
 

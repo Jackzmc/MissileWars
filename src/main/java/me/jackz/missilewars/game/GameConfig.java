@@ -8,8 +8,8 @@ public class GameConfig {
     private boolean prioritize_defense = false;
     private int max_items = 1;
 
-    public final static Location RED_SPAWNPOINT = new Location(Bukkit.getWorld("world"),-27, 76, -65);
-    public final static Location GREEN_SPAWNPOINT = new Location(Bukkit.getWorld("world"),-27, 76, 65);
+    public final static Location RED_SPAWNPOINT = new Location(Bukkit.getWorld("world"),-27, 78, -65);
+    public final static Location GREEN_SPAWNPOINT = new Location(Bukkit.getWorld("world"),-27, 78, 65);
 
     public final static Location RED_LOBBY_SPAWNPOINT = new Location(Bukkit.getWorld("world"), -81,78,-18.5, 90, 0);
     public final static Location GREEN_LOBBY_SPAWNPOINT = new Location(Bukkit.getWorld("world"), -81,78,18.5, 90, 0);
