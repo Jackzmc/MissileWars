@@ -168,19 +168,20 @@ public class AdminCommand implements CommandExecutor {
             case "choose": {
                 if(args.length >= 2) {
                     String query = args[1].toLowerCase().trim();
-                    for (String s : ITEMS.keySet()) {
-                        if(s.toLowerCase().trim().equals(query)) {
-                            String cmd = ITEMS.get(s);
-                            if(cmd != null) {
-                                Bukkit.dispatchCommand(console,cmd);
-                                break;
-                            }else{
-                                sender.sendMessage("§cCould not find item, this shouldn't happen.");
-                            }
+                    int max_of_item = MissileWars.gameManager.getConfig().getMaxItems();
+                    ItemStack item = ItemSystem.getItem(query);
+                    if(item == null) {
+                        sender.sendMessage("§cUnknown item type specified");
+                    }else {
+                        for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.GREEN)) {
+                            ItemSystem.giveItem(player, item, max_of_item);
+                        }
+                        for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.RED)) {
+                            ItemSystem.giveItem(player, item, max_of_item);
                         }
                     }
                 }else{
-                    sender.sendMessage("§cPlease enter name of item.");
+                    ItemSystem.chooseItem();
                 }
                 break;
             }
