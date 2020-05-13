@@ -20,7 +20,7 @@ import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.lib.ClipboardLoader;
 import org.bukkit.Bukkit;
 
-class Reset {
+public class Reset {
     private final static String greenCube = "green-Cube2";
     private final static String redCube = "red-Cube2";
     //private final static String greenPortal = "greenPortal";
@@ -34,7 +34,7 @@ class Reset {
     private final static BlockVector3 NoManLandPos1 = BlockVector3.at(-73, 90, -85);
     private final static BlockVector3 NoManLandPos2 = BlockVector3.at(23, 35, 85);
 
-    static void reset() {
+    public static void reset() {
         Clipboard greenCube = ClipboardLoader.getClipboard(Reset.greenCube);
         Clipboard redCube = ClipboardLoader.getClipboard(Reset.redCube);
         Bukkit.broadcastMessage("§6[Missile Wars] §eResetting the map, please wait...");
@@ -47,11 +47,11 @@ class Reset {
 
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
             paste(world, greenCube, greenCubeOrigin, true);
-            paste(world, redCube, redCubeOrigin, true);
-
-            //paste(world, ClipboardLoader.getClipboard("portal"), greenPortalOrigin,true);
-            //paste(world, ClipboardLoader.getClipboard("portal"), redPortalOrigin,true);
         }, 20 * 15);
+        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+
+            paste(world, redCube, redCubeOrigin, true);
+        }, 20 * 25);
     }
 
     private static void clearNML(World world, CuboidRegion region, BlockState airBlock, BlockArrayClipboard clipboard) {

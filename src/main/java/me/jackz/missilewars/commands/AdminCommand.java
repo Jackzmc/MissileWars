@@ -3,6 +3,7 @@ package me.jackz.missilewars.commands;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.game.ItemSystem;
+import me.jackz.missilewars.game.Reset;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -215,7 +216,12 @@ public class AdminCommand implements CommandExecutor {
                 break;
             }
             case "reset": {
-                MissileWars.gameManager.reset();
+                for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
+                    if(onlinePlayer.getGameMode() != GameMode.CREATIVE) {
+                    onlinePlayer.setGameMode(GameMode.SPECTATOR);
+                    }
+                }
+                Reset.reset();
                 break;
             }
             case "stop": {

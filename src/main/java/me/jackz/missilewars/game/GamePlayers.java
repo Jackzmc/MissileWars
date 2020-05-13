@@ -33,6 +33,16 @@ public class GamePlayers {
         greenTeam = scoreboard.getTeam("Green");
     }
 
+    public static String getTeamName(MWTeam team) {
+        if(team == MWTeam.RED) {
+            return "Red";
+        }else if(team == MWTeam.GREEN) {
+            return "Green";
+        }else {
+            return "None";
+        }
+    }
+
     public void setupPlayer(Player player) {
         player.getInventory().clear();
         player.addPotionEffect(nightVision);
