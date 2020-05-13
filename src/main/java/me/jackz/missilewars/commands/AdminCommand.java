@@ -66,6 +66,10 @@ public class AdminCommand implements CommandExecutor {
             sender.sendMessage("§e/mwa give <player/red/green> <item> §7- gives player or team an item");
             sender.sendMessage("§e/mwa choose <item> §7- activate item spawn manually");
             sender.sendMessage("§e/mwa items §7- get all items");
+            sender.sendMessage("§e/mwa scramble §7- SCramble the teams");
+            sender.sendMessage("§e/mwa start §7- Force start the game");
+            sender.sendMessage("§e/mwa reset §7- Force reset the game");
+            sender.sendMessage("§e/mwa config §7- Change game rules and configs");
             return true;
         }
         switch(args[0].toLowerCase()) {
@@ -116,54 +120,55 @@ public class AdminCommand implements CommandExecutor {
                 }
                 break;
             }
-            case "teams": {
-                if(args.length >= 2) {
-                    if(args[1].equalsIgnoreCase("scramble")) {
-                        List<Player> players = new ArrayList<>();
-                        for (Player player : plugin.getServer().getOnlinePlayers()) {
-                            if(player.getGameMode().equals(GameMode.CREATIVE) || player.getGameMode().equals(GameMode.SPECTATOR)) continue;
-                            if(MissileWars.gameManager.players().has(player)) {
-                                MissileWars.gameManager.players().remove(player);
+            case "config": {
+                sender.sendMessage("§cNot Implemented");
+                break;
+            }
+            case "scramble": {
+                if(args[1].equalsIgnoreCase("scramble")) {
+                    List<Player> players = new ArrayList<>();
+                    for (Player player : plugin.getServer().getOnlinePlayers()) {
+                        if(player.getGameMode().equals(GameMode.CREATIVE) || player.getGameMode().equals(GameMode.SPECTATOR)) continue;
+                        if(MissileWars.gameManager.players().has(player)) {
+                            MissileWars.gameManager.players().remove(player);
+                            players.add(player);
+                        }else {
+                            GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
+                            if (team == GamePlayers.MWTeam.NONE) {
                                 players.add(player);
                             }
-                            Team team = player.getScoreboard().getEntryTeam(player.getName());
-                            if(team == null) {
-                                players.add(player);
-                            }
                         }
-                        //2 / 2.0 -> 1
-                        int first_team_size = (int) Math.floor(players.size() / 2.0);
-                        boolean greenTeamOverflow = Math.random() > .5;
-
-                        Collections.shuffle(players);
-                        int first_team_players = 0;
-                        Team firstTeam = greenTeamOverflow ? greenTeam : redTeam;
-                        Team secondTeam = greenTeamOverflow ? redTeam : greenTeam;
-
-                        for (Player player : players) {
-                            if(first_team_players < first_team_size) {
-                                first_team_players++;
-                                firstTeam.addEntry(player.getName());
-                            }else{
-                                secondTeam.addEntry(player.getName());
-                            }
-                        }
-                        //TODO: add players to gamemanager gameplayers
-                        plugin.getDisplayManager().refreshSidebar();
-                        int second_team_players = players.size() - first_team_players;
-                        if(greenTeamOverflow) {
-                            sender.sendMessage(String.format("§eTeams have been scrambled! §a%d Green §6- §c%d Red",first_team_players,second_team_players));
-                        }else{
-                            sender.sendMessage(String.format("§eTeams have been scrambled! §a%d Green §6- §c%d Red",second_team_players,first_team_players));
-                        }
-                        return true;
-                    }else{
-                        sender.sendMessage("§cUnknown option, /mwa teams for help");
                     }
+                    sender.sendMessage("§c[debug] Scrambling " + players.size() + " players");
+                    //2 / 2.0 -> 1
+                    int first_team_size = (int) Math.floor(players.size() / 2.0);
+                    boolean greenTeamOverflow = Math.random() > .5;
+
+                    Collections.shuffle(players);
+                    int first_team_players = 0;
+                    Team firstTeam = greenTeamOverflow ? greenTeam : redTeam;
+                    Team secondTeam = greenTeamOverflow ? redTeam : greenTeam;
+
+                    for (Player player : players) {
+                        if(first_team_players < first_team_size) {
+                            first_team_players++;
+                            firstTeam.addEntry(player.getName());
+                        }else{
+                            secondTeam.addEntry(player.getName());
+                        }
+                    }
+                    //TODO: add players to gamemanager gameplayers
+                    plugin.getDisplayManager().refreshSidebar();
+                    int second_team_players = players.size() - first_team_players;
+                    if(greenTeamOverflow) {
+                        sender.sendMessage(String.format("§eTeams have been scrambled! §a%d Green §6- §c%d Red",first_team_players,second_team_players));
+                    }else{
+                        sender.sendMessage(String.format("§eTeams have been scrambled! §a%d Green §6- §c%d Red",second_team_players,first_team_players));
+                    }
+                    return true;
                 }else{
-                    sender.sendMessage("§cTeams options: /mwa teams scramble");
+                    sender.sendMessage("§cUnknown option, /mwa teams for help");
                 }
-                //todo: AdminTeamCommand
             }
             case "choose": {
                 if(args.length >= 2) {
