@@ -49,8 +49,8 @@ public class Reset {
             paste(world, greenCube, greenCubeOrigin, true);
         }, 20 * 15);
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
-
             paste(world, redCube, redCubeOrigin, true);
+            Bukkit.broadcastMessage("§6[Missile Wars] §aMap has been reset successfully");
         }, 20 * 25);
     }
 
@@ -62,7 +62,6 @@ public class Reset {
             ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(editSession, region, clipboard, BlockVector3.ZERO);
             Operations.completeBlindly(forwardExtentCopy);
             //probably put a delay, cant reliabily wait
-            Bukkit.broadcastMessage("§6[Missile Wars] §aMap has been reset successfully");
         } catch (MaxChangedBlocksException e) {
             Bukkit.getLogger().warning("Hit a max blocks limit resetting map, may not be cleared");
         }
