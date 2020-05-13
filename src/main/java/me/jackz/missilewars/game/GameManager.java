@@ -1,9 +1,6 @@
 package me.jackz.missilewars.game;
 
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.jackz.missilewars.MissileWars;
-import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -15,8 +12,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class GameManager {
     private MissileWars plugin;
@@ -25,9 +23,7 @@ public class GameManager {
     private static GameConfig config;
     private ItemSystem itemSystem;
 
-    private final static PotionEffect nightVision = new PotionEffect(PotionEffectType.NIGHT_VISION, 9999, 2, true, false, false);
-    private final static PotionEffect saturation = new PotionEffect(PotionEffectType.SATURATION, 9999, 2, true, false, false);
-    private final static Location spawnLocation = new Location(Bukkit.getWorld("world"),-100.5 ,71,.5);
+
 
     public GameManager(MissileWars plugin) {
         this.state = new GameState();
@@ -35,11 +31,11 @@ public class GameManager {
         itemSystem = new ItemSystem();
         players = new GamePlayers();
         config = new GameConfig();
-        initalizeScoreboard();
+        initializeScoreboard();
     }
 
     //#region privatemethods
-    private void initalizeScoreboard() {
+    private void initializeScoreboard() {
         Scoreboard main = Bukkit.getServer().getScoreboardManager().getMainScoreboard();
         if(main.getTeam("Red") == null) {
             Team red = main.registerNewTeam("Red");
@@ -65,25 +61,27 @@ public class GameManager {
     public void start() {
         state.setActive(true);
         ItemStack bow = ItemSystem.getItem("bow");
-        for (Player player : players.getAll()) {
-            player.setGameMode(GameMode.SURVIVAL);
-            player.getInventory().clear();
-            player.addPotionEffect(nightVision);
-            player.addPotionEffect(saturation);
+        for (Map.Entry<Player, GamePlayers.MWTeam> entry : players.getAll()) {
+            Player player = entry.getKey();
+            GamePlayers.MWTeam team = entry.getValue();
+            if(team == GamePlayers.MWTeam.GREEN) {
+                player.teleport(GameConfig.GREEN_SPAWNPOINT);
+            }else if(team == GamePlayers.MWTeam.RED) {
+                player.teleport(GameConfig.RED_SPAWNPOINT);
+            }
+
+            players.setupPlayer(player);
             //todo: tp to spawnpoint
             player.setHealth(20);
             ItemSystem.giveItem(player, bow, 1);
         }
         itemSystem.start();
     }
+
     public void reset() {
-        List<Player> allPlayers = players.getAll();
+        Set<Player> allPlayers = players.getAllPlayers();
         for (Player player : allPlayers) {
-            player.getInventory().clear();
-            player.setGameMode(GameMode.SPECTATOR);
-            player.addPotionEffect(nightVision);
-            player.addPotionEffect(saturation);
-            player.setHealth(20);
+            players.setupPlayer(player);
         }
 
         state.setActive(false);
@@ -93,12 +91,13 @@ public class GameManager {
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
             for(Player player : allPlayers) {
                 player.getInventory().clear();
-                player.teleport(spawnLocation);
+                player.teleport(GameConfig.SPAWN_LOCATION);
                 player.setGameMode(GameMode.ADVENTURE);
             }
         }, 20 * 30);
         //todo: run reset, copy regions, and reset gamestate, and players list
     }
+
 
     public void shutdown() {
         state = null;
