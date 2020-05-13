@@ -88,7 +88,7 @@ public class ItemSystem {
                 return ITEM_ARROW;
             case "arrows":
                 ItemStack arrows = ITEM_ARROW.clone();
-                arrows.setAmount(3);
+                arrows.setAmount(4);
                 return arrows;
             case "barrier":
                 return ITEM_BARRIER;

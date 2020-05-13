@@ -16,41 +16,45 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.lib.ClipboardLoader;
 import org.bukkit.Bukkit;
 
 class Reset {
-    private final static String greenCube = "greenCube";
-    private final static String redCube = "redCube";
-    private final static String greenPortal = "greenPortal";
-    private final static String redPortal = "redPortal";
+    private final static String greenCube = "green-Cube2";
+    private final static String redCube = "red-Cube2";
+    //private final static String greenPortal = "greenPortal";
+    //private final static String redPortal = "redPortal";
 
     private final static BlockVector3 greenCubeOrigin = BlockVector3.at(-52.5,78.0,66.5);
     private final static BlockVector3 redCubeOrigin = BlockVector3.at(-52.5,78.0,-65.5);
-    private final static BlockVector3 greenPortalOrigin = BlockVector3.at(-5, 73.0, 72);
-    private final static BlockVector3 redPortalOrigin = BlockVector3.at(-5, 73.0, -72);
+    //private final static BlockVector3 greenPortalOrigin = BlockVector3.at(-5, 73.0, 72);
+    //private final static BlockVector3 redPortalOrigin = BlockVector3.at(-5, 73.0, -72);
 
-    private final static BlockVector3 NoManLandPos1 = BlockVector3.at(-73, 90, -50);
-    private final static BlockVector3 NoManLandPos2 = BlockVector3.at(23, 35, 50);
+    private final static BlockVector3 NoManLandPos1 = BlockVector3.at(-73, 90, -85);
+    private final static BlockVector3 NoManLandPos2 = BlockVector3.at(23, 35, 85);
 
     static void reset() {
-        Clipboard greenCube = ClipboardLoader.getClipboard("greenCube");
-        Clipboard redCube = ClipboardLoader.getClipboard("redCube");
+        Clipboard greenCube = ClipboardLoader.getClipboard(Reset.greenCube);
+        Clipboard redCube = ClipboardLoader.getClipboard(Reset.redCube);
         Bukkit.broadcastMessage("§6[Missile Wars] §eResetting the map, please wait...");
 
         World world = BukkitAdapter.adapt(Bukkit.getWorld("world"));
-
-        paste(world, greenCube, greenCubeOrigin, true);
-        paste(world, redCube, redCubeOrigin, true);
-
-        paste(world, ClipboardLoader.getClipboard("portal"), greenPortalOrigin,true);
-        paste(world, ClipboardLoader.getClipboard("portal"), redPortalOrigin,true);
-        
-
         CuboidRegion region = new CuboidRegion(NoManLandPos1,NoManLandPos2);
         BlockState airBlock = BlockTypes.AIR.getDefaultState();
         BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
+        clearNML(world, region, airBlock, clipboard);
 
+        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+            paste(world, greenCube, greenCubeOrigin, true);
+            paste(world, redCube, redCubeOrigin, true);
+
+            //paste(world, ClipboardLoader.getClipboard("portal"), greenPortalOrigin,true);
+            //paste(world, ClipboardLoader.getClipboard("portal"), redPortalOrigin,true);
+        }, 20 * 15);
+    }
+
+    private static void clearNML(World world, CuboidRegion region, BlockState airBlock, BlockArrayClipboard clipboard) {
         try(EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, -1)) {
             editSession.setBlocks(region, airBlock);
             editSession.setFastMode(true);

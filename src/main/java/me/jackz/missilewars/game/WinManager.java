@@ -31,6 +31,6 @@ public class WinManager {
             onlinePlayer.sendTitle(color.toString() + name + " Team Wins!","The " + loserTeamName + " team's portal has been destroyed",0,160,0);
         }
         Bukkit.broadcastMessage(color.toString() + name + " team §9has won the game!");
-        MissileWars.gameManager.reset();
+        MissileWars.gameManager.end();
     }
 }

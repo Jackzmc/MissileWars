@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 public class GameConfig {
-    private int item_interval_sec = 30;
+    private int item_interval_sec = 20;
     private boolean prioritize_defense = false;
     private int max_items = 1;
 

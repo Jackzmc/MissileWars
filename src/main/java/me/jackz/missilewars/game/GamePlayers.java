@@ -25,6 +25,7 @@ public class GamePlayers {
 
     private final static PotionEffect nightVision = new PotionEffect(PotionEffectType.NIGHT_VISION, 9999, 2, true, false, false);
     private final static PotionEffect saturation = new PotionEffect(PotionEffectType.SATURATION, 9999, 2, true, false, false);
+    private final static PotionEffect regeneration = new PotionEffect(PotionEffectType.REGENERATION, 9999, 0, true, false, false);
 
     public GamePlayers() {
         scoreboard =  Bukkit.getScoreboardManager().getMainScoreboard();
@@ -36,6 +37,7 @@ public class GamePlayers {
         player.getInventory().clear();
         player.addPotionEffect(nightVision);
         player.addPotionEffect(saturation);
+        player.addPotionEffect(regeneration);
         player.setHealth(20);
     }
 

@@ -31,6 +31,8 @@ public class TeamDisplayManager {
         refreshTimerID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this::refreshSidebar,0,20 * 1); //every 3s
     }
     private void createObjective() {
+        Objective old = sb.getObjective("teamlist");
+        if(old != null) old.unregister();
         sidebar = sb.registerNewObjective("teamlist", "dummy","§lTeam Information", RenderType.INTEGER);
         sidebar.setDisplaySlot(DisplaySlot.SIDEBAR);
         sidebar.getScore("§a§nGreen Team Players").setScore(4);
