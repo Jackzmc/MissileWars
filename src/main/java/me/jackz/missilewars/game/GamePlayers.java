@@ -2,12 +2,12 @@ package me.jackz.missilewars.game;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GamePlayers {
@@ -23,10 +23,20 @@ public class GamePlayers {
     private Team redTeam;
     private Team greenTeam;
 
+    private final static PotionEffect nightVision = new PotionEffect(PotionEffectType.NIGHT_VISION, 9999, 2, true, false, false);
+    private final static PotionEffect saturation = new PotionEffect(PotionEffectType.SATURATION, 9999, 2, true, false, false);
+
     public GamePlayers() {
         scoreboard =  Bukkit.getScoreboardManager().getMainScoreboard();
         redTeam = scoreboard.getTeam("Red");
         greenTeam = scoreboard.getTeam("Green");
+    }
+
+    public void setupPlayer(Player player) {
+        player.getInventory().clear();
+        player.addPotionEffect(nightVision);
+        player.addPotionEffect(saturation);
+        player.setHealth(20);
     }
 
     public void add(Player player, MWTeam team) {
@@ -68,17 +78,23 @@ public class GamePlayers {
             return new ArrayList<>();
         }
     }
-    public List<Player> getAll() {
-        List<Player> players = new ArrayList<>();
+    private Map<Player, MWTeam> getAllMap() {
+        Map<Player, MWTeam> players = new HashMap<>();
         for (String entry : redTeam.getEntries()) {
             Player p = Bukkit.getPlayerExact(entry);
-            if(p != null) players.add(p);
+            if(p != null) players.put(p, MWTeam.RED);
         }
         for (String entry : greenTeam.getEntries()) {
             Player p = Bukkit.getPlayerExact(entry);
-            if(p != null) players.add(p);
+            if(p != null) players.put(p, MWTeam.GREEN);
         }
         return players;
+    }
+    public Set<Map.Entry<Player,MWTeam>> getAll() {
+        return getAllMap().entrySet();
+    }
+    public Set<Player> getAllPlayers() {
+        return getAllMap().keySet();
     }
     public MWTeam getTeam(Player player) {
         Team scoreboardTeam = scoreboard.getEntryTeam(player.getName());
