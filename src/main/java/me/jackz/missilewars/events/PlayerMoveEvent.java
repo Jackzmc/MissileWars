@@ -1,6 +1,13 @@
 package me.jackz.missilewars.events;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GameConfig;
 import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.game.ItemSystem;
 import org.bukkit.Bukkit;
@@ -24,6 +31,23 @@ public class PlayerMoveEvent implements Listener {
         Location location = player.getLocation();
         if(location.getY() <= 0 && player.getGameMode() == GameMode.SURVIVAL) {
             player.setHealth(0);
+        }else{
+            BlockVector3 blockVector3 = BukkitAdapter.adapt(location).toVector().toBlockPoint();
+            ApplicableRegionSet regions = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(player.getWorld())).getApplicableRegions(blockVector3);
+            for (ProtectedRegion region : regions) {
+                if(region.getId().equalsIgnoreCase("redteamjoin")) {
+                    MissileWars.gameManager.players().add(player, GamePlayers.MWTeam.RED);
+                    player.setGameMode(GameMode.ADVENTURE);
+                    MissileWars.gameManager.players().setupPlayer(player);
+                    player.teleport(GameConfig.RED_LOBBY_SPAWNPOINT);
+                }else if(region.getId().equalsIgnoreCase("greenteamjoin")) {
+                    MissileWars.gameManager.players().add(player, GamePlayers.MWTeam.GREEN);
+                    player.setGameMode(GameMode.ADVENTURE);
+                    MissileWars.gameManager.players().setupPlayer(player);
+                    player.teleport(GameConfig.GREEN_LOBBY_SPAWNPOINT);
+
+                }
+            }
         }
     }
 
