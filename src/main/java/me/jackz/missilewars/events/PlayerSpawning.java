@@ -52,12 +52,13 @@ public class PlayerSpawning implements Listener {
             if(lines[1].contains("Return to Lobby")) {
                 player.teleport(GameConfig.SPAWN_LOCATION);
                 MissileWars.gameManager.players().remove(player);
+                Bukkit.broadcastMessage(player.getName() + " returned to the lobby.");
             }else if(lines[2].contains("ready")) {
                 //todo: implement ready logic
             }
             return;
         }
-        if(e.getHand() == EquipmentSlot.HAND && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.CREATIVE)) {
+        if(MissileWars.gameManager.getState().isGameActive() && e.getHand() == EquipmentSlot.HAND && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.CREATIVE)) {
             if(e.getItem() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
                 if(Util.isInTeam(player)) {
                     if (e.getClickedBlock() != null) {

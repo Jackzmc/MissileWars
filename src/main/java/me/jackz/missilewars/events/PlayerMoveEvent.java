@@ -40,12 +40,14 @@ public class PlayerMoveEvent implements Listener {
                     player.setGameMode(GameMode.ADVENTURE);
                     MissileWars.gameManager.players().setupPlayer(player);
                     player.teleport(GameConfig.RED_LOBBY_SPAWNPOINT);
+
+                    Bukkit.broadcastMessage("§c" + player.getName() + " joined the Red team!");
                 }else if(region.getId().equalsIgnoreCase("greenteamjoin")) {
                     MissileWars.gameManager.players().add(player, GamePlayers.MWTeam.GREEN);
                     player.setGameMode(GameMode.ADVENTURE);
                     MissileWars.gameManager.players().setupPlayer(player);
                     player.teleport(GameConfig.GREEN_LOBBY_SPAWNPOINT);
-
+                    Bukkit.broadcastMessage("§a" + player.getName() + " joined the Green team!");
                 }
             }
         }

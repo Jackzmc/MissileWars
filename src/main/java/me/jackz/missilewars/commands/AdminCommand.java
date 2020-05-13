@@ -211,6 +211,10 @@ public class AdminCommand implements CommandExecutor {
                 MissileWars.gameManager.reset();
                 break;
             }
+            case "stop": {
+                MissileWars.gameManager.end();
+                break;
+            }
             default:
                 sender.sendMessage("§cUnknown command, please try /mwa help");
         }

@@ -28,7 +28,7 @@ public class WinManager {
         String loserTeamName = (team == GamePlayers.MWTeam.GREEN) ? "red" : "green";
 
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            onlinePlayer.sendTitle(color.toString() + name + " Team Wins!","The " + loserTeamName + "'s portal has been destroyed",0,160,0);
+            onlinePlayer.sendTitle(color.toString() + name + " Team Wins!","The " + loserTeamName + " team's portal has been destroyed",0,160,0);
         }
         Bukkit.broadcastMessage(color.toString() + name + " team §9has won the game!");
         MissileWars.gameManager.reset();
