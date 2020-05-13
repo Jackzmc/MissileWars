@@ -113,15 +113,16 @@ public class PlayerSpawning implements Listener {
                             if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                                 e.setCancelled(true);
                             }
-
-                            Entity fireball = player.launchProjectile(Fireball.class);
+                            Location eye = player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(1.2));
+                            Fireball fireball = (Fireball) eye.getWorld().spawnEntity(eye, EntityType.FIREBALL);
+                            fireball.setVelocity(eye.getDirection().normalize().multiply(.8));
+                            fireball.setShooter(player);
                             fireball.setVelocity(fireball.getVelocity().multiply(1));
                             fireball.setGravity(true);
-                            if(Math.random() < .1) {
+                            if(Math.random() < .01) {
                                 Entity Pig = player.getWorld().spawnEntity(player.getLocation(),EntityType.PIG);
                                 fireball.addPassenger(Pig);
                             }
-
                             e.setCancelled(true);
                             Util.removeOneFromHand(player);
                         }
@@ -139,19 +140,33 @@ public class PlayerSpawning implements Listener {
     private void onSnowballThrow(ProjectileLaunchEvent e) {
         Projectile projectile = e.getEntity();
         if(projectile.getType() == EntityType.SNOWBALL) {
+            if(Math.random() < .05) {
+                Entity firework = projectile.getWorld().spawnEntity(projectile.getLocation(),EntityType.FIREWORK);
+                projectile.addPassenger(firework);
+            }
+
             Player player = (Player) projectile.getShooter();
-            Team team = player.getScoreboard().getEntryTeam(player.getName());
+            GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
             projectile.setBounce(false);
+
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-                if(projectile.getLocation().getY() >= 90 || projectile.getLocation().getY() <= 35) {
+                if(projectile.isDead() || e.isCancelled()) return;
+                //todo: also check if is in "nomanland" region? would mean not one big whole fucking region to reset
+                if(projectile.getLocation().getY() >= 85 || projectile.getLocation().getY() < 40) {
                     //Fail barrier spawn
                     if(player.getGameMode() == GameMode.SURVIVAL) {
                         ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
                     }
                     projectile.remove();
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR,TextComponent.fromLegacyText("§cCan't deploy barrier out of bounds."));
+                }else if(!projectile.getLocation().getBlock().getType().equals(Material.AIR)) {
+                    if(player.getGameMode() == GameMode.SURVIVAL) {
+                        ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
+                    }
+                    projectile.remove();
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR,TextComponent.fromLegacyText("§cCan't deploy barrier in a block"));
                 }else {
-                    boolean success = paste(player, team.getName() + "-shield", projectile.getLocation(), 0);
+                    boolean success = paste(player, GamePlayers.getTeamName(team) + "-shield", projectile.getLocation(), 0);
                     if (!success) {
                         if(player.getGameMode() == GameMode.SURVIVAL) {
                             ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
