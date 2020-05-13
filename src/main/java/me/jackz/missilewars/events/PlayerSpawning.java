@@ -12,6 +12,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GameConfig;
 import me.jackz.missilewars.game.ItemSystem;
 import me.jackz.missilewars.lib.ClipboardLoader;
 import me.jackz.missilewars.lib.Util;
@@ -22,6 +23,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -44,6 +46,17 @@ public class PlayerSpawning implements Listener {
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         if(MissileWars.gameManager.getState().isLegacyMissilesEnabled()) return;
+        if(e.getClickedBlock() != null && e.getClickedBlock().getType().equals(Material.OAK_WALL_SIGN)) {
+            Sign sign = (Sign) e.getClickedBlock();
+            String[] lines = sign.getLines();
+            if(lines[1].contains("Return to Lobby")) {
+                player.teleport(GameConfig.SPAWN_LOCATION);
+                MissileWars.gameManager.players().remove(player);
+            }else if(lines[2].contains("ready")) {
+                //todo: implement ready logic
+            }
+            return;
+        }
         if(e.getHand() == EquipmentSlot.HAND && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.CREATIVE)) {
             if(e.getItem() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
                 if(Util.isInTeam(player)) {
