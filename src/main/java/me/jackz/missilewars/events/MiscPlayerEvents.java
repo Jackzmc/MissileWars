@@ -24,6 +24,7 @@ import org.bukkit.potion.PotionEffectType;
 public class MiscPlayerEvents implements Listener {
     private final static PotionEffect nightVision = new PotionEffect(PotionEffectType.NIGHT_VISION,99999,2,true,false,false);
     private final static PotionEffect saturation = new PotionEffect(PotionEffectType.SATURATION,99999,2,true,false,false);
+    private final static PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION,999999,0,true,false,false);
     private final static Location spawnLocation = new Location(Bukkit.getWorld("world"),-100.5 ,71,.5);
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -72,12 +73,15 @@ public class MiscPlayerEvents implements Listener {
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
             player.addPotionEffect(nightVision);
             player.addPotionEffect(saturation);
+            player.addPotionEffect(regen);
+
+            GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
+            if(team == GamePlayers.MWTeam.RED) {
+                player.teleport(GameConfig.RED_SPAWNPOINT);
+            }else if(team == GamePlayers.MWTeam.GREEN) {
+                player.teleport(GameConfig.GREEN_SPAWNPOINT);
+            }
         },5);
-        GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
-        if(team == GamePlayers.MWTeam.RED) {
-            player.teleport(GameConfig.RED_SPAWNPOINT);
-        }else if(team == GamePlayers.MWTeam.GREEN) {
-            player.teleport(GameConfig.GREEN_SPAWNPOINT);
-        }
+
     }
 }
