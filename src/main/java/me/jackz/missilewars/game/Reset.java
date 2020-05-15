@@ -16,13 +16,15 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
 import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.lib.ClipboardLoader;
 import org.bukkit.Bukkit;
 
 public class Reset {
-    private final static String greenCube = "green-Cube2";
-    private final static String redCube = "red-Cube2";
+    private final static String greenCube = "green-Cube3";
+    private final static String redCube = "red-Cube3";
     //private final static String greenPortal = "greenPortal";
     //private final static String redPortal = "redPortal";
 

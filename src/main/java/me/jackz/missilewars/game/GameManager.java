@@ -85,8 +85,6 @@ public class GameManager {
             player.sendMessage("§9Tip: §7Use §e/teammsg §7to chat with your team");
 
             players.setupPlayer(player);
-            //todo: tp to spawnpoint
-            player.setHealth(20);
             ItemSystem.giveItem(player, bow, false);
         }
         itemSystem.start();
