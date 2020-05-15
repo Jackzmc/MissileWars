@@ -1,6 +1,8 @@
 package me.jackz.missilewars.game;
 
+import me.jackz.missilewars.MissileWars;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -49,6 +51,19 @@ public class GamePlayers {
         player.addPotionEffect(saturation);
         player.addPotionEffect(regeneration);
         player.setHealth(20);
+    }
+
+    public void joinPlayer(Player player, MWTeam team) {
+        add(player, team);
+        player.setGameMode(GameMode.ADVENTURE);
+        setupPlayer(player);
+        player.teleport(GameConfig.RED_LOBBY_SPAWNPOINT);
+        if(team == MWTeam.RED) {
+            Bukkit.broadcastMessage("§c" + player.getName() + " joined the Red team!");
+        }else{
+            Bukkit.broadcastMessage("§a" + player.getName() + " joined the Green team!");
+        }
+
     }
 
     public void add(Player player, MWTeam team) {

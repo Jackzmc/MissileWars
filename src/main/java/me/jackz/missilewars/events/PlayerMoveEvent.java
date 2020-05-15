@@ -36,18 +36,9 @@ public class PlayerMoveEvent implements Listener {
             ApplicableRegionSet regions = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(player.getWorld())).getApplicableRegions(blockVector3);
             for (ProtectedRegion region : regions) {
                 if(region.getId().equalsIgnoreCase("redteamjoin")) {
-                    MissileWars.gameManager.players().add(player, GamePlayers.MWTeam.RED);
-                    player.setGameMode(GameMode.ADVENTURE);
-                    MissileWars.gameManager.players().setupPlayer(player);
-                    player.teleport(GameConfig.RED_LOBBY_SPAWNPOINT);
-
-                    Bukkit.broadcastMessage("§c" + player.getName() + " joined the Red team!");
+                    MissileWars.gameManager.players().joinPlayer(player, GamePlayers.MWTeam.RED);
                 }else if(region.getId().equalsIgnoreCase("greenteamjoin")) {
-                    MissileWars.gameManager.players().add(player, GamePlayers.MWTeam.GREEN);
-                    player.setGameMode(GameMode.ADVENTURE);
-                    MissileWars.gameManager.players().setupPlayer(player);
-                    player.teleport(GameConfig.GREEN_LOBBY_SPAWNPOINT);
-                    Bukkit.broadcastMessage("§a" + player.getName() + " joined the Green team!");
+                    MissileWars.gameManager.players().joinPlayer(player, GamePlayers.MWTeam.GREEN);
                 }
             }
         }
