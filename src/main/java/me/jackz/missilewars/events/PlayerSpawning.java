@@ -11,6 +11,9 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.session.ClipboardHolder;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameConfig;
 import me.jackz.missilewars.game.GamePlayers;
@@ -37,6 +40,8 @@ import org.bukkit.scoreboard.Team;
 public class PlayerSpawning implements Listener {
     private ClipboardLoader clipboardLoader;
     private MissileWars plugin;
+
+    private static final String nomanland_region = "nomanland";
 
     public PlayerSpawning(MissileWars plugin) {
         this.plugin = plugin;
@@ -159,19 +164,25 @@ public class PlayerSpawning implements Listener {
                     }
                     projectile.remove();
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR,TextComponent.fromLegacyText("§cCan't deploy barrier out of bounds."));
-                }else if(!projectile.getLocation().getBlock().getType().equals(Material.AIR)) {
+                }else {
+                    BlockVector3 blockVector3 = BukkitAdapter.adapt(projectile.getLocation()).toVector().toBlockPoint();
+                    ApplicableRegionSet regions = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(player.getWorld())).getApplicableRegions(blockVector3);
+                    for (ProtectedRegion region : regions) {
+                        if(region.getId().equalsIgnoreCase(nomanland_region)) {
+                            boolean success = paste(player, GamePlayers.getTeamName(team) + "-shield", projectile.getLocation(), 0);
+                            if (!success) {
+                                if(player.getGameMode() == GameMode.SURVIVAL) {
+                                    ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
+                                }
+                            }
+                            break;
+                        }
+                    }
                     if(player.getGameMode() == GameMode.SURVIVAL) {
                         ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
                     }
                     projectile.remove();
                     player.spigot().sendMessage(ChatMessageType.ACTION_BAR,TextComponent.fromLegacyText("§cCan't deploy barrier in a block"));
-                }else {
-                    boolean success = paste(player, GamePlayers.getTeamName(team) + "-shield", projectile.getLocation(), 0);
-                    if (!success) {
-                        if(player.getGameMode() == GameMode.SURVIVAL) {
-                            ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
-                        }
-                    }
                 }
             },20);
         }
