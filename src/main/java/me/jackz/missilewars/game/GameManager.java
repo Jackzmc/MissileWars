@@ -86,6 +86,7 @@ public class GameManager {
 
             players.setupPlayer(player);
             ItemSystem.giveItem(player, bow, false);
+            player.setGameMode(GameMode.SURVIVAL);
         }
         itemSystem.start();
     }
