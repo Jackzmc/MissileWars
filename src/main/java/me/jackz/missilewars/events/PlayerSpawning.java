@@ -37,6 +37,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scoreboard.Team;
 
+import java.util.Arrays;
+
 public class PlayerSpawning implements Listener {
     private ClipboardLoader clipboardLoader;
     private MissileWars plugin;
@@ -52,8 +54,8 @@ public class PlayerSpawning implements Listener {
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         if(MissileWars.gameManager.getState().isLegacyMissilesEnabled()) return;
-        if(e.getClickedBlock() != null && e.getClickedBlock().getType().equals(Material.OAK_WALL_SIGN)) {
-            Sign sign = (Sign) e.getClickedBlock();
+        if(e.getClickedBlock() != null && e.getClickedBlock().getState() instanceof Sign) {
+            Sign sign = (Sign) e.getClickedBlock().getState();
             String[] lines = sign.getLines();
             if(lines[1].contains("Return to Lobby")) {
                 player.teleport(GameConfig.SPAWN_LOCATION);
@@ -175,7 +177,7 @@ public class PlayerSpawning implements Listener {
                                     ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
                                 }
                             }
-                            break;
+                            return;
                         }
                     }
                     if(player.getGameMode() == GameMode.SURVIVAL) {
