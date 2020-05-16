@@ -60,7 +60,7 @@ public class GameManager {
     public void ready(GamePlayers.MWTeam team) {
         state.setTeamReady(team,true);
         String name = (team == GamePlayers.MWTeam.RED) ? "§cRed" : "§aGreen";
-        Bukkit.broadcastMessage(name + "team §eis ready to go!");
+        Bukkit.broadcastMessage(name + " team §eis ready to go!");
         if(state.isGameReady()) {
             start();
         }

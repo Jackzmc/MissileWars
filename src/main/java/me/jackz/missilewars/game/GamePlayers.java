@@ -57,10 +57,11 @@ public class GamePlayers {
         add(player, team);
         player.setGameMode(GameMode.ADVENTURE);
         setupPlayer(player);
-        player.teleport(GameConfig.RED_LOBBY_SPAWNPOINT);
         if(team == MWTeam.RED) {
+            player.teleport(GameConfig.RED_LOBBY_SPAWNPOINT);
             Bukkit.broadcastMessage("§c" + player.getName() + " joined the Red team!");
         }else{
+            player.teleport(GameConfig.GREEN_LOBBY_SPAWNPOINT);
             Bukkit.broadcastMessage("§a" + player.getName() + " joined the Green team!");
         }
 
