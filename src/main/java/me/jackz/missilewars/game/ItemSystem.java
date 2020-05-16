@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,9 @@ public class ItemSystem {
     static {
         ITEM_BOW.addEnchantment(Enchantment.ARROW_FIRE,1);
         ITEM_BOW.addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 4);
+        ItemMeta meta = ITEM_BOW.getItemMeta();
+        meta.setUnbreakable(true);
+        ITEM_BOW.setItemMeta(meta);
     }
 
     public void start() {
@@ -46,15 +50,33 @@ public class ItemSystem {
     public static void chooseItem() {
         if(!MissileWars.gameManager.getConfig().prioritizeDefenseEnabled()) {
             Random rand = new Random();
-            String itemName = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
-            ItemStack item = getItem(itemName);
+            int randMode = MissileWars.gameManager.getConfig().getRandomizeMode();
+            if(randMode == 0) {
+                String itemName = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
+                ItemStack item = getItem(itemName);
+                for (Player player : MissileWars.gameManager.players().getAllPlayers()) {
+                    giveItem(player, item, false);
+                }
+            }else if(randMode == 1) {
+                String red_item_str = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
+                String green_item_str = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
+                ItemStack red_item = getItem(red_item_str);
+                ItemStack green_item = getItem(green_item_str);
 
-            for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.GREEN)) {
-                giveItem(player, item, false);
+                for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.RED)) {
+                    giveItem(player, red_item, false);
+                }
+                for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.GREEN)) {
+                    giveItem(player, green_item, false);
+                }
+            }else {
+                for (Player player : MissileWars.gameManager.players().getAllPlayers()) {
+                    String itemName = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
+                    ItemStack item = getItem(itemName);
+                    giveItem(player, item, false);
+                }
             }
-            for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.RED)) {
-                giveItem(player, item, false);
-            }
+
         }
     }
 
