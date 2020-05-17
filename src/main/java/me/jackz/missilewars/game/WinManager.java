@@ -3,6 +3,7 @@ package me.jackz.missilewars.game;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.lib.StatsTracker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,10 +16,12 @@ public class WinManager {
         for (ProtectedRegion region : regions) {
             if(region.getId().equalsIgnoreCase(green_portal_region)) {
                 announceWin(GamePlayers.MWTeam.RED);
+                GameManager.getStats().incSavedStat("wins.team_red");
                 //green wins
             }else if(region.getId().equalsIgnoreCase(red_portal_region)){
                 //red wins
                 announceWin(GamePlayers.MWTeam.GREEN);
+                GameManager.getStats().incSavedStat("wins.team_green");
             }
         }
     }

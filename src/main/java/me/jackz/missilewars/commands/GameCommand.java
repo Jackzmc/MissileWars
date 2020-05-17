@@ -1,6 +1,7 @@
 package me.jackz.missilewars.commands;
 
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.game.GamePlayers;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,8 +64,8 @@ public class GameCommand implements CommandExecutor  {
         }
 
         //todo: fetch stat
-        int total_red_wins = -1;
-        int total_green_wins = -1;
+        int total_red_wins = GameManager.getStats().getSavedStat("wins.team_red");
+        int total_green_wins = GameManager.getStats().getSavedStat("wins.team_green");
 
         Set<String> green_players = MissileWars.gameManager.players().get(GamePlayers.MWTeam.GREEN).stream().filter(OfflinePlayer::isOnline).map(HumanEntity::getName).collect(Collectors.toSet());
         Set<String> red_players   = MissileWars.gameManager.players().get(GamePlayers.MWTeam.RED).stream().filter(OfflinePlayer::isOnline).map(HumanEntity::getName).collect(Collectors.toSet());
