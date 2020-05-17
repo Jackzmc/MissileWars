@@ -7,7 +7,6 @@ You can't change any the configuration unless you recompile right now. Not meant
 ### Requires:
 * WorldEdit
 * WorldGuard
-* AsyncWorldEdit (not required, **recommended**)
 
 (and the hardcoded region names)
 
@@ -17,7 +16,7 @@ You can't change any the configuration unless you recompile right now. Not meant
 * (WIP) Tracks statistics of players, wins/loses, more
 * (WIP) PlaceholderAPI support
 * (WIP) Add custom missiles
-* Change game settings during game
+* (WIP) Change game settings during game
 * Free
 * and probably more things I forgot about
 
