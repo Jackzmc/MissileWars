@@ -5,7 +5,9 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameConfig;
+import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.game.GamePlayers;
+import me.jackz.missilewars.lib.MWUtil;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -26,6 +28,7 @@ public class MiscPlayerEvents implements Listener {
     private final static PotionEffect saturation = new PotionEffect(PotionEffectType.SATURATION,99999,2,true,false,false);
     private final static PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION,999999,0,true,false,false);
     private final static Location spawnLocation = new Location(Bukkit.getWorld("world"),-100.5 ,71,.5);
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
@@ -75,11 +78,15 @@ public class MiscPlayerEvents implements Listener {
             player.addPotionEffect(saturation);
             player.addPotionEffect(regen);
 
-            GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
-            if(team == GamePlayers.MWTeam.RED) {
-                player.teleport(GameConfig.RED_SPAWNPOINT);
-            }else if(team == GamePlayers.MWTeam.GREEN) {
-                player.teleport(GameConfig.GREEN_SPAWNPOINT);
+            if (MissileWars.gameManager.players().has(player)) {
+                GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
+
+                if (team == GamePlayers.MWTeam.RED) {
+                    player.teleport(GameConfig.RED_SPAWNPOINT);
+                } else if (team == GamePlayers.MWTeam.GREEN) {
+                    player.teleport(GameConfig.GREEN_SPAWNPOINT);
+                }
+                MWUtil.updateGenericStat("generic","deaths",player);
             }
         },5);
 
