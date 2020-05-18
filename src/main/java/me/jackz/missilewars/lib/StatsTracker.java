@@ -24,17 +24,22 @@ public class StatsTracker {
         int prev = savedStats.getOrDefault(name, 0);
         savedStats.put(name,prev+1);
     }
-    public int getSavedStat(String name) {
-        return savedStats.getOrDefault(name,0);
-    }
-
     public void incSessionStat(String name) {
         int prev = memStats.getOrDefault(name, 0);
         memStats.put(name,prev+1);
     }
+    public void incStat(String name) {
+        incSavedStat(name);
+        incSessionStat(name);
+    }
+
+    public int getSavedStat(String name) {
+        return savedStats.getOrDefault(name,0);
+    }
     public int getSessionStat(String name) {
         return memStats.getOrDefault(name, 0);
     }
+
     public void clearSessionStats() {
         memStats.clear();
     }

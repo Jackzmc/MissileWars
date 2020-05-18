@@ -24,10 +24,12 @@ public class MWUtil {
         clipboardLoader = new ClipboardLoader(MissileWars.getInstance());
     }
     public static void updateSpawnStat(String statname, Player player) {
-        GameManager.getStats().incSavedStat("spawns." + statname + ".total");
-        GameManager.getStats().incSavedStat("spawns." + statname + "." + player.getUniqueId());
-        GameManager.getStats().incSessionStat("spawns." + statname + ".total");
-        GameManager.getStats().incSessionStat("spawns." + statname + "." + player.getUniqueId());
+        GameManager.getStats().incStat("spawns." + statname + ".total");
+        GameManager.getStats().incStat("spawns." + statname + "." + player.getUniqueId());
+    }
+    public static void updateGenericStat(String prefix, String statname, Player player) {
+        GameManager.getStats().incStat(prefix + "." + statname + ".total");
+        GameManager.getStats().incStat(prefix + "." + statname + "." + player.getUniqueId());
     }
     public static boolean isPortalInLocation(Location start, boolean negZ) {
         final int z_radius = 15;
