@@ -18,9 +18,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 
-public class BarrierDeploy {
+public class BarrierDeploy implements Listener {
     private static final String nomanland_region = "nomanland";
 
     @EventHandler
