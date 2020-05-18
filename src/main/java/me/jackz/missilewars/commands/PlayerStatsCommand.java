@@ -2,11 +2,17 @@ package me.jackz.missilewars.commands;
 
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameManager;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PlayerStatsCommand implements CommandExecutor  {
     private MissileWars plugin;
@@ -44,10 +50,31 @@ public class PlayerStatsCommand implements CommandExecutor  {
                 sender.sendMessage("§cPlayer has not played any games");
             }
         }else{
-            sender.sendMessage("§6§nGame Stats for " + player.getDisplayName());
-
-            String msg = String.format("Has Won %d Games\nHas Lost %d Games", wins, loses);
-            sender.sendMessage(msg);
+            int deaths = GameManager.getStats().getSavedStat("generic.deaths." + player.getUniqueId());
+            int shield_spawns = GameManager.getStats().getSavedStat("spawns.barrier." + player.getUniqueId());
+            int fireball_launches = GameManager.getStats().getSavedStat("spawns.fireball." + player.getUniqueId());
+            int tomahawk_spawns = GameManager.getStats().getSavedStat("spawns.tomahawk." + player.getUniqueId());
+            int juggernaut_spawns = GameManager.getStats().getSavedStat("spawns.juggernaut." + player.getUniqueId());
+            int guardian_spawns = GameManager.getStats().getSavedStat("spawns.guardian." + player.getUniqueId());
+            int lightning_spawns = GameManager.getStats().getSavedStat("spawns.lightning." + player.getUniqueId());
+            int shieldbuster_spawns = GameManager.getStats().getSavedStat("spawns.shieldbuster." + player.getUniqueId());
+            int minutes_played = GameManager.getStats().getSavedStat("gametime_min." + player.getUniqueId());
+            List<BaseComponent> components = new ArrayList<>(Arrays.asList(
+                    new TextComponent("§6§nGame Statistics for " + player.getDisplayName()),
+                    new TextComponent(String.format("\n§e%d Wins §9and §e%d Loses", wins, loses)),
+                    new TextComponent("\n§9Minutes Played: §e" + minutes_played),
+                    new TextComponent("\n§9Deaths: §e" + deaths),
+                    new TextComponent("\n§9Fireball Launches: §e" + fireball_launches),
+                    new TextComponent("\n§9Barriers Deployed: §e" + shield_spawns),
+                    new TextComponent("\n§9Tomahawks Deployed: §e" + tomahawk_spawns),
+                    new TextComponent("\n§9Juggernauts Deployed: §e" + juggernaut_spawns),
+                    new TextComponent("\n§9Guardians Deployed: §e" + guardian_spawns),
+                    new TextComponent("\n§9Lightnings Deployed: §e" + lightning_spawns),
+                    new TextComponent("\n§9Shieldbusters Deployed: §e" + shieldbuster_spawns)
+            ));
+            BaseComponent[] componentArray = new BaseComponent[components.size()];
+            components.toArray(componentArray);
+            sender.spigot().sendMessage(componentArray);
         }
 
     }
