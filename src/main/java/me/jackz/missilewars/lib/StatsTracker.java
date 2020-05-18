@@ -28,14 +28,14 @@ public class StatsTracker {
         return savedStats.getOrDefault(name,0);
     }
 
-    public void incStat(String name) {
+    public void incSessionStat(String name) {
         int prev = memStats.getOrDefault(name, 0);
         memStats.put(name,prev+1);
     }
-    public int getStat(String name) {
+    public int getSessionStat(String name) {
         return memStats.getOrDefault(name, 0);
     }
-    public void clearStats() {
+    public void clearSessionStats() {
         memStats.clear();
     }
 

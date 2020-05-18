@@ -11,14 +11,13 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameConfig;
+import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.game.GamePlayers;
-import me.jackz.missilewars.game.ItemSystem;
 import me.jackz.missilewars.lib.ClipboardLoader;
+import me.jackz.missilewars.lib.MWUtil;
+import me.jackz.missilewars.lib.StatsTracker;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -32,23 +31,11 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scoreboard.Team;
 
-import java.util.Arrays;
-
 public class PlayerSpawning implements Listener {
-    private ClipboardLoader clipboardLoader;
-    private MissileWars plugin;
-
-    private static final String nomanland_region = "nomanland";
-
-    public PlayerSpawning(MissileWars plugin) {
-        this.plugin = plugin;
-        clipboardLoader = new ClipboardLoader(plugin);
-    }
 
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
@@ -77,6 +64,7 @@ public class PlayerSpawning implements Listener {
         if(MissileWars.gameManager.getState().isGameActive() && e.getHand() == EquipmentSlot.HAND && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.CREATIVE)) {
             if(e.getItem() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
                 if(Util.isInTeam(player)) {
+                    StatsTracker stats = GameManager.getStats();
                     if (e.getClickedBlock() != null) {
                         switch (e.getItem().getType()) {
                             case GUARDIAN_SPAWN_EGG:
@@ -101,14 +89,6 @@ public class PlayerSpawning implements Listener {
                                 spawnMissile("tomahawk", player, e.getClickedBlock());
                             case BLAZE_SPAWN_EGG:
                                 e.setCancelled(true);
-                            case BLAZE_ROD:
-                                if(MissileWars.gameManager.getState().isDebug()) {
-                                    boolean red = isPortalInLocation(e.getClickedBlock().getLocation(),true);
-                                    boolean green = isPortalInLocation(e.getClickedBlock().getLocation(),false);
-                                    String formatted = String.format("§c%b | §a%b",red,green);
-                                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.valueOf(formatted)));
-                                    break;
-                                }
                             case SNOWBALL:
                                 e.setCancelled(true);
                                 //spawnShield(player);
@@ -120,18 +100,8 @@ public class PlayerSpawning implements Listener {
                             if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                                 e.setCancelled(true);
                             }
-                            Location eye = player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(1.2));
-                            Fireball fireball = (Fireball) eye.getWorld().spawnEntity(eye, EntityType.FIREBALL);
-                            fireball.setVelocity(eye.getDirection().normalize().multiply(.8));
-                            fireball.setShooter(player);
-                            fireball.setVelocity(fireball.getVelocity().multiply(1));
-                            fireball.setGravity(true);
-                            if(Math.random() < .01) {
-                                Entity Pig = player.getWorld().spawnEntity(player.getLocation(),EntityType.PIG);
-                                fireball.addPassenger(Pig);
-                            }
+                            launchFireball(player);
                             e.setCancelled(true);
-                            Util.removeOneFromHand(player);
                         }
                     }
                 }else{
@@ -143,52 +113,7 @@ public class PlayerSpawning implements Listener {
             }
         }
     }
-    @EventHandler
-    private void onSnowballThrow(ProjectileLaunchEvent e) {
-        Projectile projectile = e.getEntity();
-        if(projectile.getType() == EntityType.SNOWBALL) {
-            if(Math.random() < .05) {
-                Entity firework = projectile.getWorld().spawnEntity(projectile.getLocation(),EntityType.FIREWORK);
-                projectile.addPassenger(firework);
-            }
 
-            Player player = (Player) projectile.getShooter();
-            GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
-            projectile.setBounce(false);
-
-            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-                if(projectile.isDead() || e.isCancelled()) return;
-                //todo: also check if is in "nomanland" region? would mean not one big whole fucking region to reset
-                if(projectile.getLocation().getY() >= 85 || projectile.getLocation().getY() < 40) {
-                    //Fail barrier spawn
-                    if(player.getGameMode() == GameMode.SURVIVAL) {
-                        ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
-                    }
-                    projectile.remove();
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR,TextComponent.fromLegacyText("§cCan't deploy barrier out of bounds."));
-                }else {
-                    BlockVector3 blockVector3 = BukkitAdapter.adapt(projectile.getLocation()).toVector().toBlockPoint();
-                    ApplicableRegionSet regions = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(player.getWorld())).getApplicableRegions(blockVector3);
-                    for (ProtectedRegion region : regions) {
-                        if(region.getId().equalsIgnoreCase(nomanland_region)) {
-                            boolean success = paste(player, GamePlayers.getTeamName(team) + "-shield", projectile.getLocation(), 0);
-                            if (!success) {
-                                if(player.getGameMode() == GameMode.SURVIVAL) {
-                                    ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
-                                }
-                            }
-                            return;
-                        }
-                    }
-                    if(player.getGameMode() == GameMode.SURVIVAL) {
-                        ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
-                    }
-                    projectile.remove();
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR,TextComponent.fromLegacyText("§cCan't deploy barrier in a block"));
-                }
-            },20);
-        }
-    }
 
     private void spawnMissile(String type, Player player, Block clickedBlock) {
         Team team = player.getScoreboard().getEntryTeam(player.getName());
@@ -202,74 +127,36 @@ public class PlayerSpawning implements Listener {
 
         Location spawnBlock = clickedBlock.getLocation().add(0,-3,team_block_add);
         if(MissileWars.gameManager.getState().isDebug()) Util.highlightBlock(spawnBlock,Material.SEA_LANTERN,20 * 5);
-        if(isPortalInLocation(spawnBlock,isGreenTeam)) {
+        if(MWUtil.isPortalInLocation(spawnBlock,isGreenTeam)) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cCan't spawn a missile in the portal area!"));
             return;
         }
 
         String schemName = team.getName() + "-" + type;
-        boolean success = paste(player,schemName,spawnBlock,rotation_amount);
+        boolean success = MWUtil.pasteSchematic(player,schemName,spawnBlock,rotation_amount);
         if(success) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§0Spawned a §9" + type));
             Util.removeOneFromHand(player);
+            MWUtil.updateSpawnStat(type,player);
         }else {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cMissile spawn failed"));
         }
     }
-    private boolean isPortalInLocation(Location start, boolean negZ) {
-        final int z_radius = 15;
-        final int y_radius = 4;
-        //0 -> -15 or 0 -> 15
-        //negZ: -15 to 0 | posZ: 0 -> 15
-        double startBlock = negZ ? start.getZ() - z_radius : start.getZ(); //-15 or 0
-        for(double z = startBlock; z <= startBlock + z_radius; z++) {
-            //check below
-            for(double y = start.getY() - y_radius; y < start.getY(); y++) {
-                Location loc = new Location(start.getWorld(), start.getX(), y, z);
-                if(MissileWars.gameManager.getState().isDebug()) Util.highlightBlock(loc,Material.RED_WOOL);
-                Material material = loc.getBlock().getType();
-                if(material == Material.NETHER_PORTAL || material == Material.OBSIDIAN) {
-                    Bukkit.getLogger().info("locaiton:" + loc.getX() + "," + loc.getY() + "," + loc.getZ());
-                    if(MissileWars.gameManager.getState().isDebug()) Util.highlightBlock(loc.getBlock());
-                    return true;
-                }
-            }
+
+    private void launchFireball(Player player) {
+        Location eye = player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(1.2));
+        Fireball fireball = (Fireball) eye.getWorld().spawnEntity(eye, EntityType.FIREBALL);
+        fireball.setVelocity(eye.getDirection().normalize().multiply(.8));
+        fireball.setShooter(player);
+        fireball.setVelocity(fireball.getVelocity().multiply(1));
+        fireball.setGravity(true);
+        if(Math.random() < .01) {
+            Entity Pig = player.getWorld().spawnEntity(player.getLocation(),EntityType.PIG);
+            fireball.addPassenger(Pig);
         }
-        return false;
+        Util.removeOneFromHand(player);
+        MWUtil.updateSpawnStat("fireball",player);
     }
 
-    private boolean paste(Player player,String schemName,Location origin, int rotation_amount) {
-        BukkitPlayer wePlayer = BukkitAdapter.adapt(player);
-        int x = origin.getBlockX();
-        int y = origin.getBlockY();
-        int z = origin.getBlockZ();
 
-        Clipboard clipboard = clipboardLoader.getClipboard(schemName);
-        if(clipboard == null) {
-            plugin.getLogger().warning("Could not find schematic '" + schemName + "'");
-            player.sendMessage("§cSorry, there is no schematic for this item to place.");
-            return false;
-        }else{
-            AffineTransform transform = new AffineTransform();
-            transform = transform.rotateY(rotation_amount);
-            try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(wePlayer.getWorld(), 200)) {
-                //editSession.setFastMode(true);
-                ClipboardHolder holder = new ClipboardHolder(clipboard);
-                holder.setTransform(holder.getTransform().combine(transform));
-                Operation operation = holder
-                        .createPaste(editSession)
-                        .copyEntities(false)
-                        .to(BlockVector3.at(x,y,z))
-                        .ignoreAirBlocks(true)
-                        // configure here
-                        .build();
-                Operations.complete(operation);
-                return true;
-            } catch (WorldEditException ex) {
-                ex.printStackTrace();
-                player.sendMessage("§cException while placing: " + ex.getMessage());
-                return false;
-            }
-        }
-    }
 }
