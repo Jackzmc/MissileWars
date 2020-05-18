@@ -240,6 +240,7 @@ public class AdminCommand implements CommandExecutor {
                             sender.sendMessage("§cUnknown option, try: /mwa game <start/reset/stop/reload>");
                     }
                 }
+                break;
             }
             case "reload": {
                 if(args.length < 2) {
@@ -255,6 +256,7 @@ public class AdminCommand implements CommandExecutor {
                             sender.sendMessage("§cUnknown option, try: /mwa reload <all/config/stats>");
                     }
                 }
+                break;
             }
             default:
                 sender.sendMessage("§cUnknown command, please try /mwa help");

@@ -42,9 +42,13 @@ public class PlayerStatsCommand implements CommandExecutor  {
         int wins = GameManager.getStats().getSavedStat("wins." + player.getUniqueId());
         int loses = GameManager.getStats().getSavedStat("loses." + player.getUniqueId());
         if (wins == 0 && loses == 0) {
-            sender.sendMessage("§cPlayer has not played any games");
+            if(sender == player || sender.getName().equals(player.getName())) {
+                sender.sendMessage("§cYou have not played any games.");
+            }else{
+                sender.sendMessage("§cPlayer has not played any games");
+            }
         }else{
-            sender.sendMessage("§6&nGame Stats for " + player.getDisplayName());
+            sender.sendMessage("§6§nGame Stats for " + player.getDisplayName());
 
             String msg = String.format("Has Won %d Games\nHas Lost %d Games", wins, loses);
             sender.sendMessage(msg);
