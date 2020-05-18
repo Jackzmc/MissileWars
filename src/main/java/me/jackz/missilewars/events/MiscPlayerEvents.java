@@ -86,6 +86,8 @@ public class MiscPlayerEvents implements Listener {
                     player.teleport(GameConfig.GREEN_SPAWNPOINT);
                 }
                 MWUtil.updateGenericStat("generic","deaths",player);
+            }else{
+                player.teleport(GameConfig.SPAWN_LOCATION);
             }
         },5);
 

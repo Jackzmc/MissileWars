@@ -15,14 +15,18 @@ public class StatsTracker {
     private Map<String,Integer> savedStats = new HashMap<>();
     private Map<String,Integer> memStats = new HashMap<>();
     private File file;
+    private long game_start_time = -1;
 
     public StatsTracker() {
         file = new File(MissileWars.getInstance().getDataFolder(),"statistics.yml");
         reload();
     }
     public void incSavedStat(String name) {
+        incSavedStat(name, 1);
+    }
+    public void incSavedStat(String name, int incAmount) {
         int prev = savedStats.getOrDefault(name, 0);
-        savedStats.put(name,prev+1);
+        setSavedStat(name,prev+incAmount);
     }
     public void incSessionStat(String name) {
         int prev = memStats.getOrDefault(name, 0);
@@ -31,6 +35,10 @@ public class StatsTracker {
     public void incStat(String name) {
         incSavedStat(name);
         incSessionStat(name);
+    }
+
+    public void setSavedStat(String name, int value) {
+        savedStats.put(name,value);
     }
 
     public int getSavedStat(String name) {
@@ -65,6 +73,17 @@ public class StatsTracker {
             Bukkit.getLogger().warning("Could not save statistics.yml. IOException");
         }
 
+    }
+
+    public long getGameTimeMS() {
+        if(game_start_time < 0) {
+            return -1;
+        }else{
+            return System.currentTimeMillis() - game_start_time;
+        }
+    }
+    public void resetGameTime() {
+        game_start_time = System.currentTimeMillis();
     }
 
 }

@@ -89,15 +89,29 @@ public class GameManager {
             player.setGameMode(GameMode.SURVIVAL);
         }
         itemSystem.start();
+        stats.resetGameTime();
     }
 
     public void end() {
         Set<Player> allPlayers = players.getAllPlayers();
+        int duration_minutes = (int) stats.getGameTimeMS() / 1000 / 60;
+
+        stats.incSavedStat("gametime_min.total",duration_minutes);
+        int longest_game = stats.getSavedStat("gametime_min.longest");
+        if(longest_game < duration_minutes) {
+            stats.setSavedStat("gametime_min.longest", duration_minutes);
+            Bukkit.broadcastMessage("§eGame was a record breaking total of §9" + duration_minutes + " minutes §elong! ");
+        }else{
+            Bukkit.broadcastMessage("§eGame was a total of §9" + duration_minutes + " minutes §elong!");
+        }
+
         for (Player player : allPlayers) {
             players.setupPlayer(player);
             player.setGameMode(GameMode.SPECTATOR);
+            stats.incSavedStat("gametime_min." + player.getUniqueId(),duration_minutes);
         }
         state.setActive(false);
+
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), this::reset , 20 * 15);
     }
 
