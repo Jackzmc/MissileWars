@@ -4,10 +4,15 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.lib.StatsTracker;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class WinManager {
@@ -60,10 +65,24 @@ public class WinManager {
         String name = team == GamePlayers.MWTeam.GREEN ? "Green" : "Red";
         String loserTeamName = (team == GamePlayers.MWTeam.GREEN) ? "red" : "green";
 
+        Map.Entry<Player,Integer> highestDeaths = GameManager.getStats().getHighestSessionStat("generic.deaths");
+        List<BaseComponent> components = new ArrayList<>(Arrays.asList(
+                new TextComponent("§6==================================================\n"),
+                new TextComponent(color.toString() + name + " team §9has won the game!\n"),
+                new TextComponent("§6--------------------------------------------------\n"),
+                new TextComponent("§9Game Statistics:\n"),
+                new TextComponent("§d[Hover or Click to view whole game statistics]\n"),
+                new TextComponent("§d[Hover or Click to see global statistics]\n"),
+                new TextComponent("\n"),
+                new TextComponent(String.format("§e%s had the most deaths (%d)\n", highestDeaths.getKey().getName(), highestDeaths.getValue())),
+                new TextComponent("§6==================================================\n")
+        ));
+        BaseComponent[] componentArray = new BaseComponent[components.size()];
+        components.toArray(componentArray);
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.sendTitle(color.toString() + name + " Team Wins!","The " + loserTeamName + " team's portal has been destroyed",0,160,0);
+            onlinePlayer.spigot().sendMessage(componentArray);
         }
-        Bukkit.broadcastMessage(color.toString() + name + " team §9has won the game!");
         MissileWars.gameManager.end();
     }
 }
