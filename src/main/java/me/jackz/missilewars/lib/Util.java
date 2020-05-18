@@ -13,7 +13,6 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,11 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Util {
-    public static boolean isInTeam(Player player) {
-        Team team = player.getScoreboard().getEntryTeam(player.getName());
-        if(team == null) return false;
-        return team.getName().equalsIgnoreCase("Green") || team.getName().equalsIgnoreCase("Red");
-    }
     public static void removeOneFromHand(Player player) {
         if(player.getGameMode() == GameMode.CREATIVE) return;
         ItemStack item = player.getInventory().getItemInMainHand();

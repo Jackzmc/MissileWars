@@ -1,10 +1,5 @@
 package me.jackz.missilewars.game;
 
-import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class GameState {
 
 

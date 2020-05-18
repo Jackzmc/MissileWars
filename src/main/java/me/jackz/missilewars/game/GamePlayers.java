@@ -1,6 +1,5 @@
 package me.jackz.missilewars.game;
 
-import me.jackz.missilewars.MissileWars;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;

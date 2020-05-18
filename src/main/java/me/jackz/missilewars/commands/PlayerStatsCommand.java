@@ -7,15 +7,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
 
 public class PlayerStatsCommand implements CommandExecutor  {
     private MissileWars plugin;
-    private Scoreboard sb;
     public PlayerStatsCommand(MissileWars plugin) {
         this.plugin = plugin;
-        this.sb = plugin.getServer().getScoreboardManager().getMainScoreboard();
     }
 
     @Override

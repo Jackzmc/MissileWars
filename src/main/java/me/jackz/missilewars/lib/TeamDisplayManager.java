@@ -1,10 +1,9 @@
 package me.jackz.missilewars.lib;
 
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GamePlayers;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.*;
 
 import java.util.List;
@@ -14,8 +13,6 @@ public class TeamDisplayManager {
     private Scoreboard sb;
     private Objective sidebar;
 
-    private Team redTeam;
-    private Team greenTeam;
     private int red_team_size = 0;
     private int green_team_size = 0;
 
@@ -24,8 +21,6 @@ public class TeamDisplayManager {
     public TeamDisplayManager(MissileWars plugin) {
         this.plugin = plugin;
         this.sb = plugin.getServer().getScoreboardManager().getMainScoreboard();
-        redTeam = sb.getTeam("Red");
-        greenTeam = sb.getTeam("Green");
         createObjective();
         refreshSidebar();
         refreshTimerID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this::refreshSidebar,0,20 * 1); //every 3s
@@ -40,22 +35,21 @@ public class TeamDisplayManager {
         sidebar.getScore("§c§nRed Team Players").setScore(1);
     }
     public void refreshSidebar(boolean force) {
-        if(force || green_team_size != greenTeam.getSize() || red_team_size != redTeam.getSize()) {
+        List<Player> greenTeamPlayers = MissileWars.gameManager.players().get(GamePlayers.MWTeam.GREEN);
+        List<Player> redTeamPlayers = MissileWars.gameManager.players().get(GamePlayers.MWTeam.RED);
+        if(force || green_team_size != greenTeamPlayers.size() || red_team_size != redTeamPlayers.size()) {
             sidebar.unregister();
             createObjective();
-
-            for (String entry : greenTeam.getEntries()) {
-                Player p = plugin.getServer().getPlayerExact(entry);
-                if (p == null || !p.isOnline()) continue;
-                sidebar.getScore(entry).setScore(3);
+            for (Player player : greenTeamPlayers) {
+                if (player == null || !player.isOnline()) continue;
+                sidebar.getScore(player.getName()).setScore(3);
             }
-            for (String entry : redTeam.getEntries()) {
-                Player p = plugin.getServer().getPlayerExact(entry);
-                if (p == null || !p.isOnline()) continue;
-                sidebar.getScore(entry).setScore(0);
+            for (Player player : redTeamPlayers) {
+                if (player == null || !player.isOnline()) continue;
+                sidebar.getScore(player.getName()).setScore(0);
             }
-            green_team_size = greenTeam.getSize();
-            red_team_size = redTeam.getSize();
+            green_team_size = greenTeamPlayers.size();
+            red_team_size = redTeamPlayers.size();
         }
     }
     public void refreshSidebar() {

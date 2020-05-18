@@ -1,21 +1,9 @@
 package me.jackz.missilewars.events;
 
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.WorldEditException;
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.bukkit.BukkitPlayer;
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import com.sk89q.worldedit.function.operation.Operation;
-import com.sk89q.worldedit.function.operation.Operations;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.math.transform.AffineTransform;
-import com.sk89q.worldedit.session.ClipboardHolder;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameConfig;
 import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.game.GamePlayers;
-import me.jackz.missilewars.lib.ClipboardLoader;
 import me.jackz.missilewars.lib.MWUtil;
 import me.jackz.missilewars.lib.StatsTracker;
 import me.jackz.missilewars.lib.Util;
@@ -27,13 +15,15 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.scoreboard.Team;
 
 public class PlayerSpawning implements Listener {
 
@@ -63,7 +53,7 @@ public class PlayerSpawning implements Listener {
         }
         if(MissileWars.gameManager.getState().isGameActive() && e.getHand() == EquipmentSlot.HAND && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.CREATIVE)) {
             if(e.getItem() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
-                if(Util.isInTeam(player)) {
+                if(MissileWars.gameManager.players().has(player)) {
                     StatsTracker stats = GameManager.getStats();
                     if (e.getClickedBlock() != null) {
                         switch (e.getItem().getType()) {
@@ -116,9 +106,9 @@ public class PlayerSpawning implements Listener {
 
 
     private void spawnMissile(String type, Player player, Block clickedBlock) {
-        Team team = player.getScoreboard().getEntryTeam(player.getName());
+        GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
         boolean isLightning = type.equalsIgnoreCase("lightning");
-        boolean isGreenTeam = team.getName().equalsIgnoreCase("Green");
+        boolean isGreenTeam = team == GamePlayers.MWTeam.GREEN;
         //lightning schematics are inverted...
         int distance_from_block = isLightning ? 5 : 4;
         int rotation_amount = isLightning  ? 180 : 0;
@@ -132,7 +122,7 @@ public class PlayerSpawning implements Listener {
             return;
         }
 
-        String schemName = team.getName() + "-" + type;
+        String schemName = GamePlayers.getTeamName(team) + "-" + type;
         boolean success = MWUtil.pasteSchematic(player,schemName,spawnBlock,rotation_amount);
         if(success) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§0Spawned a §9" + type));

@@ -19,19 +19,12 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class AdminCommand implements CommandExecutor {
     private MissileWars plugin;
-    private ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-    private Team redTeam;
-    private Team greenTeam;
 
     public AdminCommand(MissileWars plugin) {
         this.plugin = plugin;
-        Scoreboard sb = plugin.getServer().getScoreboardManager().getMainScoreboard();
-        redTeam = sb.getTeam("Red");
-        greenTeam = sb.getTeam("Green");
     }
 
     private final Map<String, String> ITEMS = new HashMap<String, String>() {{
@@ -149,15 +142,15 @@ public class AdminCommand implements CommandExecutor {
 
                     Collections.shuffle(players);
                     int first_team_players = 0;
-                    Team firstTeam = greenTeamOverflow ? greenTeam : redTeam;
-                    Team secondTeam = greenTeamOverflow ? redTeam : greenTeam;
+                    GamePlayers.MWTeam firstTeam = greenTeamOverflow ? GamePlayers.MWTeam.GREEN : GamePlayers.MWTeam.RED;
+                    GamePlayers.MWTeam secondTeam = greenTeamOverflow ? GamePlayers.MWTeam.RED: GamePlayers.MWTeam.GREEN;
 
                     for (Player player : players) {
                         if(first_team_players < first_team_size) {
                             first_team_players++;
-                            firstTeam.addEntry(player.getName());
+                            MissileWars.gameManager.players().joinPlayer(player, firstTeam);
                         }else{
-                            secondTeam.addEntry(player.getName());
+                            MissileWars.gameManager.players().joinPlayer(player, secondTeam);
                         }
                     }
                     //TODO: add players to gamemanager gameplayers

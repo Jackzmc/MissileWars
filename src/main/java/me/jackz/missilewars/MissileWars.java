@@ -1,6 +1,9 @@
 package me.jackz.missilewars;
 
-import me.jackz.missilewars.commands.*;
+import me.jackz.missilewars.commands.AdminCommand;
+import me.jackz.missilewars.commands.GameCommand;
+import me.jackz.missilewars.commands.PlayerStatsCommand;
+import me.jackz.missilewars.commands.SpectateCommand;
 import me.jackz.missilewars.events.*;
 import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.lib.RestartManager;

@@ -8,11 +8,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.Team;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class SpectateCommand implements CommandExecutor {
     @Override

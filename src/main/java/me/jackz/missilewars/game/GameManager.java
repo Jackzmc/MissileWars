@@ -5,20 +5,15 @@ import me.jackz.missilewars.lib.StatsTracker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class GameManager {
-    private MissileWars plugin;
     private GameState state;
     private GamePlayers players;
     private static GameConfig config;
@@ -29,7 +24,6 @@ public class GameManager {
 
     public GameManager(MissileWars plugin) {
         this.state = new GameState();
-        this.plugin = plugin;
         itemSystem = new ItemSystem();
         players = new GamePlayers();
         config = new GameConfig();
