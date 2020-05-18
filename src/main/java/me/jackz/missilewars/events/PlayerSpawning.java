@@ -48,6 +48,9 @@ public class PlayerSpawning implements Listener {
                     player.sendMessage("§cYou must be in a team to ready up!");
                 }
                 //todo: implement ready logic
+            }else if(lines[1].contains("Spectate")) {
+                player.setGameMode(GameMode.SPECTATOR);
+
             }
             return;
         }

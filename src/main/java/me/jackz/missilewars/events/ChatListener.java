@@ -43,7 +43,7 @@ public class ChatListener implements Listener {
             int player_loses = GameManager.getStats().getSavedStat("loses." + player.getUniqueId());
             int player_time = GameManager.getStats().getSavedStat("gametime_min." + player.getUniqueId());
             BaseComponent[] stats = new BaseComponent[]{
-                    new TextComponent("§6Player Statistics"),
+                    new TextComponent("§6" + player.getName() + "'s Statistics"),
                     new TextComponent("\n§9Wins: §e" + player_wins),
                     new TextComponent("\n§9Loses: §e" + player_loses),
                     new TextComponent("\n§9Total Minutes Played: §e" + player_time)

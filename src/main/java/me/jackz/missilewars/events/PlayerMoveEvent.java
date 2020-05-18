@@ -25,9 +25,9 @@ public class PlayerMoveEvent implements Listener {
         Location location = player.getLocation();
         if(location.getY() <= 0 && player.getGameMode() == GameMode.SURVIVAL) {
             player.setHealth(0);
-        } else if(location.distance(GameConfig.SPAWN_LOCATION) <= 2) {
+        } else if(location.distance(GameConfig.SPAWN_LOCATION) <= 2 && player.getGameMode() == GameMode.SPECTATOR) {
             player.setGameMode(GameMode.ADVENTURE);
-        } else{
+        } else if(player.getGameMode() == GameMode.ADVENTURE) {
             BlockVector3 blockVector3 = BukkitAdapter.adapt(location).toVector().toBlockPoint();
             ApplicableRegionSet regions = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(player.getWorld())).getApplicableRegions(blockVector3);
             for (ProtectedRegion region : regions) {
