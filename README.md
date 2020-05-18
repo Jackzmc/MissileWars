@@ -14,10 +14,17 @@ You can't change any the configuration unless you recompile right now. Not meant
 * Full MissileWars vanilla replacement
 * Uses worldedit to spawn missiles & clear game
 * (WIP) Tracks statistics of players, wins/loses, more
-* (WIP) PlaceholderAPI support
-* (WIP) Add custom missiles
-* (WIP) Change game settings during game
+* (SOON) PlaceholderAPI support
+* (SOON) Add custom missiles
+* (SOON) Change game settings during game
 * Free
 * and probably more things I forgot about
 
+## Commands
+| Command                      | Permissions | Description                                               |
+|------------------------------|-------------|-----------------------------------------------------------|
+| /spectate                    | _none_   | Switch between spectating and not spectating                 |
+| /game, /gameinfo             | _none_   | View game stats / players                                    |
+| /stat(s), /wins, /loses      | _none_   | View stats of others or yourself                             |
+| /missilewarsadmin, /mwa      | OP Status| The main management command. Use /mwa help for info          |
 
