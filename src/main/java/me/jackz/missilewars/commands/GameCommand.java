@@ -46,10 +46,10 @@ public class GameCommand implements CommandExecutor  {
                 }
             }else{
                 if(sender instanceof Player) {
+                    player = (Player) sender;
+                }else{
                     sender.sendMessage("§cCan not use this command in console. You can specify a player instead");
                     return true;
-                }else{
-                    player = (Player) sender;
                 }
             }
             if (args[1].equalsIgnoreCase("green")) {

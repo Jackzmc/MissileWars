@@ -71,6 +71,7 @@ public class GameManager {
         }
     }
     //#endregion
+    //todo: prevent start if is resetting
     public void start() {
         state.setActive(true);
         ItemStack bow = ItemSystem.getItem("bow");
@@ -130,6 +131,11 @@ public class GameManager {
         }
         players = null;
         config = null;
+        if(stats != null) {
+            stats.save();
+            stats = null;
+        }
+
     }
 
     public GameState getState() {

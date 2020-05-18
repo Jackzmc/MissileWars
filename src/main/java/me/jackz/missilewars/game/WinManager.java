@@ -7,6 +7,9 @@ import me.jackz.missilewars.lib.StatsTracker;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import sun.text.SupplementaryCharacterData;
+
+import java.util.Map;
 
 public class WinManager {
     private final static String red_portal_region = "redportal";
@@ -15,16 +18,41 @@ public class WinManager {
     public static void testWin(ApplicableRegionSet regions) {
         for (ProtectedRegion region : regions) {
             if(region.getId().equalsIgnoreCase(green_portal_region)) {
-                announceWin(GamePlayers.MWTeam.RED);
-                GameManager.getStats().incSavedStat("wins.team_red");
                 //green wins
+                announceWin(GamePlayers.MWTeam.RED);
+                updateStats(GamePlayers.MWTeam.RED);
+                break;
             }else if(region.getId().equalsIgnoreCase(red_portal_region)){
                 //red wins
                 announceWin(GamePlayers.MWTeam.GREEN);
-                GameManager.getStats().incSavedStat("wins.team_green");
+                updateStats(GamePlayers.MWTeam.GREEN);
+                break;
             }
         }
     }
+
+    private static void updateStats(GamePlayers.MWTeam winning) {
+        StatsTracker stats = GameManager.getStats();
+        if(winning == GamePlayers.MWTeam.GREEN) {
+            stats.incSavedStat("wins.team_green");
+            stats.incSavedStat("loses.team_red");
+        }else{
+            stats.incSavedStat("wins.team_red");
+            stats.incSavedStat("loses.team_green");
+        }
+        for (Map.Entry<Player, GamePlayers.MWTeam> playerMWTeamEntry : MissileWars.gameManager.players().getAll()) {
+            GamePlayers.MWTeam team = playerMWTeamEntry.getValue();
+            Player player = playerMWTeamEntry.getKey();
+            //If team was winning team
+            if (team == winning) {
+                stats.incSavedStat("wins." + player.getUniqueId());
+            } else {
+                stats.incSavedStat("loses." + player.getUniqueId());
+            }
+        }
+        stats.save();
+    }
+
     private static void announceWin(GamePlayers.MWTeam team) {
         ChatColor color = team == GamePlayers.MWTeam.GREEN ? ChatColor.GREEN : ChatColor.RED;
         String name = team == GamePlayers.MWTeam.GREEN ? "Green" : "Red";
