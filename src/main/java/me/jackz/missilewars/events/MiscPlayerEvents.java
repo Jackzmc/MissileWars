@@ -77,9 +77,8 @@ public class MiscPlayerEvents implements Listener {
             player.addPotionEffect(saturation);
             player.addPotionEffect(regen);
 
-            if (MissileWars.gameManager.players().has(player)) {
+            if (MissileWars.gameManager.getState().isGameActive() && MissileWars.gameManager.players().has(player)) {
                 GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
-
                 if (team == GamePlayers.MWTeam.RED) {
                     player.teleport(GameConfig.RED_SPAWNPOINT);
                 } else if (team == GamePlayers.MWTeam.GREEN) {

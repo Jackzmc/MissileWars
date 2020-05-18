@@ -4,6 +4,7 @@ import me.jackz.missilewars.MissileWars;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,13 +40,13 @@ public class StatsTracker {
         incSessionStat(name);
     }
 
-    public Entry<String, Integer> getHighestSessionStat(String statName) {
+    public Entry<Player, Integer> getHighestSessionStat(String statName) {
         int highest = 0;
         String name = null;
         for (Entry<String, Integer> stringIntegerEntry : memStats.entrySet()) {
             String key = stringIntegerEntry.getKey();
             if(key.startsWith(statName)) {
-                String id = key.substring(key.lastIndexOf("."));
+                String id = key.substring(key.lastIndexOf(".") + 1);
                 int value = stringIntegerEntry.getValue();
 
                 if (!id.equalsIgnoreCase("total")) {
@@ -57,7 +58,8 @@ public class StatsTracker {
             }
         }
         if(name != null) {
-            return new AbstractMap.SimpleEntry<String, Integer>(name, highest);
+            Player player = Bukkit.getPlayer(name);
+            return new AbstractMap.SimpleEntry<>(player, highest);
         }else{
             return null;
         }
