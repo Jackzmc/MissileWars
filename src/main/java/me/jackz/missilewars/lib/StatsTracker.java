@@ -7,8 +7,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class StatsTracker {
 
@@ -35,6 +37,30 @@ public class StatsTracker {
     public void incStat(String name) {
         incSavedStat(name);
         incSessionStat(name);
+    }
+
+    public Entry<String, Integer> getHighestSessionStat(String statName) {
+        int highest = 0;
+        String name = null;
+        for (Entry<String, Integer> stringIntegerEntry : memStats.entrySet()) {
+            String key = stringIntegerEntry.getKey();
+            if(key.startsWith(statName)) {
+                String id = key.substring(key.lastIndexOf("."));
+                int value = stringIntegerEntry.getValue();
+
+                if (!id.equalsIgnoreCase("total")) {
+                    if (value > highest) {
+                        highest = value;
+                        name = id;
+                    }
+                }
+            }
+        }
+        if(name != null) {
+            return new AbstractMap.SimpleEntry<String, Integer>(name, highest);
+        }else{
+            return null;
+        }
     }
 
     public void setSavedStat(String name, int value) {
