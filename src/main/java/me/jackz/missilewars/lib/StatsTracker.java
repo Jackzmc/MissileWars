@@ -40,13 +40,18 @@ public class StatsTracker {
     }
 
     private void load() {
-
+        FileConfiguration data = YamlConfiguration.loadConfiguration(file);
+        for (String key : data.getKeys(true)) {
+            if(data.isInt(key)) {
+                savedStats.put(key, data.getInt(key));
+            }
+        }
     }
 
     public void save() {
         FileConfiguration data = YamlConfiguration.loadConfiguration(file);
         for (Map.Entry<String, Integer> entries : savedStats.entrySet()) {
-            savedStats.put(entries.getKey(),entries.getValue());
+            data.set(entries.getKey(),entries.getValue());
         }
         try {
             data.save(file);
