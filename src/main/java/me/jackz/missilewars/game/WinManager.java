@@ -15,18 +15,21 @@ public class WinManager {
     private final static String green_portal_region = "greenportal";
 
     public static void testWin(ApplicableRegionSet regions) {
+        GamePlayers.MWTeam team = GamePlayers.MWTeam.NONE;
         for (ProtectedRegion region : regions) {
             if(region.getId().equalsIgnoreCase(green_portal_region)) {
                 //green wins
-                announceWin(GamePlayers.MWTeam.RED);
-                updateStats(GamePlayers.MWTeam.RED);
+                team = GamePlayers.MWTeam.RED;
                 break;
             }else if(region.getId().equalsIgnoreCase(red_portal_region)){
                 //red wins
-                announceWin(GamePlayers.MWTeam.GREEN);
-                updateStats(GamePlayers.MWTeam.GREEN);
+                team = GamePlayers.MWTeam.GREEN;
                 break;
             }
+        }
+        if(team != GamePlayers.MWTeam.NONE) {
+            announceWin(team);
+            updateStats(team);
         }
     }
 
