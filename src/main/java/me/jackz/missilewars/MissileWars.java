@@ -8,18 +8,19 @@ import me.jackz.missilewars.events.*;
 import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.lib.RestartManager;
 import me.jackz.missilewars.lib.TeamDisplayManager;
+import net.milkbowl.vault.chat.Chat;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class MissileWars extends JavaPlugin {
-
 
     private static MissileWars main;
     public static GameManager gameManager;
     private TeamDisplayManager displayManager;
     private RestartManager restartManager;
-
+    private Chat vaultChat;
 
     @Override
     public void onEnable() {
@@ -32,6 +33,7 @@ public final class MissileWars extends JavaPlugin {
 
         registerCommands();
         registerListeners();
+        setupChat();
     }
 
     private void registerCommands() {
@@ -48,6 +50,10 @@ public final class MissileWars extends JavaPlugin {
         pm.registerEvents(new MiscPlayerEvents(),this);
         pm.registerEvents(new Explosion(),this);
         pm.registerEvents(new BarrierDeploy(),this);
+    }
+    private void setupChat() {
+        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+        if(rsp != null) vaultChat = rsp.getProvider();
     }
 
     @Override
@@ -75,5 +81,7 @@ public final class MissileWars extends JavaPlugin {
     public static MissileWars getInstance() {
         return main;
     }
-
+    public Chat getVaultChat() {
+        return vaultChat;
+    }
 }

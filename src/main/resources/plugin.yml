@@ -1,6 +1,7 @@
 name: MissileWars
 version: ${project.version}
 depend: [WorldEdit,WorldGuard]
+softdepend: [Vault]
 main: me.jackz.missilewars.MissileWars
 load: POSTWORLD
 api-version: 1.13
