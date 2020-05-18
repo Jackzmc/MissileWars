@@ -7,6 +7,7 @@ You can't change any the configuration unless you recompile right now. Not meant
 ### Requires:
 * WorldEdit
 * WorldGuard
+* Vault _(optional)_
 
 (and the hardcoded region names)
 

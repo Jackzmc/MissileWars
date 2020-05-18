@@ -1,5 +1,6 @@
 package me.jackz.missilewars.game;
 
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -33,7 +34,7 @@ public class GamePlayers {
         redTeam = scoreboard.getTeam("Red");
         greenTeam = scoreboard.getTeam("Green");
     }
-
+    //#region static methods
     public static String getTeamName(MWTeam team) {
         if(team == MWTeam.RED) {
             return "Red";
@@ -43,6 +44,16 @@ public class GamePlayers {
             return "None";
         }
     }
+    public static ChatColor getTeamColor(MWTeam team) {
+        if(team == MWTeam.RED) {
+            return ChatColor.RED;
+        }else if(team == MWTeam.GREEN) {
+            return ChatColor.GREEN;
+        }else{
+            return ChatColor.WHITE;
+        }
+    }
+    //#endregion
 
     public void setupPlayer(Player player) {
         player.getInventory().clear();

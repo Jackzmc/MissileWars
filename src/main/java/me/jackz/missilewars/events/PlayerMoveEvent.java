@@ -6,6 +6,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GameConfig;
 import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.game.ItemSystem;
 import org.bukkit.GameMode;
@@ -24,7 +25,9 @@ public class PlayerMoveEvent implements Listener {
         Location location = player.getLocation();
         if(location.getY() <= 0 && player.getGameMode() == GameMode.SURVIVAL) {
             player.setHealth(0);
-        }else{
+        } else if(location.distance(GameConfig.SPAWN_LOCATION) <= 2) {
+            player.setGameMode(GameMode.ADVENTURE);
+        } else{
             BlockVector3 blockVector3 = BukkitAdapter.adapt(location).toVector().toBlockPoint();
             ApplicableRegionSet regions = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(player.getWorld())).getApplicableRegions(blockVector3);
             for (ProtectedRegion region : regions) {

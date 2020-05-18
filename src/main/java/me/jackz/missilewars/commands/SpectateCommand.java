@@ -45,6 +45,7 @@ public class SpectateCommand implements CommandExecutor {
                 player.teleport(GameConfig.SPAWN_LOCATION);
             }else{
                 player.setGameMode(GameMode.SPECTATOR);
+                player.sendMessage("§eYou are now spectating, leave spectator mode by typing §9/spectate §eagain.");
             }
         }
 
