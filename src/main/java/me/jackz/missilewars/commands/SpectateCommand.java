@@ -1,5 +1,8 @@
 package me.jackz.missilewars.commands;
 
+import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GameConfig;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,24 +17,42 @@ import java.util.stream.Collectors;
 public class SpectateCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(sender instanceof Player) {
-            Player p = (Player) sender;
-            Team team = p.getScoreboard().getEntryTeam(p.getName());
-            boolean is_in_game = team != null && (team.getName().equalsIgnoreCase("green") || team.getName().equalsIgnoreCase("red"));
-            boolean is_spectating = p.getGameMode() == GameMode.SPECTATOR;
-            if(is_in_game) {
-                p.sendMessage("§cYou are already in the game!");
-            }else{
-                if(is_spectating) {
-                    p.setGameMode(GameMode.ADVENTURE);
-                    p.teleport(p.getWorld().getSpawnLocation());
-                }else{
-                    p.setGameMode(GameMode.SPECTATOR);
+        Player player;
+        if(args.length >= 1) {
+            if(sender.isOp() || sender.hasPermission("missilewars.spectate.others")) {
+                player = Bukkit.getPlayer(args[0]);
+                if (player == null) {
+                    sender.sendMessage("§cCould not find any players online with that name.");
+                    return true;
                 }
+            }else{
+                sender.sendMessage("§cYou do not have permission");
+                return true;
             }
         }else{
-            sender.sendMessage("You must be a player to run this command.");
+            if(sender instanceof Player) {
+                player = (Player) sender;
+            }else{
+                sender.sendMessage("Please specify a player to toggle spectating on");
+                return true;
+            }
         }
+        boolean is_in_game = MissileWars.gameManager.players().has(player);
+        if(is_in_game) {
+            if(player == sender || sender.getName().equals(player.getName())) {
+                sender.sendMessage("§cYou can't spectate when you are in a game.");
+            }else{
+                sender.sendMessage("§cThat player is currently in a game.");
+            }
+        }else{
+            if(player.getGameMode() == GameMode.SPECTATOR) {
+                player.setGameMode(GameMode.ADVENTURE);
+                player.teleport(GameConfig.SPAWN_LOCATION);
+            }else{
+                player.setGameMode(GameMode.SPECTATOR);
+            }
+        }
+
         return true;
     }
 }
