@@ -1,6 +1,7 @@
 package me.jackz.missilewars.commands;
 
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.game.ItemSystem;
 import me.jackz.missilewars.game.Reset;
@@ -68,8 +69,8 @@ public class AdminCommand implements CommandExecutor {
             sender.sendMessage("§e/mwa choose <item> §7- activate item spawn manually");
             sender.sendMessage("§e/mwa items §7- get all items");
             sender.sendMessage("§e/mwa scramble §7- Scramble the teams");
-            sender.sendMessage("§e/mwa start §7- Force start the game");
-            sender.sendMessage("§e/mwa reset §7- Force reset the game");
+            sender.sendMessage("§e/mwa game <start/reset/stop/reload>");
+            sender.sendMessage("§e/mwa reload <all/config/stats");
             sender.sendMessage("§e/mwa config §7- Change game rules and configs");
             return true;
         }
@@ -211,22 +212,49 @@ public class AdminCommand implements CommandExecutor {
                 }
                 break;
             }
-            case "start": {
-                MissileWars.gameManager.start();
-                break;
-            }
-            case "reset": {
-                for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
-                    if(onlinePlayer.getGameMode() != GameMode.CREATIVE) {
-                    onlinePlayer.setGameMode(GameMode.SPECTATOR);
+            case "game": {
+                if(args.length < 2) {
+                    sender.sendMessage("§cUsage: /mwa game <start/reset/stop/reload>");
+                }else{
+                    switch(args[1].toLowerCase()) {
+                        case "start":
+                            MissileWars.gameManager.start();
+
+                            break;
+                        case "reset": {
+                            for (Player onlinePlayer : Bukkit.getServer().getOnlinePlayers()) {
+                                if(onlinePlayer.getGameMode() != GameMode.CREATIVE) {
+                                    onlinePlayer.setGameMode(GameMode.SPECTATOR);
+                                }
+                            }
+                            Reset.reset();
+                            break;
+                        }
+                        case "stop":
+                            MissileWars.gameManager.end();
+                            break;
+                        case "reload":
+                            MissileWars.gameManager.reload();
+                            break;
+                        default:
+                            sender.sendMessage("§cUnknown option, try: /mwa game <start/reset/stop/reload>");
                     }
                 }
-                Reset.reset();
-                break;
             }
-            case "stop": {
-                MissileWars.gameManager.end();
-                break;
+            case "reload": {
+                if(args.length < 2) {
+                    sender.sendMessage("§cUsage: /mwa reload <all/config/stats>");
+                }else{
+                    switch(args[1].toLowerCase()) {
+                        case "stats": {
+                            GameManager.getStats().reload();
+                            sender.sendMessage("§aSuccessfully reloaded statistics.");
+                            break;
+                        }
+                        default:
+                            sender.sendMessage("§cUnknown option, try: /mwa reload <all/config/stats>");
+                    }
+                }
             }
             default:
                 sender.sendMessage("§cUnknown command, please try /mwa help");
