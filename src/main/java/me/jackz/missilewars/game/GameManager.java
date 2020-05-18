@@ -122,6 +122,11 @@ public class GameManager {
         //todo: run reset, copy regions, and reset gamestate, and players list
     }
 
+    public void reload() {
+        itemSystem.stop();
+        itemSystem.start();
+    }
+
 
     public void shutdown() {
         state = null;

@@ -18,7 +18,7 @@ public class StatsTracker {
 
     public StatsTracker() {
         file = new File(MissileWars.getInstance().getDataFolder(),"statistics.yml");
-        load();
+        reload();
     }
     public void incSavedStat(String name) {
         int prev = savedStats.getOrDefault(name, 0);
@@ -44,7 +44,8 @@ public class StatsTracker {
         memStats.clear();
     }
 
-    private void load() {
+    public void reload() {
+        savedStats.clear();
         FileConfiguration data = YamlConfiguration.loadConfiguration(file);
         for (String key : data.getKeys(true)) {
             if(data.isInt(key)) {
