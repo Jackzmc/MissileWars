@@ -1,14 +1,17 @@
 package me.jackz.missilewars.game;
 
+import me.jackz.missilewars.MissileWars;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import javax.imageio.stream.MemoryCacheImageOutputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -69,10 +72,12 @@ public class GamePlayers {
         player.setGameMode(GameMode.ADVENTURE);
         setupPlayer(player);
         if(team == MWTeam.RED) {
-            player.teleport(GameConfig.RED_LOBBY_SPAWNPOINT);
+            Location spawnLocation = MissileWars.gameManager.getState().isGameActive() ? GameConfig.RED_SPAWNPOINT : GameConfig.RED_LOBBY_SPAWNPOINT;
+            player.teleport(spawnLocation);
             Bukkit.broadcastMessage("§c" + player.getName() + " joined the Red team!");
         }else{
-            player.teleport(GameConfig.GREEN_LOBBY_SPAWNPOINT);
+            Location spawnLocation = MissileWars.gameManager.getState().isGameActive() ? GameConfig.GREEN_SPAWNPOINT : GameConfig.GREEN_LOBBY_SPAWNPOINT;
+            player.teleport(spawnLocation);
             Bukkit.broadcastMessage("§a" + player.getName() + " joined the Green team!");
         }
 
