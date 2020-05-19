@@ -72,6 +72,9 @@ public class StatsTracker {
     public int getSavedStat(String name) {
         return savedStats.getOrDefault(name,0);
     }
+    public int getStat(String name, boolean saved) {
+        return saved ? getSavedStat(name) : getSessionStat(name);
+    }
     public int getSessionStat(String name) {
         return memStats.getOrDefault(name, 0);
     }

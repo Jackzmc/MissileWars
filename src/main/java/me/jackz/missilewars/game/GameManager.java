@@ -90,6 +90,7 @@ public class GameManager {
         }
         itemSystem.start();
         stats.resetGameTime();
+        stats.clearSessionStats();
     }
 
     public void end() {
