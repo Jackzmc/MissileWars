@@ -22,10 +22,14 @@ public class PlayerStatsCommand implements CommandExecutor  {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(args.length > 0) {
+        if(args.length > 0 && !args[0].equalsIgnoreCase("session")) {
             Player player = Bukkit.getPlayer(args[0]);
             if(player != null) {
-                printStats(sender,player);
+                boolean global = true;
+                if(args.length > 1 && args[1].equalsIgnoreCase("session")) {
+                    global = false;
+                }
+                printStats(sender,player, global);
             }else{
                 sender.sendMessage("§cCould not find any players with that name.");
             }
@@ -33,16 +37,20 @@ public class PlayerStatsCommand implements CommandExecutor  {
         }else{
             if(sender instanceof Player) {
                 Player player = (Player) sender;
-                printStats(sender,player);
+                boolean global = true;
+                if(args.length > 0 && args[0].equalsIgnoreCase("session")) {
+                    global = false;
+                }
+                printStats(sender, player, global);
             }else{
                 sender.sendMessage("§cYou must be a player to view your own statistics. Try /stats <player>");
             }
         }
         return true;
     }
-    private void printStats(CommandSender sender, Player player) {
-        int wins = GameManager.getStats().getSavedStat("wins." + player.getUniqueId());
-        int loses = GameManager.getStats().getSavedStat("loses." + player.getUniqueId());
+    private void printStats(CommandSender sender, Player player, boolean global) {
+        int wins = GameManager.getStats().getStat("wins." + player.getUniqueId(), global);
+        int loses = GameManager.getStats().getStat("loses." + player.getUniqueId(), global);
         if (wins == 0 && loses == 0) {
             if(sender == player || sender.getName().equals(player.getName())) {
                 sender.sendMessage("§cYou have not played any games.");
@@ -50,15 +58,15 @@ public class PlayerStatsCommand implements CommandExecutor  {
                 sender.sendMessage("§cPlayer has not played any games");
             }
         }else{
-            int deaths = GameManager.getStats().getSavedStat("generic.deaths." + player.getUniqueId());
-            int shield_spawns = GameManager.getStats().getSavedStat("spawns.barrier." + player.getUniqueId());
-            int fireball_launches = GameManager.getStats().getSavedStat("spawns.fireball." + player.getUniqueId());
-            int tomahawk_spawns = GameManager.getStats().getSavedStat("spawns.tomahawk." + player.getUniqueId());
-            int juggernaut_spawns = GameManager.getStats().getSavedStat("spawns.juggernaut." + player.getUniqueId());
-            int guardian_spawns = GameManager.getStats().getSavedStat("spawns.guardian." + player.getUniqueId());
-            int lightning_spawns = GameManager.getStats().getSavedStat("spawns.lightning." + player.getUniqueId());
-            int shieldbuster_spawns = GameManager.getStats().getSavedStat("spawns.shieldbuster." + player.getUniqueId());
-            int minutes_played = GameManager.getStats().getSavedStat("gametime_min." + player.getUniqueId());
+            int deaths = GameManager.getStats().getStat("generic.deaths." + player.getUniqueId(), global);
+            int shield_spawns = GameManager.getStats().getStat("spawns.barrier." + player.getUniqueId(), global);
+            int fireball_launches = GameManager.getStats().getStat("spawns.fireball." + player.getUniqueId(), global);
+            int tomahawk_spawns = GameManager.getStats().getStat("spawns.tomahawk." + player.getUniqueId(), global);
+            int juggernaut_spawns = GameManager.getStats().getStat("spawns.juggernaut." + player.getUniqueId(), global);
+            int guardian_spawns = GameManager.getStats().getStat("spawns.guardian." + player.getUniqueId(), global);
+            int lightning_spawns = GameManager.getStats().getStat("spawns.lightning." + player.getUniqueId(), global);
+            int shieldbuster_spawns = GameManager.getStats().getStat("spawns.shieldbuster." + player.getUniqueId(), global);
+            int minutes_played = GameManager.getStats().getStat("gametime_min." + player.getUniqueId(), global);
             List<BaseComponent> components = new ArrayList<>(Arrays.asList(
                     new TextComponent("§6§nGame Statistics for " + player.getDisplayName()),
                     new TextComponent(String.format("\n§e%d Wins §9and §e%d Loses", wins, loses)),
