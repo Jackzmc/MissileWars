@@ -82,7 +82,8 @@ public class ItemSystem {
 
     public static void giveItem(Player player, ItemStack itemstack, boolean bypassLimit) {
         //maxAmount being -1 disables limit
-        if(!bypassLimit && player.getInventory().contains(itemstack, MissileWars.gameManager.getConfig().getMaxItems())) {
+        int item_count = Util.getAmount(player.getInventory(), itemstack);
+        if(!bypassLimit &&item_count <= MissileWars.gameManager.getConfig().getMaxItems()) {
             player.sendMessage("§cYou already have a " + itemstack.getItemMeta().getDisplayName());
         }else{
             player.getInventory().addItem(itemstack);
