@@ -56,7 +56,9 @@ public class GameConfig {
     //#region getters
 
     public int getItemInterval() {
-        int scale_amount = MissileWars.gameManager.players().size();
+        //15+1.4x+Math.floor(x/2)
+        int x = (2*MissileWars.gameManager.players().size()) + 2;
+        double scale_amount = 15 + (1.4*x) + Math.floor((double)x/2);
         return item_interval_sec;
     }
 
