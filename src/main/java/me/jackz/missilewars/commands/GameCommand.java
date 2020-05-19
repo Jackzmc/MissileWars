@@ -38,8 +38,13 @@ public class GameCommand implements CommandExecutor  {
                     sender.sendMessage("§cUsage: /game join <red/green>");
                     return true;
                 }
+                boolean self = false;
                 Player player;
                 if (args.length >= 3) {
+                    if(!sender.hasPermission("missilewars.join.others") && !sender.isOp()) {
+                        sender.sendMessage("§cYou do not have permission.");
+                        return true;
+                    }
                     player = Bukkit.getPlayer(args[3]);
                     if (player == null) {
                         sender.sendMessage("§cCould not find that player");
@@ -48,15 +53,20 @@ public class GameCommand implements CommandExecutor  {
                 } else {
                     if (sender instanceof Player) {
                         player = (Player) sender;
+                        self = true;
                     } else {
                         sender.sendMessage("§cCan not use this command in console. You can specify a player instead");
                         return true;
                     }
                 }
-                if (args[1].equalsIgnoreCase("green")) {
-                    MissileWars.gameManager.players().joinPlayer(player, GamePlayers.MWTeam.GREEN);
-                } else if (args[1].equalsIgnoreCase("red")) {
-                    MissileWars.gameManager.players().joinPlayer(player, GamePlayers.MWTeam.RED);
+                if(self && MissileWars.gameManager.getConfig().isMidGameJoinAllowed() && MissileWars.gameManager.getState().isGameActive()) {
+                    sender.sendMessage("§cCan't join a game that is in session");
+                }else {
+                    if (args[1].equalsIgnoreCase("green")) {
+                        MissileWars.gameManager.players().joinPlayer(player, GamePlayers.MWTeam.GREEN);
+                    } else if (args[1].equalsIgnoreCase("red")) {
+                        MissileWars.gameManager.players().joinPlayer(player, GamePlayers.MWTeam.RED);
+                    }
                 }
                 return true;
             }else if(args[0].equalsIgnoreCase("stats")) {
