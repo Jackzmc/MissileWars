@@ -5,7 +5,7 @@ import me.jackz.missilewars.game.GameConfig;
 import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.lib.MWUtil;
-import me.jackz.missilewars.lib.StatsTracker;
+import me.jackz.missilewars.game.StatsTracker;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
