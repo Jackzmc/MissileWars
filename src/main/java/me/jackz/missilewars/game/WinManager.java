@@ -5,6 +5,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.lib.StatsTracker;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -65,14 +66,23 @@ public class WinManager {
         String name = team == GamePlayers.MWTeam.GREEN ? "Green" : "Red";
         String loserTeamName = (team == GamePlayers.MWTeam.GREEN) ? "red" : "green";
 
+        TextComponent currentGameStat = new TextComponent("§d[Click to view this game's statistics]\n");
+        TextComponent currentMyStat = new TextComponent("§d[Click to view your statistics for this game]\n");
+        TextComponent globalStat = new TextComponent("§d[Click to see global statistics]\n");
+        currentGameStat.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/game stats session"));
+        currentMyStat.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/stats session"));
+        globalStat.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/game stats"));
+
         Map.Entry<Player,Integer> highestDeaths = GameManager.getStats().getHighestSessionStat("generic.deaths");
         List<BaseComponent> components = new ArrayList<>(Arrays.asList(
                 new TextComponent("§6==================================================\n"),
                 new TextComponent(color.toString() + name + " team §9has won the game!\n"),
                 new TextComponent("§6--------------------------------------------------\n"),
                 new TextComponent("§9Game Statistics:\n"),
-                new TextComponent("§d[Hover or Click to view whole game statistics]\n"),
-                new TextComponent("§d[Hover or Click to see global statistics]\n"),
+                currentGameStat,
+                currentMyStat,
+                globalStat,
+                new TextComponent("§7§oTip: Use §r§e/stats <player> [global/session]§7§oto view their stats.\n"),
                 new TextComponent("\n"),
                 new TextComponent(String.format("§e%s had the most deaths (%d)\n", highestDeaths.getKey().getName(), highestDeaths.getValue())),
                 new TextComponent("§6==================================================\n")
