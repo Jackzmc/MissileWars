@@ -55,6 +55,7 @@ public class GamePlayers {
     }
     //#endregion
 
+
     public void setupPlayer(Player player) {
         player.getInventory().clear();
         player.addPotionEffect(nightVision);
@@ -75,6 +76,10 @@ public class GamePlayers {
             Bukkit.broadcastMessage("§a" + player.getName() + " joined the Green team!");
         }
 
+    }
+
+    public int size() {
+        return redTeamPlayers.size() + greenTeamPlayers.size();
     }
 
     public void add(Player player, MWTeam team) {

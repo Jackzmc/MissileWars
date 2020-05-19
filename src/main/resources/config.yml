@@ -1,0 +1,22 @@
+# The base interval (in seconds), of when the items (missiles, shields, etc) are given
+# This is with the bare minimum 2 players, it will be scaled per two players added
+# Default: 15
+item-interval-seconds: 15
+
+# Should the item system prioritize defense based items (More barriers/fireballs/arrows given)
+# Default: false
+prioritize-defense-items: false
+
+# Maximum amount of each item you can have (arrows will be 4x this value)
+# Default: 1
+max-stack-count: 1
+
+# Set the randomize mode
+# 0 -> Both teams get same items [Default]
+# 1 -> Each team gets different items
+# 2 -> Every individual player gets a different item
+randomize-mode: 0
+
+# Should players be allowed to join in the middle of a game?
+# Default: true
+allow-midgame-joins: true

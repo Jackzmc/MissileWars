@@ -47,8 +47,12 @@ public class ItemSystem {
         Bukkit.getScheduler().cancelTask(timerID);
     }
 
+    public static List<String> getTypes() {
+        return ITEM_TYPES;
+    }
+
     public static void chooseItem() {
-        if(!MissileWars.gameManager.getConfig().prioritizeDefenseEnabled()) {
+        if(!MissileWars.gameManager.getConfig().isPrioritizeDefenseEnabled()) {
             Random rand = new Random();
             int randMode = MissileWars.gameManager.getConfig().getRandomizeMode();
             if(randMode == 0) {
