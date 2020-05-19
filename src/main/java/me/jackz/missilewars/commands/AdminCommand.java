@@ -27,29 +27,6 @@ public class AdminCommand implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    private final Map<String, String> ITEMS = new HashMap<String, String>() {{
-        put("Fireball", "fill -121 45 -21 -119 45 -21 redstone_block");
-        put("Arrows", "fill -121 45 -16 -119 45 -16 redstone_block");
-        put("Barrier","fill -121 45 -11 -119 45 -11 redstone_block");
-
-        put("Tomahawk","fill -121 45 -6 -119 45 -6 redstone_block");
-        put("ShieldBuster","fill -121 45 -1 -119 45 -1 redstone_block");
-        put("Juggernaut","fill -121 45 4 -119 45 4 redstone_block");
-        put("Lightning","fill -121 45 9 -119 45 9 redstone_block");
-        put("Guardian","fill -121 45 14 -119 45 14 redstone_block");
-    }};
-    private final Map<String, String> GIVE_ITEMS = new HashMap<String,String>() {{
-        put("fireball","give %PLAYER% blaze_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Fireball\\\"}\",Lore:[\"Spawns a Fireball.\",\"Punch it to aim/launch at target.\"]}} 1");
-        put("arrows","give %PLAYER% arrow{display:{Name:\"{\\\"text\\\":\\\"Flame Arrow\\\"}\",Lore:[\"Shoot to ignite TNT.\"]}} 3");
-        put("barrier","give %PLAYER% snowball{display:{Name:\"{\\\"text\\\":\\\"Deploy Barrier\\\"}\",Lore:[\"Deploys a barrier after 1 second.\"]}} 1");
-
-        put("shieldbuster","give %PLAYER% witch_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Red ShieldBuster\\\"}\",Lore:[\"Spawns a Shield Buster missile.\"]}} 1");
-        put("tomahawk","give %PLAYER% creeper_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Red Tomahawk\\\"}\",Lore:[\"Spawns a Tomahawk missile.\"]}} 1");
-        put("juggernaut","give %PLAYER% ghast_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Red Juggernaut\\\"}\",Lore:[\"Spawns a Juggernaut missile.\"]}} 1");
-        put("lightning","give %PLAYER% ocelot_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Red Lightning\\\"}\",Lore:[\"Spawns a Lightning missile.\"]}} 1");
-        put("guardian","give %PLAYER% guardian_spawn_egg{display:{Name:\"{\\\"text\\\":\\\"Deploy Red Guardian\\\"}\",Lore:[\"Spawns a Guardian missile.\"]}} 1");
-    }};
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(!sender.isOp()) {
@@ -188,10 +165,11 @@ public class AdminCommand implements CommandExecutor {
             }
             case "items": {
                 sender.sendMessage("§6Missile Wars - Items");
-                Set<String> itemSet = ITEMS.keySet();
+                List<String> itemSet = ItemSystem.getTypes();
                 int i=0;
                 for (String s : itemSet) {
-                    TextComponent tc = new TextComponent("§6" + ++i + ". §e" + s);
+                    String name = s.substring(0, 1).toUpperCase() + s.substring(1);
+                    TextComponent tc = new TextComponent("§6" + ++i + ". §e" + name);
                     TextComponent giveall = new TextComponent(" §d[Give All]");
                     TextComponent giveallred = new TextComponent(" §c[Give All Red]");
                     TextComponent giveallgreen = new TextComponent(" §a[Give All Green]");
@@ -240,11 +218,20 @@ public class AdminCommand implements CommandExecutor {
                     sender.sendMessage("§cUsage: /mwa reload <all/config/stats>");
                 }else{
                     switch(args[1].toLowerCase()) {
-                        case "stats": {
+                        case "stats":
                             GameManager.getStats().reload();
                             sender.sendMessage("§aSuccessfully reloaded statistics.");
                             break;
-                        }
+                        case "config":
+                            MissileWars.gameManager.getConfig().reload();
+                            sender.sendMessage("§aSuccessfully reloaded configuration.");
+                            break;
+
+                        case "all":
+                            GameManager.getStats().reload();
+                            MissileWars.gameManager.getConfig().reload();
+                            sender.sendMessage("§aSuccessfully reloaded.");
+                            break;
                         default:
                             sender.sendMessage("§cUnknown option, try: /mwa reload <all/config/stats>");
                     }
