@@ -1,11 +1,13 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.lib.ConfigOption;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.IOException;
 
 public class GameConfig {
     private int item_interval_sec = 20;
@@ -19,6 +21,7 @@ public class GameConfig {
     public final static boolean DEFAULT_allow_midgame_joins = false;
     public final static int DEFAULT_max_items = 1;
     public final static int DEFAULT_randomize_mode = 0; //0 -> ALL, 1 -> Per team, 2 -> Per individual
+
 
     private static File file;
     private static YamlConfiguration config;
@@ -34,7 +37,8 @@ public class GameConfig {
 
     public GameConfig() {
         file = new File(MissileWars.getInstance().getDataFolder(),"config.yml");
-        MissileWars.getInstance().saveResource("config.yml",false);
+        if(!file.exists()) MissileWars.getInstance().saveResource("config.yml",false);
+
         config = YamlConfiguration.loadConfiguration(file);
         config.addDefault("item-interval-seconds", DEFAULT_item_interval_sec);
         config.addDefault("prioritize-defense-items", DEFAULT_prioritize_defense);
@@ -51,6 +55,10 @@ public class GameConfig {
         max_items = config.getInt("max-item-count", DEFAULT_max_items);
         randomize_mode = config.getInt("randomize-mode", DEFAULT_randomize_mode);
         allow_midgame_joins =config.getBoolean("allow-midgame-joins", DEFAULT_allow_midgame_joins);
+    }
+
+    public void save() throws IOException {
+        config.save(file);
     }
 
     //#region getters
