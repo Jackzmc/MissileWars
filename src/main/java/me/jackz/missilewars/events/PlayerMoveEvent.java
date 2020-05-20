@@ -43,14 +43,10 @@ public class PlayerMoveEvent implements Listener {
     @EventHandler
     public void onDrop(PlayerDropItemEvent e) {
         Player player = e.getPlayer();
-        if(player.getGameMode().equals(GameMode.SURVIVAL) && !e.isCancelled()) {
+        if(e.isCancelled()) return;
+        if(player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.ADVENTURE) {
             GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
-            if(team != GamePlayers.MWTeam.NONE) {
-                //if(e.getItemDrop().getItemStack().getType().equals(Material.BOW)) {
-                    e.setCancelled(true);
-                //}
-                //e.setCancelled(true);
-            }
+            e.setCancelled(true);
         }
     }
 
