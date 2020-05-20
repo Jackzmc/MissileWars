@@ -28,9 +28,9 @@ public class GamePlayers {
     private Team redTeam;
     private Team greenTeam;
 
-    private final static PotionEffect nightVision = new PotionEffect(PotionEffectType.NIGHT_VISION, 9999, 2, true, false, false);
-    private final static PotionEffect saturation = new PotionEffect(PotionEffectType.SATURATION, 9999, 2, true, false, false);
-    private final static PotionEffect regeneration = new PotionEffect(PotionEffectType.REGENERATION, 9999, 0, true, false, false);
+    private final static PotionEffect nightVision = new PotionEffect(PotionEffectType.NIGHT_VISION, 99999, 2, true, false, false);
+    private final static PotionEffect saturation = new PotionEffect(PotionEffectType.SATURATION, 99999, 2, true, false, false);
+    private final static PotionEffect regeneration = new PotionEffect(PotionEffectType.REGENERATION, 99999, 0, true, false, false);
 
     public GamePlayers() {
         scoreboard =  Bukkit.getScoreboardManager().getMainScoreboard();
