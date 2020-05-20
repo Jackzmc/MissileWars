@@ -1,11 +1,11 @@
 package me.jackz.missilewars.commands;
 
 import me.jackz.missilewars.MissileWars;
-import me.jackz.missilewars.game.GameManager;
-import me.jackz.missilewars.game.GamePlayers;
-import me.jackz.missilewars.game.ItemSystem;
-import me.jackz.missilewars.game.Reset;
+import me.jackz.missilewars.game.*;
+import me.jackz.missilewars.lib.ConfigTextComponent;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -91,10 +91,6 @@ public class AdminCommand implements CommandExecutor {
                 }else{
                     sender.sendMessage("§cInvalid usage. /mwa give <red/green/[player]> <item>");
                 }
-                break;
-            }
-            case "config": {
-                sender.sendMessage("§cNot Implemented");
                 break;
             }
             case "scramble": {
@@ -209,6 +205,106 @@ public class AdminCommand implements CommandExecutor {
                             break;
                         default:
                             sender.sendMessage("§cUnknown option, try: /mwa game <start/reset/stop/reload>");
+                    }
+                }
+                break;
+            }
+            case "config": {
+                if(args.length < 2) {
+                    sender.sendMessage("§cUsage: /mwa config <[property name]/help> [new value]");
+                }else {
+                    switch(args[1].toLowerCase()) {
+                        case "1":
+                        case "iteminterval":
+                            if(args.length >= 3) {
+                                sender.sendMessage("§cChanging setting is not implemented.");
+                            }else{
+                                TextComponent tc = ConfigTextComponent.tc_itemInterval;
+                                tc.setText("§9§nItem Interval§r §a[Hover for information]");
+                                sender.spigot().sendMessage(tc);
+                                sender.sendMessage("§eCurrent Value: §9" + MissileWars.gameManager.getConfig().getItemInterval());
+                                sender.sendMessage("§7§oSet value with §e/mwa config iteminterval <number>");
+                            }
+                            break;
+                        case "2":
+                        case "preferdefense":
+                            if(args.length >= 3) {
+                                sender.sendMessage("§cChanging setting is not implemented.");
+                            }else{
+                                TextComponent tc = ConfigTextComponent.tc_prioritize_defense;
+                                tc.setText("§9§nPrioritize Defense Items§r §a[Hover for information]");
+                                sender.spigot().sendMessage(tc);
+                                sender.sendMessage("§eCurrent Value: §9" + MissileWars.gameManager.getConfig().isPrioritizeDefenseEnabled());
+                                sender.sendMessage("§7§oSet value with §e/mwa config preferdefense <true/false>");
+                            }
+                            break;
+                        case "3":
+                        case "midgamejoin":
+                            if(args.length >= 3) {
+                                sender.sendMessage("§cChanging setting is not implemented.");
+                            }else{
+                                TextComponent tc = ConfigTextComponent.tc_midgame_joins;
+                                tc.setText("§9§nAllow Midgame Joins§r §a[Hover for information]");
+                                sender.spigot().sendMessage(tc);
+                                sender.sendMessage("§eCurrent Value: §9" + MissileWars.gameManager.getConfig().isMidGameJoinAllowed());
+                                sender.sendMessage("§7§oSet value with §e/mwa config midgamejoin <true/false>");
+                            }
+                            break;
+                        case "4":
+                        case "maxitems":
+                            if(args.length >= 3) {
+                                if(args[2].matches(".*\\d.*")) {
+                                    int number = Integer.parseInt(args[2]);
+                                    if(number < -1 || number == 0 || number > 64) {
+                                        sender.sendMessage("§cNumber is not in range of 1 - 64 (or -1 to disable)");
+                                    }else{
+                                        MissileWars.gameManager.getConfig().setMaxItems(number);
+                                        sender.sendMessage("§aChanged max item size to " + number);
+                                    }
+                                }else{
+                                    sender.sendMessage("§cValue must be a valid number");
+                                }
+                            }else{
+                                TextComponent tc = ConfigTextComponent.tc_max_item;
+                                tc.setText("§9§nMax Item Size§r §a[Hover for information]");
+                                sender.spigot().sendMessage(tc);
+                                sender.sendMessage("§eCurrent Value: §r§9" + MissileWars.gameManager.getConfig().getMaxItems());
+                                sender.sendMessage("§7§oSet value with §e/mwa config maxitems <value>");
+                            }
+                            break;
+                        case "5":
+                        case "randomizemode":
+                            if(args.length >= 3) {
+                                if(args[2].matches(".*\\d.*")) {
+                                    int number = Integer.parseInt(args[2]);
+                                    if(number < 0 || number > 3) {
+                                        sender.sendMessage("§cNumber is not in range of 0 - 3");
+                                    }else{
+                                        MissileWars.gameManager.getConfig().setRandomizeMode(number);
+                                        sender.sendMessage("§aChanged randomize mode to " + number);
+                                    }
+                                }else{
+                                    sender.sendMessage("§cValue must be a valid number");
+                                }
+                            }else{
+                                TextComponent tc = ConfigTextComponent.tc_randomize_mode;
+                                tc.setText("§9§nRandomize Mode§r §a[Hover for information]");
+                                sender.spigot().sendMessage(tc);
+                                sender.sendMessage("§eCurrent Value: §r§9" + MissileWars.gameManager.getConfig().getRandomizeMode());
+                                sender.sendMessage("§7§oSet value with §e/mwa config randomizemode <number>");
+                            }
+                            break;
+                        case "help":
+                            sender.sendMessage("§6Available Settings: <Name> (<id>)");
+                            sender.sendMessage("§6§o(Hover over an item to see information, click to set)");
+                            sender.spigot().sendMessage(
+                                    ConfigTextComponent.tc_itemInterval,
+                                    ConfigTextComponent.tc_prioritize_defense,
+                                    ConfigTextComponent.tc_midgame_joins,
+                                    ConfigTextComponent.tc_max_item,
+                                    ConfigTextComponent.tc_randomize_mode
+                            );
+                            break;
                     }
                 }
                 break;
