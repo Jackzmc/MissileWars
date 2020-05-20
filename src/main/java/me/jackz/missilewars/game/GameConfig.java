@@ -14,11 +14,11 @@ public class GameConfig {
     private int max_items = 1;
     private int randomize_mode = 0; //0 -> ALL, 1 -> Per team, 2 -> Per individual
 
-    private final static int DEFAULT_item_interval_sec = 15;
-    private final static boolean DEFAULT_prioritize_defense = false;
-    private final static boolean DEFAULT_allow_midgame_joins = false;
-    private final static int DEFAULT_max_items = 1;
-    private final static int DEFAULT_randomize_mode = 0; //0 -> ALL, 1 -> Per team, 2 -> Per individual
+    public final static int DEFAULT_item_interval_sec = 15;
+    public final static boolean DEFAULT_prioritize_defense = false;
+    public final static boolean DEFAULT_allow_midgame_joins = false;
+    public final static int DEFAULT_max_items = 1;
+    public final static int DEFAULT_randomize_mode = 0; //0 -> ALL, 1 -> Per team, 2 -> Per individual
 
     private static File file;
     private static YamlConfiguration config;

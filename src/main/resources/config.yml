@@ -9,6 +9,8 @@ prioritize-defense-items: false
 
 # Maximum amount of each item you can have (arrows will be 4x this value)
 # Default: 1
+# Range: 1 - 64
+# -1 Will make it unlimited
 max-stack-count: 1
 
 # Set the randomize mode
