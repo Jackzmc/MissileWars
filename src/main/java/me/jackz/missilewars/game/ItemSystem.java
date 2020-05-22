@@ -2,6 +2,8 @@ package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.lib.Util;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -87,7 +89,9 @@ public class ItemSystem {
     public static void giveItem(Player player, ItemStack itemstack, boolean bypassLimit) {
         //maxAmount being -1 disables limit
         int item_count = Util.getAmount(player.getInventory(), itemstack);
-        if(!bypassLimit &&item_count <= MissileWars.gameManager.getConfig().getMaxItems()) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("╝debug: " + item_count + itemstack.getItemMeta().getDisplayName()));
+        if(MissileWars.gameManager.getConfig().getMaxItems() == -1) bypassLimit = true;
+        if(!bypassLimit && item_count >= MissileWars.gameManager.getConfig().getMaxItems()) {
             player.sendMessage("§cYou already have a " + itemstack.getItemMeta().getDisplayName());
         }else{
             player.getInventory().addItem(itemstack);

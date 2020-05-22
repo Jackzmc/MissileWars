@@ -7,6 +7,7 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.WinManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -22,6 +23,7 @@ public class Explosion implements Listener {
             for (Block block : e.blockList()) {
                 if (block.getType().equals(Material.NETHER_PORTAL)) {
                     BlockVector3 blockVector3 = BukkitAdapter.asBlockVector(block.getLocation());
+                    Bukkit.broadcastMessage("debug: test");
                     ApplicableRegionSet regions = WorldGuard.getInstance().getPlatform().getRegionContainer().get(world).getApplicableRegions(blockVector3);
                     WinManager.testWin(regions);
                     break;

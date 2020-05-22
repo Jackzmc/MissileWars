@@ -25,6 +25,9 @@ public class PlayerStatsCommand implements CommandExecutor  {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(args.length > 0 && !args[0].equalsIgnoreCase("session")) {
+            if(sender.hasPermission("missilewars.stats.other")) {
+
+
             OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
             if(player.hasPlayedBefore()) {
                 boolean global = true;
@@ -35,16 +38,23 @@ public class PlayerStatsCommand implements CommandExecutor  {
             }else{
                 sender.sendMessage("§cThat player has no recorded statistics.");
             }
+            }else {
+                sender.sendMessage("§cYou do not have permission.");
+            }
         }else{
-            if(sender instanceof Player) {
-                Player player = (Player) sender;
-                boolean global = true;
-                if(args.length > 0 && args[0].equalsIgnoreCase("session")) {
-                    global = false;
+            if(sender.hasPermission("missilewars.stats")) {
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    boolean global = true;
+                    if (args.length > 0 && args[0].equalsIgnoreCase("session")) {
+                        global = false;
+                    }
+                    printStats(sender, player.getUniqueId(), player.getName(), global);
+                } else {
+                    sender.sendMessage("§cYou must be a player to view your own statistics. Try /stats <player>");
                 }
-                printStats(sender,  player.getUniqueId(), player.getName(), global);
             }else{
-                sender.sendMessage("§cYou must be a player to view your own statistics. Try /stats <player>");
+                sender.sendMessage("§cYou do not have permission.");
             }
         }
         return true;

@@ -39,13 +39,19 @@ public class SpectateCommand implements CommandExecutor {
             }else{
                 sender.sendMessage("§cThat player is currently in a game.");
             }
-        }else{
+        }else {
+            if (sender.getName().equals(player.getName())) {
+                if(!player.hasPermission("missilewars.spectate")) {
+                    sender.sendMessage("§cYou do not have permission");
+                    return true;
+                }
+            }
             if(player.getGameMode() == GameMode.SPECTATOR) {
                 player.setGameMode(GameMode.ADVENTURE);
                 player.teleport(GameConfig.SPAWN_LOCATION);
             }else{
                 player.setGameMode(GameMode.SPECTATOR);
-                player.sendMessage("§eYou are now spectating, leave spectator mode by typing §9/spectate §eagain.");
+                if(sender.getName().equals(player.getName())) player.sendMessage("§eYou are now spectating, leave spectator mode by typing §9/spectate §eagain.");
             }
         }
 

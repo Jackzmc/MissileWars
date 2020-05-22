@@ -52,8 +52,13 @@ public class GameCommand implements CommandExecutor  {
                     }
                 } else {
                     if (sender instanceof Player) {
-                        player = (Player) sender;
-                        self = true;
+                        if(sender.hasPermission("missilewars.join")) {
+                            player = (Player) sender;
+                            self = true;
+                        }else{
+                            sender.sendMessage("§cYou do not have permission.");
+                            return true;
+                        }
                     } else {
                         sender.sendMessage("§cCan not use this command in console. You can specify a player instead");
                         return true;
@@ -70,14 +75,22 @@ public class GameCommand implements CommandExecutor  {
                 }
                 return true;
             }else if(args[0].equalsIgnoreCase("stats")) {
-                if(args.length >= 2) {
-                    if(args[1].equalsIgnoreCase("global")) {
-                        sender.spigot().sendMessage(getTotalStatComponents(true));
-                        return true;
-                    }else if(args[1].equalsIgnoreCase("session")) {
-                        sender.spigot().sendMessage(getTotalStatComponents(false));
-                        return true;
+                if(sender.hasPermission("missilewars.stats")) {
+                    if (args.length >= 2) {
+                        if (args[1].equalsIgnoreCase("global")) {
+                            if(sender.hasPermission("missilewars.stats.global")) {
+                                sender.spigot().sendMessage(getTotalStatComponents(true));
+                                return true;
+                            }else{
+                                sender.sendMessage("§cYou do not have permission.");
+                            }
+                        } else if (args[1].equalsIgnoreCase("session")) {
+                            sender.spigot().sendMessage(getTotalStatComponents(false));
+                            return true;
+                        }
                     }
+                }else{
+                    sender.sendMessage("§cYou do not have permission.");
                 }
                 sender.sendMessage("§cUsage: /game stats <global/session>");
                 return true;
@@ -128,9 +141,9 @@ public class GameCommand implements CommandExecutor  {
         int minutes_played = stats.getStat("gametime_min.total", global);
         int minutes_played_highest = stats.getStat("gametime_min.longest", global);
         List<BaseComponent> components = new ArrayList<>(Arrays.asList(
-                new TextComponent("§6§n" + (global? "Session" : "Global") + " Statistics"),
+                new TextComponent("§6§n" + (global? "Global" : "Session") + " Statistics"),
                 new TextComponent(String.format("\n§aGreen -> Wins: §e%d §a| Loses: §e%d", green_wins, green_loses)),
-                new TextComponent(String.format("\n§cRed   -> Wins: §e%d §c| Loses: §e%d", red_wins, red_loses)),
+                new TextComponent(String.format("\n§cRed    -> Wins: §e%d §c| Loses: §e%d", red_wins, red_loses)),
                 new TextComponent(String.format("\n§9Minutes Played Total: §e%d §9(Highest per game: §e%d§9)",minutes_played, minutes_played_highest)),
                 new TextComponent("\n§9Deaths: §e" + deaths),
                 new TextComponent("\n§9Fireball Launches: §e" + fireball_launches),

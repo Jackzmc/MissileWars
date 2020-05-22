@@ -70,9 +70,9 @@ public class WinManager {
         TextComponent globalStat = new TextComponent("§d[Click to see global statistics]\n");
         currentGameStat.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/game stats session"));
         currentMyStat.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/stats session"));
-        globalStat.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/game stats"));
+        globalStat.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/game stats global"));
 
-        Map.Entry<Player,Integer> highestDeaths = GameManager.getStats().getHighestSessionStat("generic.deaths");
+        //Map.Entry<Player,Integer> highestDeaths = GameManager.getStats().getHighestSessionStat("generic.deaths");
         List<BaseComponent> components = new ArrayList<>(Arrays.asList(
                 new TextComponent("§6==================================================\n"),
                 new TextComponent(color.toString() + name + " team §9has won the game!\n"),
@@ -83,7 +83,7 @@ public class WinManager {
                 globalStat,
                 new TextComponent("§7§oTip: Use §r§e/stats <player> [global/session]§7§oto view their stats.\n"),
                 new TextComponent("\n"),
-                new TextComponent(String.format("§e%s had the most deaths (%d)\n", highestDeaths.getKey().getName(), highestDeaths.getValue())),
+                //new TextComponent(String.format("§e%s had the most deaths (%d)\n", highestDeaths.getKey().getName(), highestDeaths.getValue())),
                 new TextComponent("§6==================================================\n")
         ));
         BaseComponent[] componentArray = new BaseComponent[components.size()];
