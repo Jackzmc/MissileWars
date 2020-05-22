@@ -24,7 +24,31 @@ AsyncWorldEdit can possibly be used, as the resetting process can lag a server, 
 * Free
 * and probably more things I forgot about
 
-## Commands
+# Downloads
+#### Item Schematics
+Download all the schematics required here:
+Plugin should be by default configured to use them.
+
+https://dl.jackz.me/MissileWars/schematics.zip
+
+
+#### Working World Download
+Download the Missile Wars World
+(All commandblocks have been removed)
+
+https://dl.jackz.me/MissileWars/WORLD.zip
+
+
+#### Development Builds 
+
+[![Build Status](https://ci.jackz.me/view/Java/job/MissileWars/badge/icon)](https://ci.jackz.me/view/Java/job/MissileWars/)
+
+Builds can be found at this link:
+
+https://ci.jackz.me/view/Java/job/MissileWars/
+
+
+# Commands
 | Command                      | Permissions                | Description                                               |
 |------------------------------|----------------------------|-----------------------------------------------------------|
 | /spectate [player]           | missilewars.spectate.others| Switch between spectating and not spectating              |
