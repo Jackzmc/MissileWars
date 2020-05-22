@@ -21,3 +21,24 @@ commands:
     aliases: [mwa]
     description: admin
     usage: /mwa help
+
+permissions:
+  missilewars.stats.*:
+    description: Allows to view all types of statistics
+    default: true
+  missilewars.spectate:
+    description: Allow switching between spectating
+    default: true
+    children:
+      missilewars.spectate.others: false
+  missilewars.admin:
+    description: Allows access to the /missilewarsadmin command
+    default: op
+    children:
+      missilewars.admin.choose: true
+      missilewars.admin.give: true
+      missilewars.admin.config: false
+      missilewars.admin.config.save: false
+      missilewars.admin.game.stop: false
+      missilewars.admin.game.start: true
+
