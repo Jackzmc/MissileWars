@@ -1,8 +1,7 @@
 # MissileWars
 
-Still WIP, mostly complete. Everything should work fine if you setup the manual regions and have schematic files, but they aren't provided right now. Regions constants you can find in the game package's code. Once done of course this will change. 
+Still WIP, mostly complete. Everything should work fine if you use the provided world download, and download the schematics. Will be able to setup a world later, and the file for a premade world will be provided. Any custom maps must be based on the Z-axis (bases face each other on Z).
 
-You can't change any the configuration unless you recompile right now. Not meant for production, has semi-testing. Maps must be based on the Z-axis, spawnpoints are also hardcoded.
 
 ### Requires:
 * WorldEdit
@@ -10,8 +9,6 @@ You can't change any the configuration unless you recompile right now. Not meant
 * Vault _(optional)_ for chat prefix
 
 AsyncWorldEdit can possibly be used, as the resetting process can lag a server, and possibly lag clients out. I've tested it, and it works fine in normal operations (may need to tweak memory settings to allow it work always). Only problem is on resetting, it doesn't wait and reset correctly.
-
-(and the hardcoded region names)
 
 ### Features:
 * Full MissileWars vanilla replacement
