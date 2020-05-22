@@ -6,18 +6,21 @@ You can't change any the configuration unless you recompile right now. Not meant
 
 ### Requires:
 * WorldEdit
-* WorldGuard
-* Vault _(optional)_
+* WorldGuard (possibly not in future)
+* Vault _(optional)_ for chat prefix
+
+AsyncWorldEdit can possibly be used, as the resetting process can lag a server, and possibly lag clients out. I've tested it, and it works fine in normal operations (may need to tweak memory settings to allow it work always). Only problem is on resetting, it doesn't wait and reset correctly.
 
 (and the hardcoded region names)
 
 ### Features:
 * Full MissileWars vanilla replacement
 * Uses worldedit to spawn missiles & clear game
-* (WIP) Tracks statistics of players, wins/loses, more
+* Tracks statistics of players, wins/loses, more
 * (SOON) PlaceholderAPI support
-* (SOON) Add custom missiles
-* (SOON) Change game settings during game
+* (WIP) Add custom missiles
+* Change game settings during game
+* (SOON) Custom map support
 * Free
 * and probably more things I forgot about
 
