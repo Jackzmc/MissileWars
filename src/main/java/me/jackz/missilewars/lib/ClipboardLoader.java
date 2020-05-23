@@ -20,7 +20,9 @@ public class ClipboardLoader {
     private static Map<String,Clipboard> clips = new HashMap<>();
 
     static {
-        loadSchematics();
+        File directory = new File(MissileWars.getInstance().getDataFolder() + File.separator + "schematics");
+        directory.mkdirs();
+        schematics = directory.listFiles();
     }
 
     public static Clipboard getClipboard(String name) {
@@ -28,24 +30,6 @@ public class ClipboardLoader {
             return clips.get(name);
         }else{
             return fetchClipboard(name);
-        }
-    }
-
-    private static void loadSchematics() {
-        File directory = new File(MissileWars.getInstance().getDataFolder() + File.separator + "schematics");
-        directory.mkdirs();
-        schematics = directory.listFiles();
-
-        //loadList("guardian","lightning","shieldbuster","tomahawk","juggernaut","shield");
-
-    }
-
-    private static void loadList(String... args) {
-        for (String schematic : args) {
-            String greenName = "Green-" + schematic;
-            String redName = "Red-" + schematic;
-            clips.put(greenName, fetchClipboard(greenName));
-            clips.put(redName, fetchClipboard(redName));
         }
     }
 

@@ -27,7 +27,6 @@ public class PlayerSpawning implements Listener {
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        if(MissileWars.gameManager.getState().isLegacyMissilesEnabled()) return;
         if(e.getClickedBlock() != null && e.getClickedBlock().getState() instanceof Sign) {
             Sign sign = (Sign) e.getClickedBlock().getState();
             String[] lines = sign.getLines();
