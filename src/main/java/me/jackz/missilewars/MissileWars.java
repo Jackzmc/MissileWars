@@ -24,6 +24,8 @@ public final class MissileWars extends JavaPlugin {
     private RestartManager restartManager;
     private Chat vaultChat;
 
+    private final static String[] DEFAULT_SCHEMS = new String[] { "cube3", "guardian", "juggernaut", "lightning", "shield", "shieldbuster", "tomahawk"};
+
     @Override
     public void onEnable() {
         main = this;
@@ -61,9 +63,13 @@ public final class MissileWars extends JavaPlugin {
     }
     private void saveSchematics() {
         File file = new File(getDataFolder(),"schematics");
-        if(!file.exists()) {
+        if(!file.exists() || (file.isDirectory() && file.list().length == 0)) {
             file.mkdirs();
-            saveResource("schematics/",false);
+
+            for (String schem : DEFAULT_SCHEMS) {
+                saveResource("schematics/green-" + schem + ".schem",false);
+                saveResource("schematics/red-" + schem + ".schem",false);
+            }
         }
     }
 
