@@ -25,11 +25,6 @@ public class ItemSystem {
     private final static ItemStack ITEM_BOW = Util.getCustomItem(Material.BOW,"&9GunBlade","","&7A sharp Flame Bow","&7Use to ignite TNT remotely with arrows");
     private final static ItemStack ITEM_BARRIER = Util.getCustomItem(Material.SNOWBALL,"&9Deploy Barrier","&7Deploys a barrier after 1 second.");
     private final static ItemStack ITEM_ARROW = Util.getCustomItem(Material.ARROW,"&9Flame Arrow","&7Shoot to ignite TNT.");
-    /*private final static ItemStack MISSILE_TOMAHAWK = Util.getCustomItem(Material.CREEPER_SPAWN_EGG,"&9Deploy Tomahawk","&7Spawns a tomahawk missile");
-    private final static ItemStack MISSILE_SHIELDBUSTER = Util.getCustomItem(Material.WITCH_SPAWN_EGG,"&9Deploy ShieldBuster","&7Spawns a Shieldbuster missile.","","&eWill go straight through barriers");
-    private final static ItemStack MISSILE_JUGGERNAUT = Util.getCustomItem(Material.GHAST_SPAWN_EGG,"&9Deploy Juggernaut","&7Spawns a Juggernaut missile.","","&eIs the most explosive missile");
-    private final static ItemStack MISSILE_LIGHTNING = Util.getCustomItem(Material.OCELOT_SPAWN_EGG,"&9Deploy Lightning","&7Spawns a Lightning missile. ","","&eIs the fastest missile");
-    private final static ItemStack MISSILE_GUARDIAN = Util.getCustomItem(Material.GUARDIAN_SPAWN_EGG,"&9Deploy Guardian","&7Spawns a Guardian missile.");*/
 
     static {
         ITEM_BOW.addEnchantment(Enchantment.ARROW_FIRE,1);

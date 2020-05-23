@@ -53,7 +53,7 @@ public class BarrierDeploy implements Listener {
                     ApplicableRegionSet regions = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(player.getWorld())).getApplicableRegions(blockVector3);
                     for (ProtectedRegion region : regions) {
                         if(region.getId().equalsIgnoreCase(nomanland_region)) {
-                            boolean success = MWUtil.pasteSchematic(player, GamePlayers.getTeamName(team) + "-shield", projectile.getLocation(), 0);
+                            boolean success = MWUtil.pasteSchematic(player, GamePlayers.getTeamName(team).toLowerCase() + "-shield", projectile.getLocation(), 0);
                             if (!success) {
                                 if(player.getGameMode() == GameMode.SURVIVAL) {
                                     ItemSystem.giveItem(player, ItemSystem.getItem("barrier"), true);
