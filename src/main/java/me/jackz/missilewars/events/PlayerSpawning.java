@@ -1,11 +1,8 @@
 package me.jackz.missilewars.events;
 
 import me.jackz.missilewars.MissileWars;
-import me.jackz.missilewars.game.GameConfig;
-import me.jackz.missilewars.game.GameManager;
-import me.jackz.missilewars.game.GamePlayers;
+import me.jackz.missilewars.game.*;
 import me.jackz.missilewars.lib.MWUtil;
-import me.jackz.missilewars.game.StatsTracker;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -57,37 +54,8 @@ public class PlayerSpawning implements Listener {
         if(MissileWars.gameManager.getState().isGameActive() && e.getHand() == EquipmentSlot.HAND && (player.getGameMode() == GameMode.SURVIVAL || player.getGameMode() == GameMode.CREATIVE)) {
             if(e.getItem() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK || e.getAction() == Action.RIGHT_CLICK_AIR) {
                 if(MissileWars.gameManager.players().has(player)) {
-                    StatsTracker stats = GameManager.getStats();
                     if (e.getClickedBlock() != null) {
-                        switch (e.getItem().getType()) {
-                            case GUARDIAN_SPAWN_EGG:
-                                e.setCancelled(true);
-                                spawnMissile("guardian", player, e.getClickedBlock());
-                                e.setCancelled(true);
-                                break;
-                            case GHAST_SPAWN_EGG:
-                                e.setCancelled(true);
-                                spawnMissile("juggernaut", player, e.getClickedBlock());
-                                break;
-                            case OCELOT_SPAWN_EGG:
-                                e.setCancelled(true);
-                                spawnMissile("lightning", player, e.getClickedBlock());
-                                break;
-                            case WITCH_SPAWN_EGG:
-                                e.setCancelled(true);
-                                spawnMissile("shieldbuster", player, e.getClickedBlock());
-                                break;
-                            case CREEPER_SPAWN_EGG:
-                                e.setCancelled(true);
-                                spawnMissile("tomahawk", player, e.getClickedBlock());
-                            case BLAZE_SPAWN_EGG:
-                                e.setCancelled(true);
-                            case SNOWBALL:
-                                e.setCancelled(true);
-                                //spawnShield(player);
-                                break;
-                        }
-
+                        GameManager.getMissileLoader().processRightClick(e);
                     } else {
                         if(e.getItem().getType().equals(Material.BLAZE_SPAWN_EGG)) {
                             if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -107,34 +75,6 @@ public class PlayerSpawning implements Listener {
         }
     }
 
-
-    private void spawnMissile(String type, Player player, Block clickedBlock) {
-        GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
-        boolean isLightning = type.equalsIgnoreCase("lightning");
-        boolean isGreenTeam = team == GamePlayers.MWTeam.GREEN;
-        //lightning schematics are inverted...
-        int distance_from_block = isLightning ? 5 : 4;
-        int rotation_amount = isLightning  ? 180 : 0;
-
-        int team_block_add = isGreenTeam ? -distance_from_block : distance_from_block;
-
-        Location spawnBlock = clickedBlock.getLocation().add(0,-3,team_block_add);
-        if(MissileWars.gameManager.getState().isDebug()) Util.highlightBlock(spawnBlock,Material.SEA_LANTERN,20 * 5);
-        if(MWUtil.isPortalInLocation(spawnBlock,isGreenTeam)) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cCan't spawn a missile in the portal area!"));
-            return;
-        }
-
-        String schemName = GamePlayers.getTeamName(team) + "-" + type;
-        boolean success = MWUtil.pasteSchematic(player,schemName,spawnBlock,rotation_amount);
-        if(success) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§0Spawned a §9" + type));
-            Util.removeOneFromHand(player);
-            MWUtil.updateSpawnStat(type,player);
-        }else {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§cMissile spawn failed"));
-        }
-    }
 
     private void launchFireball(Player player) {
         Location eye = player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(1.2));
