@@ -4,6 +4,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.regions.Polygonal2DRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GameManager;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -82,7 +83,7 @@ public class Util {
         return getWorldEditRegionFromWorldGuard(wgRegion, BukkitAdapter.adapt(bukkitWorld));
     }
     public static Polygonal2DRegion getWorldEditRegionFromWorldGuard(ProtectedRegion wgRegion) {
-        return getWorldEditRegionFromWorldGuard(wgRegion,Bukkit.getWorld("world"));
+        return getWorldEditRegionFromWorldGuard(wgRegion, GameManager.WORLD);
     }
     public static ItemStack getCustomItem(Material mt, String name) {
         return getCustomItem(mt,name,new ArrayList<>());

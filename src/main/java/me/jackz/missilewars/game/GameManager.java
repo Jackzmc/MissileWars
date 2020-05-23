@@ -4,6 +4,7 @@ import me.jackz.missilewars.MissileWars;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
@@ -20,6 +21,7 @@ public class GameManager {
     private ItemSystem itemSystem;
     private static StatsTracker stats;
 
+    public static World WORLD;
 
 
     public GameManager(MissileWars plugin) {
@@ -30,6 +32,9 @@ public class GameManager {
         stats = new StatsTracker();
         missileLoader = new MissileLoader();
         initializeScoreboard();
+
+        //todo: implement loading shit from data.yml
+        WORLD = Bukkit.getWorld("world");
     }
 
     //#region privatemethods

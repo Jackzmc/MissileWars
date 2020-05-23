@@ -39,7 +39,7 @@ public class Reset {
         Clipboard redCube = ClipboardLoader.getClipboard(Reset.redCube);
         Bukkit.broadcastMessage("§6[Missile Wars] §eResetting the map, please wait...");
 
-        World world = BukkitAdapter.adapt(Bukkit.getWorld("world"));
+        World world = BukkitAdapter.adapt(GameManager.WORLD);
         CuboidRegion region = new CuboidRegion(NoManLandPos1,NoManLandPos2);
         BlockState airBlock = BlockTypes.AIR.getDefaultState();
         BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
