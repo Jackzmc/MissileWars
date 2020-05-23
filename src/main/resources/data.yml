@@ -1,20 +1,26 @@
 missiles:
-  #Info:
-  #examplemissile:
-    #item: #the bukkit material type
-    #schematic: (also optional) the schematic name, must exist for both teams like Red-NAME and green-NAME
-    #hint: optional text to add (ex lightning: fastest missile)
+#  #EXAMPLE:
+#  examplemissile:
+#    item: #the bukkit material type
+#    schematic: (also optional) the schematic name, must exist for both teams like red-NAME and green-NAME
+#    hint: optional text to add (ex lightning: fastest missile)
+#  #NOTES:
+#  schematic is just the name of the file without the team prefix, by default is the id (examplemissile)
+#  which will look for a schematic file called 'green-examplemissile' or 'red-examplemissile'
+#  if you do specify shcematic property, it will replace the id with that.
+# #ALSO: each missile's item must be UNIQUE, or only the first entry will be used
   tomahawk:
     item: CREEPER_SPAWN_EGG
   shieldbuster: 
     item: WITCH_SPAWN_EGG
-    hint: "Will go straight through barriers"
+    hint: Will go straight through barriers
+    display: ShieldBuster
   juggernaut:
     item: GHAST_SPAWN_EGG
     hint: Is the most explosive missile
   lightning: 
     item: OCELOT_SPAWN_EGG
-    hint: "Is the fastest missile"
+    hint: Is the fastest missile
   guardian: 
     item: GUARDIAN_SPAWN_EGG
 

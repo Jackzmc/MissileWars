@@ -1,8 +1,7 @@
 # MissileWars
 
-Still WIP, mostly complete. Everything should work fine if you use the provided world download, and download the schematics. Will be able to setup a world later, and the file for a premade world will be provided. Any custom maps must be based on the Z-axis (bases face each other on Z).
-
-You can't change any the configuration unless you recompile right now. Not meant for production, has semi-testing. Maps must be based on the Z-axis, spawnpoints are also hardcoded.
+Still WIP, mostly complete. Everything should work fine if you use the provided world download, and data.yml. Will be able to setup a world later, and the file for a premade world will be provided. Any custom maps must be based on the Z-axis (bases face each other on Z).
+You can't change any the configuration unless you recompile right now. Maps must be based on the Z-axis.
 
 ### Requires:
 * WorldEdit
@@ -16,7 +15,7 @@ AsyncWorldEdit can possibly be used, as the resetting process can lag a server, 
 * Uses worldedit to spawn missiles & clear game
 * Tracks statistics of players, wins/loses, more
 * (SOON) PlaceholderAPI support
-* (WIP) Add custom missiles
+* Add custom missiles
 * Change game settings during game
 * (SOON) Custom map support
 * Free
@@ -24,17 +23,17 @@ AsyncWorldEdit can possibly be used, as the resetting process can lag a server, 
 
 # Downloads
 #### Item Schematics
-Download all the schematics required here:
-Plugin should be by default configured to use them.
-
-https://dl.jackz.me/MissileWars/schematics.zip
-
+Schematics are already provided with plugin jar. If you are adding any custom schematics, please lowercase the team name.
 
 #### Working World Download
 Download the Missile Wars World
 (All commandblocks have been removed)
 
 https://dl.jackz.me/MissileWars/WORLD.zip
+##### data.yml for world
+A preconfigured setup for the provided world can be downloaded here:
+
+https://dl.jackz.me/MissileWars/data.yml
 
 
 #### Development Builds 
