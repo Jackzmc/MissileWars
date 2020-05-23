@@ -16,6 +16,7 @@ public class GameManager {
     private GameState state;
     private GamePlayers players;
     private static GameConfig config;
+    private static MissileLoader missileLoader;
     private ItemSystem itemSystem;
     private static StatsTracker stats;
 
@@ -27,10 +28,9 @@ public class GameManager {
         players = new GamePlayers();
         config = new GameConfig();
         stats = new StatsTracker();
+        missileLoader = new MissileLoader();
         initializeScoreboard();
     }
-
-
 
     //#region privatemethods
     private void initializeScoreboard() {
@@ -148,7 +148,7 @@ public class GameManager {
             stats.save();
             stats = null;
         }
-
+        missileLoader = null;
     }
 
     public GameState getState() {
@@ -164,4 +164,8 @@ public class GameManager {
     public static StatsTracker getStats() {
         return stats;
     }
+    public static MissileLoader getMissileLoader() {
+        return missileLoader;
+    }
+
 }
