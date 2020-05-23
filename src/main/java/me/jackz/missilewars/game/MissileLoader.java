@@ -32,7 +32,8 @@ public class MissileLoader {
         if(file.exists()) {
             reload();
         }else{
-            Bukkit.getLogger().severe("Could not load data.yml: Missile spawning disabled");
+            MissileWars.getInstance().saveResource("data.yml",false);
+            Bukkit.getLogger().warning("Could not find data.yml, creating default.");
         }
     }
 
