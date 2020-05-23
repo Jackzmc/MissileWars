@@ -22,15 +22,15 @@ AsyncWorldEdit can possibly be used, as the resetting process can lag a server, 
 * and probably more things I forgot about
 
 # Downloads
-#### Item Schematics
+### Item Schematics
 Schematics are already provided with plugin jar. If you are adding any custom schematics, please lowercase the team name.
 
-#### Working World Download
+### Working World Download
 Download the Missile Wars World
 (All commandblocks have been removed)
 
 https://dl.jackz.me/MissileWars/WORLD.zip
-##### data.yml for world
+#### data.yml for world
 A preconfigured setup for the provided world can be downloaded here:
 
 https://dl.jackz.me/MissileWars/data.yml
