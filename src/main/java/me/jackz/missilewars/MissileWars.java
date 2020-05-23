@@ -14,6 +14,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 public final class MissileWars extends JavaPlugin {
 
     private static MissileWars main;
@@ -34,6 +36,8 @@ public final class MissileWars extends JavaPlugin {
         registerCommands();
         registerListeners();
         setupChat();
+        saveSchematics();
+
     }
 
     private void registerCommands() {
@@ -54,6 +58,13 @@ public final class MissileWars extends JavaPlugin {
     private void setupChat() {
         RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
         if(rsp != null) vaultChat = rsp.getProvider();
+    }
+    private void saveSchematics() {
+        File file = new File(getDataFolder(),"schematics");
+        if(!file.exists()) {
+            file.mkdirs();
+            saveResource("schematics/",false);
+        }
     }
 
     @Override
