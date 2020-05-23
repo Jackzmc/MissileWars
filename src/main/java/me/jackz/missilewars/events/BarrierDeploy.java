@@ -27,6 +27,7 @@ public class BarrierDeploy implements Listener {
     @EventHandler
     private void onSnowballThrow(ProjectileLaunchEvent e) {
         Projectile projectile = e.getEntity();
+        if(projectile.getShooter() == null) return;
         if(projectile.getType() == EntityType.SNOWBALL) {
             if(Math.random() < .05) {
                 Entity firework = projectile.getWorld().spawnEntity(projectile.getLocation(),EntityType.FIREWORK);

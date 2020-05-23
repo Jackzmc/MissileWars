@@ -21,8 +21,8 @@ import me.jackz.missilewars.lib.ClipboardLoader;
 import org.bukkit.Bukkit;
 
 public class Reset {
-    private final static String greenCube = "green-Cube3";
-    private final static String redCube = "red-Cube3";
+    private final static String greenCube = "green-cube3";
+    private final static String redCube = "red-cube3";
     //private final static String greenPortal = "greenPortal";
     //private final static String redPortal = "redPortal";
 
@@ -45,6 +45,7 @@ public class Reset {
         BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
         clearNML(world, region, airBlock, clipboard);
 
+
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
             paste(world, greenCube, greenCubeOrigin, true);
         }, 20 * 15);
@@ -52,9 +53,10 @@ public class Reset {
             paste(world, redCube, redCubeOrigin, true);
             Bukkit.broadcastMessage("§6[Missile Wars] §aMap has been reset successfully");
         }, 20 * 25);
+
     }
 
-    private static void clearNML(World world, CuboidRegion region, BlockState airBlock, BlockArrayClipboard clipboard) {
+    private static boolean clearNML(World world, CuboidRegion region, BlockState airBlock, BlockArrayClipboard clipboard) {
         try(EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, -1)) {
             editSession.setBlocks(region, airBlock);
             editSession.setFastMode(true);
@@ -62,12 +64,15 @@ public class Reset {
             ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(editSession, region, clipboard, BlockVector3.ZERO);
             Operations.completeBlindly(forwardExtentCopy);
             //probably put a delay, cant reliabily wait
+            return true;
         } catch (MaxChangedBlocksException e) {
             Bukkit.getLogger().warning("Hit a max blocks limit resetting map, may not be cleared");
+            return false;
         }
     }
 
     private static boolean paste(World world, Clipboard clipboard, BlockVector3 location, boolean fastMode) {
+        if(clipboard == null) return false;
         try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, -1)) {
             editSession.setFastMode(fastMode);
             ClipboardHolder holder = new ClipboardHolder(clipboard);

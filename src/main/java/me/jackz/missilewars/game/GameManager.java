@@ -71,8 +71,12 @@ public class GameManager {
     //#endregion
     //todo: prevent start if is resetting
     public void start() {
-        state.setActive(true);
+        if(players.size() == 0) {
+            Bukkit.getLogger().warning("GameManager: Not starting with 0 players.");
+            return;
+        }
         ItemStack bow = ItemSystem.getItem("bow");
+        state.setActive(true);
         for (Map.Entry<Player, GamePlayers.MWTeam> entry : players.getAll()) {
             Player player = entry.getKey();
             GamePlayers.MWTeam team = entry.getValue();

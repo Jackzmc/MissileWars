@@ -60,6 +60,10 @@ public class ClipboardLoader {
     }
     private static Clipboard getClipboard(File schematic) {
         ClipboardFormat format = ClipboardFormats.findByFile(schematic);
+        if(format == null) {
+            Bukkit.getLogger().warning("Failed to find schematic file " + schematic.getName());
+            return null;
+        }
         try (ClipboardReader reader = format.getReader(new FileInputStream(schematic))) {
             return reader.read();
         } catch (IOException e) {
