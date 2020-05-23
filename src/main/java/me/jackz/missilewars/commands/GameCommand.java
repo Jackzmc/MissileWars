@@ -4,6 +4,7 @@ import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.game.StatsTracker;
+import me.jackz.missilewars.lib.Missile;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -133,11 +134,6 @@ public class GameCommand implements CommandExecutor  {
         int deaths = stats.getStat("generic.deaths.total", global);
         int shield_spawns = stats.getStat("spawns.barrier.total", global);
         int fireball_launches = stats.getStat("spawns.fireball.total", global);
-        int tomahawk_spawns = stats.getStat("spawns.tomahawk.total", global);
-        int juggernaut_spawns = stats.getStat("spawns.juggernaut.total", global);
-        int guardian_spawns = stats.getStat("spawns.guardian.total", global);
-        int lightning_spawns = stats.getStat("spawns.lightning.total", global);
-        int shieldbuster_spawns = stats.getStat("spawns.shieldbuster.total", global);
         int minutes_played = stats.getStat("gametime_min.total", global);
         int minutes_played_highest = stats.getStat("gametime_min.longest", global);
         List<BaseComponent> components = new ArrayList<>(Arrays.asList(
@@ -147,13 +143,13 @@ public class GameCommand implements CommandExecutor  {
                 new TextComponent(String.format("\n§9Minutes Played Total: §e%d §9(Highest per game: §e%d§9)",minutes_played, minutes_played_highest)),
                 new TextComponent("\n§9Deaths: §e" + deaths),
                 new TextComponent("\n§9Fireball Launches: §e" + fireball_launches),
-                new TextComponent("\n§9Barriers Deployed: §e" + shield_spawns),
-                new TextComponent("\n§9Tomahawks Deployed: §e" + tomahawk_spawns),
-                new TextComponent("\n§9Juggernauts Deployed: §e" + juggernaut_spawns),
-                new TextComponent("\n§9Guardians Deployed: §e" + guardian_spawns),
-                new TextComponent("\n§9Lightnings Deployed: §e" + lightning_spawns),
-                new TextComponent("\n§9Shieldbusters Deployed: §e" + shieldbuster_spawns)
+                new TextComponent("\n§9Barriers Deployed: §e" + shield_spawns)
         ));
+        for (Missile missile : GameManager.getMissileLoader().getList()) {
+            int spawns = GameManager.getStats().getStat("spawns." + missile.getId() + ".total",global);
+            TextComponent tc = new TextComponent("\n§9" + missile.getDisplay() + "s Deployed: §e" + spawns);
+            components.add(tc);
+        }
         BaseComponent[] componentArray = new BaseComponent[components.size()];
         components.toArray(componentArray);
         return componentArray;
