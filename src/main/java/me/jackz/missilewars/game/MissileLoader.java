@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MissileLoader {
     //Will manage the files, and the data.yml file and managing spawning
@@ -37,11 +39,20 @@ public class MissileLoader {
         }
     }
 
-    public List<Missile> getList() {
+    public List<Missile> getMissiles() {
         return missileList;
     }
-    public String[] getMissiles() {
-        return (String[]) missileList.stream().map(Missile::getId).toArray();
+    public List<String> getIds() {
+        return missileList.stream().map(Missile::getId).collect(Collectors.toList());
+    }
+
+    public Missile findMissile(String id) {
+        for (Missile missile : missileList) {
+            if(missile.getId().equalsIgnoreCase(id)) {
+                return missile;
+            }
+        }
+        return null;
     }
 
     public void reload() {

@@ -4,23 +4,19 @@ import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.*;
 import me.jackz.missilewars.lib.ConfigOption;
 import me.jackz.missilewars.lib.ConfigTextComponent;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
+import me.jackz.missilewars.lib.Missile;
 import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AdminCommand implements CommandExecutor {
     private MissileWars plugin;
@@ -38,12 +34,12 @@ public class AdminCommand implements CommandExecutor {
         if(args.length == 0 || args[0].equalsIgnoreCase("help") ) {
             sender.sendMessage("§6Missile Wars - Admin Menu");
             sender.sendMessage("§e/mwa give <player/red/green> <item> [bypass]§7- gives player or team an item");
-            sender.sendMessage("§e/mwa choose <item> §7- activate item spawn manually");
+            sender.sendMessage("§e/mwa choose <item> §7- ctivate item spawn manually");
             sender.sendMessage("§e/mwa items §7- get all items");
-            sender.sendMessage("§e/mwa scramble §7- Scramble the teams");
-            sender.sendMessage("§e/mwa game <start/reset/stop/reload>");
-            sender.sendMessage("§e/mwa reload <all/config/stats");
-            sender.sendMessage("§e/mwa config §7- Change game rules and configs");
+            sender.sendMessage("§e/mwa scramble §7- scramble the teams");
+            sender.sendMessage("§e/mwa game <start/reset/stop/reload> §7- start, stop, and reload game");
+            sender.sendMessage("§e/mwa reload <all/config/data/stats> §7- reload any or all configuration files");
+            sender.sendMessage("§e/mwa config §7- change game rules and configs");
             return true;
         }
         switch(args[0].toLowerCase()) {
@@ -248,6 +244,8 @@ public class AdminCommand implements CommandExecutor {
                             break;
                         case "debug":
                             sender.sendMessage("active: " + MissileWars.gameManager.getState().isGameActive());
+                            String missileList = GameManager.getMissileLoader().getMissiles().stream().map(Missile::getId).collect(Collectors.joining(","));
+                            sender.sendMessage("Missiles: " + missileList);
                             break;
                         default:
                             sender.sendMessage("§cUnknown option, try: /mwa game <start/reset/stop/reload>");
@@ -423,7 +421,7 @@ public class AdminCommand implements CommandExecutor {
                             sender.sendMessage("§aSuccessfully reloaded.");
                             break;
                         default:
-                            sender.sendMessage("§cUnknown option, try: /mwa reload <all/config/stats>");
+                            sender.sendMessage("§cUnknown option, try: /mwa reload <all/config/stats/data>");
                     }
                 }
                 break;

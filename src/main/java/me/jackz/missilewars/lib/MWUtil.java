@@ -19,10 +19,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class MWUtil {
-    private static ClipboardLoader clipboardLoader;
-    static {
-        clipboardLoader = new ClipboardLoader(MissileWars.getInstance());
-    }
     public static void updateSpawnStat(String statname, Player player) {
         GameManager.getStats().incStat("spawns." + statname + ".total");
         GameManager.getStats().incStat("spawns." + statname + "." + player.getUniqueId());
@@ -59,7 +55,7 @@ public class MWUtil {
         int y = origin.getBlockY();
         int z = origin.getBlockZ();
 
-        Clipboard clipboard = clipboardLoader.getClipboard(schemName);
+        Clipboard clipboard = ClipboardLoader.getClipboard(schemName);
         if(clipboard == null) {
             Bukkit.getLogger().warning("Could not find schematic '" + schemName + "'");
             player.sendMessage("§cSorry, there is no schematic for this item to place.");

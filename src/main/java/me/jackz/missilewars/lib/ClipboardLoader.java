@@ -19,7 +19,7 @@ public class ClipboardLoader {
     private static File[] schematics;
     private static Map<String,Clipboard> clips = new HashMap<>();
 
-    public ClipboardLoader(MissileWars plugin) {
+    static {
         loadSchematics();
     }
 
@@ -36,7 +36,7 @@ public class ClipboardLoader {
         directory.mkdirs();
         schematics = directory.listFiles();
 
-        loadList("guardian","lightning","shieldbuster","tomahawk","juggernaut","shield");
+        //loadList("guardian","lightning","shieldbuster","tomahawk","juggernaut","shield");
 
     }
 
@@ -62,6 +62,9 @@ public class ClipboardLoader {
 
     private static Clipboard fetchClipboard(String name) {
         //name can be 'Green-guardian' -> try Green-guardian.schem and Green-guardian.schematic
+        if(schematics == null) {
+            Bukkit.getLogger().severe("Schematics list is null");
+        }
         for (File schematic : schematics) {
             if(schematic.getName().equalsIgnoreCase(name + ".schem")) {
                 return getClipboard(schematic);

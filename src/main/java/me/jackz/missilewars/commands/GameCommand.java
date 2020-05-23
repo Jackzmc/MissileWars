@@ -145,7 +145,7 @@ public class GameCommand implements CommandExecutor  {
                 new TextComponent("\n§9Fireball Launches: §e" + fireball_launches),
                 new TextComponent("\n§9Barriers Deployed: §e" + shield_spawns)
         ));
-        for (Missile missile : GameManager.getMissileLoader().getList()) {
+        for (Missile missile : GameManager.getMissileLoader().getMissiles()) {
             int spawns = GameManager.getStats().getStat("spawns." + missile.getId() + ".total",global);
             TextComponent tc = new TextComponent("\n§9" + missile.getDisplay() + "s Deployed: §e" + spawns);
             components.add(tc);

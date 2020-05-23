@@ -1,6 +1,7 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.lib.Missile;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -17,18 +18,18 @@ import java.util.List;
 import java.util.Random;
 
 public class ItemSystem {
-    private final static List<String> ITEM_TYPES = new ArrayList<>(Arrays.asList("fireball","arrows","barrier","tomahawk","shieldbuster","juggernaut","lightning","guardian"));
+    private final static List<String> ITEM_TYPES = new ArrayList<>(Arrays.asList("fireball","arrows","barrier"));
     private int timerID;
 
     private final static ItemStack ITEM_FIREBALL = Util.getCustomItem(Material.BLAZE_SPAWN_EGG,"&9Launch Fireball","&7Spawns a Fireball.","&7Rightclick to shoot fireball in direction you are facing");
     private final static ItemStack ITEM_BOW = Util.getCustomItem(Material.BOW,"&9GunBlade","","&7A sharp Flame Bow","&7Use to ignite TNT remotely with arrows");
     private final static ItemStack ITEM_BARRIER = Util.getCustomItem(Material.SNOWBALL,"&9Deploy Barrier","&7Deploys a barrier after 1 second.");
     private final static ItemStack ITEM_ARROW = Util.getCustomItem(Material.ARROW,"&9Flame Arrow","&7Shoot to ignite TNT.");
-    private final static ItemStack MISSILE_TOMAHAWK = Util.getCustomItem(Material.CREEPER_SPAWN_EGG,"&9Deploy Tomahawk","&7Spawns a tomahawk missile");
+    /*private final static ItemStack MISSILE_TOMAHAWK = Util.getCustomItem(Material.CREEPER_SPAWN_EGG,"&9Deploy Tomahawk","&7Spawns a tomahawk missile");
     private final static ItemStack MISSILE_SHIELDBUSTER = Util.getCustomItem(Material.WITCH_SPAWN_EGG,"&9Deploy ShieldBuster","&7Spawns a Shieldbuster missile.","","&eWill go straight through barriers");
     private final static ItemStack MISSILE_JUGGERNAUT = Util.getCustomItem(Material.GHAST_SPAWN_EGG,"&9Deploy Juggernaut","&7Spawns a Juggernaut missile.","","&eIs the most explosive missile");
     private final static ItemStack MISSILE_LIGHTNING = Util.getCustomItem(Material.OCELOT_SPAWN_EGG,"&9Deploy Lightning","&7Spawns a Lightning missile. ","","&eIs the fastest missile");
-    private final static ItemStack MISSILE_GUARDIAN = Util.getCustomItem(Material.GUARDIAN_SPAWN_EGG,"&9Deploy Guardian","&7Spawns a Guardian missile.");
+    private final static ItemStack MISSILE_GUARDIAN = Util.getCustomItem(Material.GUARDIAN_SPAWN_EGG,"&9Deploy Guardian","&7Spawns a Guardian missile.");*/
 
     static {
         ITEM_BOW.addEnchantment(Enchantment.ARROW_FIRE,1);
@@ -36,6 +37,7 @@ public class ItemSystem {
         ItemMeta meta = ITEM_BOW.getItemMeta();
         meta.setUnbreakable(true);
         ITEM_BOW.setItemMeta(meta);
+
     }
 
     public void start() {
@@ -50,7 +52,9 @@ public class ItemSystem {
     }
 
     public static List<String> getTypes() {
-        return ITEM_TYPES;
+        List<String> list = ITEM_TYPES;
+        ITEM_TYPES.addAll(GameManager.getMissileLoader().getIds());
+        return list;
     }
 
     public static void chooseItem() {
@@ -118,20 +122,22 @@ public class ItemSystem {
             case "shield":
             case "barrier":
                 return ITEM_BARRIER;
-            case "tomahawk":
-                return MISSILE_TOMAHAWK;
-            case "shieldbuster":
-                return MISSILE_SHIELDBUSTER;
-            case "juggernaut":
-                return MISSILE_JUGGERNAUT;
-            case "lightning":
-                return MISSILE_LIGHTNING;
-            case "guardian":
-                return MISSILE_GUARDIAN;
             case "bow":
                 return ITEM_BOW;
             default:
-                 return null;
+                Missile missile = GameManager.getMissileLoader().findMissile(name.toLowerCase());
+                if(missile != null) {
+                    List<String> lore = new ArrayList<>();
+                    String hint = missile.getHint();
+
+                    lore.add("&7Spawns a " + missile.getId() + " missile");
+                    if(hint != null) {
+                        lore.add("");
+                        lore.add("&e" + hint);
+                    }
+                    return Util.getCustomItem(missile.getMaterial(),"&9Deploy " + missile.getDisplay(),lore);
+                }
+                return null;
         }
     }
 }
