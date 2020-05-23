@@ -27,13 +27,13 @@ public class GameConfig {
     private static YamlConfiguration config;
 
     //These values are definitely temporarily
-    public final static Location RED_SPAWNPOINT = new Location(GameManager.WORLD,-27, 78, -65, 0, 0);
-    public final static Location GREEN_SPAWNPOINT = new Location(GameManager.WORLD,-27, 78, 65, 180, 0);
+    public final static Location RED_SPAWNPOINT = new Location(GameManager.getWorld(),-27, 78, -65, 0, 0);
+    public final static Location GREEN_SPAWNPOINT = new Location(GameManager.getWorld(),-27, 78, 65, 180, 0);
 
-    public final static Location RED_LOBBY_SPAWNPOINT = new Location(GameManager.WORLD, -81,78,-18.5, 90, 0);
-    public final static Location GREEN_LOBBY_SPAWNPOINT = new Location(GameManager.WORLD, -81,78,18.5, 90, 0);
+    public final static Location RED_LOBBY_SPAWNPOINT = new Location(GameManager.getWorld(), -81,78,-18.5, 90, 0);
+    public final static Location GREEN_LOBBY_SPAWNPOINT = new Location(GameManager.getWorld(), -81,78,18.5, 90, 0);
 
-    public final static Location SPAWN_LOCATION = new Location(GameManager.WORLD,-100.5 ,71,.5);
+    public final static Location SPAWN_LOCATION = new Location(GameManager.getWorld(),-100.5 ,71,.5);
 
     public GameConfig() {
         file = new File(MissileWars.getInstance().getDataFolder(),"config.yml");

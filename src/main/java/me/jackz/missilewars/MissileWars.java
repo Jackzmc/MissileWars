@@ -31,7 +31,7 @@ public final class MissileWars extends JavaPlugin {
         main = this;
         getDataFolder().mkdirs();
         // Plugin startup logic
-        gameManager = new GameManager(this);
+        gameManager = new GameManager();
         restartManager = new RestartManager();
         displayManager = new TeamDisplayManager(this);
 

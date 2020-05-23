@@ -27,7 +27,7 @@ public class MiscPlayerEvents implements Listener {
     private final static PotionEffect nightVision = new PotionEffect(PotionEffectType.NIGHT_VISION,999999,2,true,false,false);
     private final static PotionEffect saturation = new PotionEffect(PotionEffectType.SATURATION,999999,2,true,false,false);
     private final static PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION,999999,0,true,false,false);
-    private final static Location spawnLocation = new Location(GameManager.WORLD,-100.5 ,71,.5);
+    private final static Location spawnLocation = new Location(GameManager.getWorld(),-100.5 ,71,.5);
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {

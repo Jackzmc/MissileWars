@@ -21,11 +21,15 @@ public class GameManager {
     private ItemSystem itemSystem;
     private static StatsTracker stats;
 
-    public static World WORLD;
+    private static World WORLD;
 
+    static {
+        WORLD = Bukkit.getWorld("world");
+    }
 
-    public GameManager(MissileWars plugin) {
-        this.state = new GameState();
+    public GameManager() {
+
+        state = new GameState();
         itemSystem = new ItemSystem();
         players = new GamePlayers();
         config = new GameConfig();
@@ -34,7 +38,6 @@ public class GameManager {
         initializeScoreboard();
 
         //todo: implement loading shit from data.yml
-        WORLD = Bukkit.getWorld("world");
     }
 
     //#region privatemethods
@@ -177,4 +180,7 @@ public class GameManager {
         return missileLoader;
     }
 
+    public static World getWorld() {
+        return WORLD;
+    }
 }

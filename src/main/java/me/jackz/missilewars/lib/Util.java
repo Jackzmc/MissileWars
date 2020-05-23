@@ -83,7 +83,7 @@ public class Util {
         return getWorldEditRegionFromWorldGuard(wgRegion, BukkitAdapter.adapt(bukkitWorld));
     }
     public static Polygonal2DRegion getWorldEditRegionFromWorldGuard(ProtectedRegion wgRegion) {
-        return getWorldEditRegionFromWorldGuard(wgRegion, GameManager.WORLD);
+        return getWorldEditRegionFromWorldGuard(wgRegion, GameManager.getWorld());
     }
     public static ItemStack getCustomItem(Material mt, String name) {
         return getCustomItem(mt,name,new ArrayList<>());
