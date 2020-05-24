@@ -79,7 +79,6 @@ public class GameManager {
         }
     }
     //#endregion
-    //todo: prevent start if is resetting
     public void start() {
         if(players.size() == 0) {
             Bukkit.getLogger().warning("GameManager: Not starting with 0 players.");
@@ -148,7 +147,6 @@ public class GameManager {
                 players.remove(player);
             }
         }, 20 * 20);
-        //todo: run reset, copy regions, and reset gamestate, and players list
     }
 
     public void reload() {

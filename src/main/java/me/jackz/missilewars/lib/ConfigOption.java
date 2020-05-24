@@ -12,10 +12,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ConfigOption {
-    /*todo: possibly have GameConfig not even have hardcoded values? grab it from id.
-       mid-game-interval -> midgameinterval for input purposes
-       and then can have a way to get value manually and reduce duplicate code
-    */
 
     public enum ConfigType {
         String,
