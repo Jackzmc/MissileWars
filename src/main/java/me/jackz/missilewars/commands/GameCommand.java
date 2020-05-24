@@ -3,6 +3,7 @@ package me.jackz.missilewars.commands;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.game.GamePlayers;
+import me.jackz.missilewars.game.Reset;
 import me.jackz.missilewars.game.StatsTracker;
 import me.jackz.missilewars.lib.Missile;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -27,16 +28,15 @@ public class GameCommand implements CommandExecutor  {
     public GameCommand(MissileWars plugin) {
         this.plugin = plugin;
     }
-    /*
-    todo:
-    check if team players are online
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(args.length >= 1) {
             if(args[0].equalsIgnoreCase("join")) {
                 if(args.length < 2) {
                     sender.sendMessage("§cUsage: /game join <red/green>");
+                    return true;
+                }else if(Reset.isResetting()) {
+                    sender.sendMessage("§cGame is currently resetting, please wait.");
                     return true;
                 }
                 boolean self = false;
@@ -98,7 +98,6 @@ public class GameCommand implements CommandExecutor  {
             }
         }
 
-        //todo: fetch stat
         int total_red_wins = GameManager.getStats().getSavedStat("wins.team_red");
         int total_green_wins = GameManager.getStats().getSavedStat("wins.team_green");
 

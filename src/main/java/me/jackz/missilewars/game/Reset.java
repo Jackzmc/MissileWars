@@ -34,7 +34,14 @@ public class Reset {
     private final static BlockVector3 NoManLandPos1 = BlockVector3.at(-73, 90, -85);
     private final static BlockVector3 NoManLandPos2 = BlockVector3.at(23, 35, 85);
 
+    private static boolean resetting = false;
+
     public static void reset() {
+        if(isResetting()) {
+            Bukkit.getLogger().warning("Already resetting, ignoring second reset request");
+            return;
+        }
+        resetting = true;
         Clipboard greenCube = ClipboardLoader.getClipboard(Reset.greenCube);
         Clipboard redCube = ClipboardLoader.getClipboard(Reset.redCube);
         Bukkit.broadcastMessage("§6[Missile Wars] §eResetting the map, please wait...");
@@ -52,6 +59,7 @@ public class Reset {
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
             paste(world, redCube, redCubeOrigin, true);
             Bukkit.broadcastMessage("§6[Missile Wars] §aMap has been reset successfully");
+            resetting = false;
         }, 20 * 25);
 
     }
@@ -89,5 +97,9 @@ public class Reset {
             ex.printStackTrace();
             return false;
         }
+    }
+
+    public static boolean isResetting() {
+        return resetting;
     }
 }

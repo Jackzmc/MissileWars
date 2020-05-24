@@ -68,7 +68,14 @@ public class GameManager {
         String name = (team == GamePlayers.MWTeam.RED) ? "§cRed" : "§aGreen";
         Bukkit.broadcastMessage(name + " team §eis ready to go!");
         if(state.isGameReady()) {
-            start();
+            if(Reset.isResetting()) {
+                Bukkit.broadcastMessage("Game is still resetting, please wait.");
+                state.setTeamReady(GamePlayers.MWTeam.RED,false);
+                state.setTeamReady(GamePlayers.MWTeam.GREEN,false);
+            }else{
+                start();
+
+            }
         }
     }
     //#endregion
@@ -76,32 +83,34 @@ public class GameManager {
     public void start() {
         if(players.size() == 0) {
             Bukkit.getLogger().warning("GameManager: Not starting with 0 players.");
-            return;
-        }
-        ItemStack bow = ItemSystem.getItem("bow");
-        state.setActive(true);
-        for (Map.Entry<Player, GamePlayers.MWTeam> entry : players.getAll()) {
-            Player player = entry.getKey();
-            GamePlayers.MWTeam team = entry.getValue();
-            if(team == GamePlayers.MWTeam.GREEN) {
-                player.teleport(GameConfig.GREEN_SPAWNPOINT);
-                player.setBedSpawnLocation(GameConfig.GREEN_SPAWNPOINT);
-            }else if(team == GamePlayers.MWTeam.RED) {
-                player.teleport(GameConfig.RED_SPAWNPOINT);
-                player.setBedSpawnLocation(GameConfig.RED_SPAWNPOINT);
-            }else{
-                continue;
-            }
-            player.sendMessage("§eMissile Wars game has started!");
-            player.sendMessage("§9Tip: §7Use §e/teammsg §7to chat with your team");
+        }else if(Reset.isResetting()) {
+            Bukkit.getLogger().warning("GameManager: Game is still resetting");
+        }else {
+            ItemStack bow = ItemSystem.getItem("bow");
+            state.setActive(true);
+            for (Map.Entry<Player, GamePlayers.MWTeam> entry : players.getAll()) {
+                Player player = entry.getKey();
+                GamePlayers.MWTeam team = entry.getValue();
+                if (team == GamePlayers.MWTeam.GREEN) {
+                    player.teleport(GameConfig.GREEN_SPAWNPOINT);
+                    player.setBedSpawnLocation(GameConfig.GREEN_SPAWNPOINT);
+                } else if (team == GamePlayers.MWTeam.RED) {
+                    player.teleport(GameConfig.RED_SPAWNPOINT);
+                    player.setBedSpawnLocation(GameConfig.RED_SPAWNPOINT);
+                } else {
+                    continue;
+                }
+                player.sendMessage("§eMissile Wars game has started!");
+                player.sendMessage("§9Tip: §7Use §e/teammsg §7to chat with your team");
 
-            players.setupPlayer(player);
-            ItemSystem.giveItem(player, bow, false);
-            player.setGameMode(GameMode.SURVIVAL);
+                players.setupPlayer(player);
+                ItemSystem.giveItem(player, bow, false);
+                player.setGameMode(GameMode.SURVIVAL);
+            }
+            itemSystem.start();
+            stats.resetGameTime();
+            stats.clearSessionStats();
         }
-        itemSystem.start();
-        stats.resetGameTime();
-        stats.clearSessionStats();
     }
 
     public void end() {

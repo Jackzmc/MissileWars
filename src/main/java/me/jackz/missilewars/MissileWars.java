@@ -52,7 +52,7 @@ public final class MissileWars extends JavaPlugin {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new ChatListener(),this);
         pm.registerEvents(new PlayerMoveEvent(),this);
-        pm.registerEvents(new PlayerSpawning(),this);
+        pm.registerEvents(new PlayerInteract(),this);
         pm.registerEvents(new MiscPlayerEvents(),this);
         pm.registerEvents(new Explosion(),this);
         pm.registerEvents(new BarrierDeploy(),this);

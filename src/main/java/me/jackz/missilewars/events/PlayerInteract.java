@@ -22,7 +22,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
-public class PlayerSpawning implements Listener {
+public class PlayerInteract implements Listener {
 
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
@@ -43,7 +43,6 @@ public class PlayerSpawning implements Listener {
                 }else{
                     player.sendMessage("§cYou must be in a team to ready up!");
                 }
-                //todo: implement ready logic
             }else if(lines[1].contains("Spectate")) {
                 player.setGameMode(GameMode.SPECTATOR);
 

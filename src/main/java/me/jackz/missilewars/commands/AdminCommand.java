@@ -136,7 +136,6 @@ public class AdminCommand implements CommandExecutor {
                             MissileWars.gameManager.players().joinPlayer(player, secondTeam);
                         }
                     }
-                    //TODO: add players to gamemanager gameplayers
                     plugin.getDisplayManager().refreshSidebar();
                     int second_team_players = players.size() - first_team_players;
                     if(greenTeamOverflow) {
