@@ -23,7 +23,6 @@ public class Explosion implements Listener {
             for (Block block : e.blockList()) {
                 if (block.getType().equals(Material.NETHER_PORTAL)) {
                     BlockVector3 blockVector3 = BukkitAdapter.asBlockVector(block.getLocation());
-                    Bukkit.broadcastMessage("debug: test");
                     ApplicableRegionSet regions = WorldGuard.getInstance().getPlatform().getRegionContainer().get(world).getApplicableRegions(blockVector3);
                     WinManager.testWin(regions);
                     break;

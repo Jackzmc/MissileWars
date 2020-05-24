@@ -11,16 +11,18 @@ import org.bukkit.Bukkit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ClipboardLoader {
     private static File[] schematics;
     private static Map<String,Clipboard> clips = new HashMap<>();
 
     static {
-        File directory = new File(MissileWars.getInstance().getDataFolder() + File.separator + "schematics");
+        File directory = new File(MissileWars.getInstance().getDataFolder(),"schematics");
         directory.mkdirs();
         schematics = directory.listFiles();
     }
@@ -42,15 +44,15 @@ public class ClipboardLoader {
         }
     }
 
-
-
     private static Clipboard fetchClipboard(String name) {
-        //name can be 'Green-guardian' -> try Green-guardian.schem and Green-guardian.schematic
+        //name can be 'Green-guardian' -> try 'Green-guardian' -> 'Green-guardian.schem', finally -> 'Green-guardian.schematic'
         if(schematics == null) {
             Bukkit.getLogger().severe("Schematics list is null");
         }
         for (File schematic : schematics) {
-            if(schematic.getName().equalsIgnoreCase(name + ".schem")) {
+            if(schematic.getName().equalsIgnoreCase(name)) {
+                return getClipboard(schematic);
+            }else if(schematic.getName().equalsIgnoreCase(name + ".schem")) {
                 return getClipboard(schematic);
             }else if(schematic.getName().equalsIgnoreCase(name + ".schematic")) {
                 return getClipboard(schematic);

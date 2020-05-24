@@ -119,7 +119,6 @@ public class AdminCommand implements CommandExecutor {
                             }
                         }
                     }
-                    sender.sendMessage("§c[debug] Scrambling " + players.size() + " players");
                     //2 / 2.0 -> 1
                     int first_team_size = (int) Math.floor(players.size() / 2.0);
                     boolean greenTeamOverflow = Math.random() > .5;

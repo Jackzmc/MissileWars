@@ -88,7 +88,6 @@ public class ItemSystem {
     public static void giveItem(Player player, ItemStack itemstack, boolean bypassLimit) {
         //maxAmount being -1 disables limit
         int item_count = Util.getAmount(player.getInventory(), itemstack);
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("╝debug: " + item_count + itemstack.getItemMeta().getDisplayName()));
         if(MissileWars.gameManager.getConfig().getMaxItems() == -1) bypassLimit = true;
         if(!bypassLimit && item_count >= MissileWars.gameManager.getConfig().getMaxItems()) {
             player.sendMessage("§cYou already have a " + itemstack.getItemMeta().getDisplayName());
