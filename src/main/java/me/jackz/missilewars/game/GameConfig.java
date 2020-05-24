@@ -2,6 +2,7 @@ package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.lib.ConfigOption;
+import me.jackz.missilewars.lib.MWUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,18 +23,17 @@ public class GameConfig {
     public final static int DEFAULT_max_items = 1;
     public final static int DEFAULT_randomize_mode = 0; //0 -> ALL, 1 -> Per team, 2 -> Per individual
 
-
     private static File file;
     private static YamlConfiguration config;
 
     //These values are definitely temporarily
-    public final static Location RED_SPAWNPOINT = new Location(GameManager.getWorld(),-27, 78, -65, 0, 0);
-    public final static Location GREEN_SPAWNPOINT = new Location(GameManager.getWorld(),-27, 78, 65, 180, 0);
+    public static Location RED_SPAWNPOINT;
+    public static Location GREEN_SPAWNPOINT;
 
-    public final static Location RED_LOBBY_SPAWNPOINT = new Location(GameManager.getWorld(), -81,78,-18.5, 90, 0);
-    public final static Location GREEN_LOBBY_SPAWNPOINT = new Location(GameManager.getWorld(), -81,78,18.5, 90, 0);
+    public static Location RED_LOBBY_SPAWNPOINT;
+    public static Location GREEN_LOBBY_SPAWNPOINT;
 
-    public final static Location SPAWN_LOCATION = new Location(GameManager.getWorld(),-100.5 ,71,.5);
+    public static Location SPAWN_LOCATION;
 
     public GameConfig() {
         file = new File(MissileWars.getInstance().getDataFolder(),"config.yml");
@@ -50,11 +50,18 @@ public class GameConfig {
 
 
     public void reload() {
+        //config options
         item_interval_sec = config.getInt("item-interval-seconds", DEFAULT_item_interval_sec);
         prioritize_defense = config.getBoolean("prioritize-defense-items", DEFAULT_prioritize_defense);
         max_items = config.getInt("max-item-count", DEFAULT_max_items);
         randomize_mode = config.getInt("randomize-mode", DEFAULT_randomize_mode);
         allow_midgame_joins =config.getBoolean("allow-midgame-joins", DEFAULT_allow_midgame_joins);
+
+        RED_LOBBY_SPAWNPOINT = MWUtil.getLocation("locations.lobby.red");
+        GREEN_LOBBY_SPAWNPOINT = MWUtil.getLocation("locations.lobby.green");
+        RED_SPAWNPOINT = MWUtil.getLocation("locations.spawns.red");
+        GREEN_SPAWNPOINT = MWUtil.getLocation("locations.spawns.green");
+        SPAWN_LOCATION = MWUtil.getLocation("locations.spawns.default");
     }
 
     public void save() throws IOException {

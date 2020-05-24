@@ -27,7 +27,6 @@ public class MiscPlayerEvents implements Listener {
     private final static PotionEffect nightVision = new PotionEffect(PotionEffectType.NIGHT_VISION,999999,2,true,false,false);
     private final static PotionEffect saturation = new PotionEffect(PotionEffectType.SATURATION,999999,2,true,false,false);
     private final static PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION,999999,0,true,false,false);
-    private final static Location spawnLocation = new Location(GameManager.getWorld(),-100.5 ,71,.5);
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -51,7 +50,7 @@ public class MiscPlayerEvents implements Listener {
         GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
         if(team != GamePlayers.MWTeam.NONE && !MissileWars.gameManager.getState().isGameActive()) {
             MissileWars.gameManager.players().remove(player,team);
-            player.teleport(spawnLocation);
+            player.teleport(GameConfig.SPAWN_LOCATION);
         }
     }
 

@@ -1,6 +1,7 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.lib.DataLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -36,8 +37,10 @@ public class GameManager {
         stats = new StatsTracker();
         missileLoader = new MissileLoader();
         initializeScoreboard();
+    }
 
-        //todo: implement loading shit from data.yml
+    public static void setWorld(World world) {
+        WORLD  = world;
     }
 
     //#region privatemethods
@@ -168,6 +171,7 @@ public class GameManager {
             stats = null;
         }
         missileLoader = null;
+
     }
 
     public GameState getState() {

@@ -1,10 +1,7 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
-import me.jackz.missilewars.lib.ClipboardLoader;
-import me.jackz.missilewars.lib.MWUtil;
-import me.jackz.missilewars.lib.Missile;
-import me.jackz.missilewars.lib.Util;
+import me.jackz.missilewars.lib.*;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -26,18 +23,7 @@ import java.util.stream.Stream;
 
 public class MissileLoader {
     //Will manage the files, and the data.yml file and managing spawning
-    private static File file;
     private List<Missile> missileList = new ArrayList<>();
-
-    public MissileLoader() {
-        file = new File(MissileWars.getInstance().getDataFolder(),"data.yml");
-        if(file.exists()) {
-            reload();
-        }else{
-            MissileWars.getInstance().saveResource("data.yml",false);
-            Bukkit.getLogger().warning("Could not find data.yml, creating default.");
-        }
-    }
 
     public List<Missile> getMissiles() {
         return missileList;
@@ -56,7 +42,7 @@ public class MissileLoader {
     }
 
     public void reload() {
-        YamlConfiguration data = YamlConfiguration.loadConfiguration(file);
+        YamlConfiguration data = DataLoader.getData();
         ConfigurationSection missiles = data.getConfigurationSection("missiles");
         if(missiles != null) {
             for (String key : missiles.getKeys(false)) {
