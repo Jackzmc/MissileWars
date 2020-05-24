@@ -16,6 +16,8 @@ import me.jackz.missilewars.game.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class MWUtil {
@@ -82,5 +84,22 @@ public class MWUtil {
                 return false;
             }
         }
+    }
+    public static Location getLocation(String path) {
+        YamlConfiguration data = DataLoader.getData();
+        World world = GameManager.getWorld();
+        double x = data.getDouble(path + ".x");
+        double y = data.getDouble(path + ".y");
+        double z = data.getDouble(path + ".z");
+        float yaw = (float) data.getDouble(path + ".yaw",0);
+        return new Location(world, x, y, z, yaw, 0);
+    }
+    public static BlockVector3 getVector(String path) {
+        YamlConfiguration data = DataLoader.getData();
+        World world = GameManager.getWorld();
+        double x = data.getDouble(path + ".x");
+        double y = data.getDouble(path + ".y");
+        double z = data.getDouble(path + ".z");
+        return BlockVector3.at(x, y, z);
     }
 }
