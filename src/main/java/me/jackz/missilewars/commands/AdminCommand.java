@@ -4,6 +4,7 @@ import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.*;
 import me.jackz.missilewars.lib.ConfigOption;
 import me.jackz.missilewars.lib.ConfigTextComponent;
+import me.jackz.missilewars.lib.DataLoader;
 import me.jackz.missilewars.lib.Missile;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -412,10 +413,12 @@ public class AdminCommand implements CommandExecutor {
                             break;
                         case "data":
                         case "setup":
-                            sender.sendMessage("§cNot Implemented");
+                            DataLoader.reload();
+                            sender.sendMessage("§aSuccessfully reloaded configuration.");
                         case "all":
                             GameManager.getStats().reload();
                             MissileWars.gameManager.getConfig().reload();
+                            DataLoader.reload();
                             sender.sendMessage("§aSuccessfully reloaded.");
                             break;
                         default:
