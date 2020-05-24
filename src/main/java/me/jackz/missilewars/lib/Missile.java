@@ -44,10 +44,10 @@ public class Missile {
     }
 
     public String getSchematic() {
-        return schematic;
+        return schematic != null ? schematic : id;
     }
     public String getFullSchematic(GamePlayers.MWTeam team) {
-        return GamePlayers.getTeamName(team).toLowerCase() + "-" + schematic;
+        return GamePlayers.getTeamName(team).toLowerCase() + "-" + getSchematic();
     }
 
     public void setSchematic(String schematic) {
