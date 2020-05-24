@@ -65,6 +65,8 @@ public class WinManager {
         String name = team == GamePlayers.MWTeam.GREEN ? "Green" : "Red";
         String loserTeamName = (team == GamePlayers.MWTeam.GREEN) ? "red" : "green";
 
+        long gametime = GameManager.getStats().getGameTimeMS();
+
         TextComponent currentGameStat = new TextComponent("§d[Click to view this game's statistics]\n");
         TextComponent currentMyStat = new TextComponent("§d[Click to view your statistics for this game]\n");
         TextComponent globalStat = new TextComponent("§d[Click to see global statistics]\n");
@@ -78,6 +80,7 @@ public class WinManager {
                 new TextComponent(color.toString() + name + " team §9has won the game!\n"),
                 new TextComponent("§6--------------------------------------------------\n"),
                 new TextComponent("§9Game Statistics:\n"),
+                new TextComponent("§7This game was a total of §e" + gametime + " minutes!"),
                 currentGameStat,
                 currentMyStat,
                 globalStat,
