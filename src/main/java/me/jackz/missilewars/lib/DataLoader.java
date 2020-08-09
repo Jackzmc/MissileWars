@@ -20,7 +20,7 @@ public class DataLoader {
     }
     public static void reload() {
         if(file.exists()) {
-            YamlConfiguration data = YamlConfiguration.loadConfiguration(file);
+            data = YamlConfiguration.loadConfiguration(file);
             Reset.reloadVariables();
             World world = Bukkit.getWorld(data.getString("world-name","world"));
             GameManager.setWorld(world);
