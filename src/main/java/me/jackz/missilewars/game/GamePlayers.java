@@ -69,14 +69,15 @@ public class GamePlayers {
 
     public void joinPlayer(Player player, MWTeam team) {
         add(player, team);
-        player.setGameMode(GameMode.ADVENTURE);
+        boolean gameActive = MissileWars.gameManager.getState().isGameActive();
+        player.setGameMode(gameActive ? GameMode.SURVIVAL : GameMode.ADVENTURE);
         setupPlayer(player);
         if(team == MWTeam.RED) {
-            Location spawnLocation = MissileWars.gameManager.getState().isGameActive() ? GameConfig.RED_SPAWNPOINT : GameConfig.RED_LOBBY_SPAWNPOINT;
+            Location spawnLocation = gameActive ? GameConfig.RED_SPAWNPOINT : GameConfig.RED_LOBBY_SPAWNPOINT;
             player.teleport(spawnLocation);
             Bukkit.broadcastMessage("§c" + player.getName() + " joined the Red team!");
         }else{
-            Location spawnLocation = MissileWars.gameManager.getState().isGameActive() ? GameConfig.GREEN_SPAWNPOINT : GameConfig.GREEN_LOBBY_SPAWNPOINT;
+            Location spawnLocation = gameActive ? GameConfig.GREEN_SPAWNPOINT : GameConfig.GREEN_LOBBY_SPAWNPOINT;
             player.teleport(spawnLocation);
             Bukkit.broadcastMessage("§a" + player.getName() + " joined the Green team!");
         }
