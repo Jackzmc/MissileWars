@@ -1,6 +1,8 @@
 package me.jackz.missilewars.events;
 
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GameConfig;
+import me.jackz.missilewars.lib.Missile;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,6 +27,13 @@ public class PlayerDisconnectEvent implements Listener {
                     plugin.getServer().shutdown();
                 }
             },20 * 30L);
+        }
+        if(MissileWars.gameManager.players().has(player)) {
+            MissileWars.gameManager.players().remove(player);
+            MissileWars.gameManager.players().setupPlayer(player);
+            player.teleport(GameConfig.SPAWN_LOCATION);
+
+            //TODO: add disconnect message?
         }
     }
 }
