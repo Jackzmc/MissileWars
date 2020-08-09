@@ -11,6 +11,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +20,8 @@ import java.util.Random;
 
 public class ItemSystem {
     private final static List<String> ITEM_TYPES = new ArrayList<>(Arrays.asList("fireball","arrows","barrier"));
-    private int timerID;
+    private BukkitTask timerTask;
+    private int currentCount = 0;
 
     private final static ItemStack ITEM_FIREBALL = Util.getCustomItem(Material.BLAZE_SPAWN_EGG,"&9Launch Fireball","&7Spawns a Fireball.","&7Rightclick to shoot fireball in direction you are facing");
     private final static ItemStack ITEM_BOW = Util.getCustomItem(Material.BOW,"&9GunBlade","","&7A sharp Flame Bow","&7Use to ignite TNT remotely with arrows");
@@ -36,14 +38,16 @@ public class ItemSystem {
     }
 
     public void start() {
-        timerID = Bukkit.getScheduler().scheduleSyncRepeatingTask(MissileWars.getInstance(),
-                ItemSystem::chooseItem,
+        currentCount = MissileWars.gameManager.getConfig().getItemInterval();
+        timerTask = Bukkit.getScheduler().runTaskTimer(MissileWars.getInstance(),
+                this::processTimer,
                 20 * 5,
-                20 * MissileWars.gameManager.getConfig().getItemInterval()
+                20
         );
     }
     public void stop() {
-        Bukkit.getScheduler().cancelTask(timerID);
+        timerTask.cancel();
+        currentCount = 0;
     }
 
     public static List<String> getTypes() {
@@ -52,7 +56,21 @@ public class ItemSystem {
         return list;
     }
 
+    public void processTimer() {
+        currentCount++;
+        final int INTERVAL = MissileWars.gameManager.getConfig().getItemInterval();
+        for (Player player : MissileWars.gameManager.players().getAllPlayers()) {
+            player.setExp(currentCount == INTERVAL ? 1.0f : 0.0f);
+            player.setLevel(INTERVAL - currentCount);
+        }
+        if(currentCount >= INTERVAL) {
+            ItemSystem.chooseItem();
+            currentCount = 0;
+        }
+    }
+
     public static void chooseItem() {
+
         if(!MissileWars.gameManager.getConfig().isPrioritizeDefenseEnabled()) {
             Random rand = new Random();
             int randMode = MissileWars.gameManager.getConfig().getRandomizeMode();
