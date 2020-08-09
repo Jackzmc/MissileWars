@@ -241,6 +241,8 @@ public class AdminCommand implements CommandExecutor {
                             sender.sendMessage("active: " + MissileWars.gameManager.getState().isGameActive());
                             String missileList = GameManager.getMissileLoader().getMissiles().stream().map(Missile::getId).collect(Collectors.joining(","));
                             sender.sendMessage("Missiles: " + missileList);
+                            sender.sendMessage("RED_LOBBY_SPAWNPOINT: " + GameConfig.RED_LOBBY_SPAWNPOINT);
+                            sender.sendMessage("RED_SPAWNPOINT: " + GameConfig.RED_SPAWNPOINT);
                             break;
                         default:
                             sender.sendMessage("§cUnknown option, try: /mwa game <start/reset/stop/reload>");

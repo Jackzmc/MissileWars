@@ -84,7 +84,7 @@ public class WinManager {
                 currentGameStat,
                 currentMyStat,
                 globalStat,
-                new TextComponent("§7§oTip: Use §r§e/stats <player> [global/session]§7§oto view their stats.\n"),
+                new TextComponent("§7§oTip: Use §r§e/stats <player> [global/session] §7§oto view their stats.\n"),
                 new TextComponent("\n"),
                 //new TextComponent(String.format("§e%s had the most deaths (%d)\n", highestDeaths.getKey().getName(), highestDeaths.getValue())),
                 new TextComponent("§6==================================================\n")
