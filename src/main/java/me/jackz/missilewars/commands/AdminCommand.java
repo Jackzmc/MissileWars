@@ -128,25 +128,22 @@ public class AdminCommand implements CommandExecutor {
                 GamePlayers.MWTeam firstTeam = greenTeamOverflow ? GamePlayers.MWTeam.GREEN : GamePlayers.MWTeam.RED;
                 GamePlayers.MWTeam secondTeam = greenTeamOverflow ? GamePlayers.MWTeam.RED: GamePlayers.MWTeam.GREEN;
 
-                    for (Player player : players) {
-                        if(first_team_players < first_team_size) {
-                            first_team_players++;
-                            MissileWars.gameManager.players().joinPlayer(player, firstTeam);
-                        }else{
-                            MissileWars.gameManager.players().joinPlayer(player, secondTeam);
-                        }
-                    }
-                    plugin.getDisplayManager().refreshSidebar();
-                    int second_team_players = players.size() - first_team_players;
-                    if(greenTeamOverflow) {
-                        sender.sendMessage(String.format("§eTeams have been scrambled! §a%d Green §6- §c%d Red",first_team_players,second_team_players));
+                for (Player player : players) {
+                    if(first_team_players < first_team_size) {
+                        first_team_players++;
+                        MissileWars.gameManager.players().joinPlayer(player, firstTeam);
                     }else{
-                        sender.sendMessage(String.format("§eTeams have been scrambled! §a%d Green §6- §c%d Red",second_team_players,first_team_players));
+                        MissileWars.gameManager.players().joinPlayer(player, secondTeam);
                     }
-                    return true;
-                }else{
-                    sender.sendMessage("§cUnknown option, /mwa teams for help");
                 }
+                plugin.getDisplayManager().refreshSidebar();
+                int second_team_players = players.size() - first_team_players;
+                if(greenTeamOverflow) {
+                    Bukkit.getServer().broadcastMessage(String.format("§eTeams have been scrambled! §a%d Green §6- §c%d Red",first_team_players,second_team_players));
+                }else{
+                    Bukkit.getServer().broadcastMessage(String.format("§eTeams have been scrambled! §a%d Green §6- §c%d Red",second_team_players,first_team_players));
+                }
+                return true;
             }
             case "choose": {
                 if(!sender.hasPermission("missilewars.admin.choose")) {
