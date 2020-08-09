@@ -141,6 +141,8 @@ public class GameManager {
     public void reset() {
         Reset.reset();
         itemSystem.stop();
+        state.setTeamReady(GamePlayers.MWTeam.GREEN, false);
+        state.setTeamReady(GamePlayers.MWTeam.RED, false);
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
             Set<Player> allPlayers = players.getAllPlayers();
             for(Player player : allPlayers) {
