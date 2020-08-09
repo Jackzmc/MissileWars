@@ -66,7 +66,11 @@ public class GameCommand implements CommandExecutor  {
                     }
                 }
                 if(self && MissileWars.gameManager.getConfig().isMidGameJoinAllowed() && MissileWars.gameManager.getState().isGameActive()) {
-                    sender.sendMessage("§cCan't join a game that is in session");
+                    if(MissileWars.gameManager.players().has(player)) {
+                        sender.sendMessage("§cCan't switch teams during a game.");
+                    }else{
+                        sender.sendMessage("§cCan't join a game that is in session");
+                    }
                 }else {
                     if (args[1].equalsIgnoreCase("green")) {
                         MissileWars.gameManager.players().joinPlayer(player, GamePlayers.MWTeam.GREEN);
