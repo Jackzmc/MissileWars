@@ -65,6 +65,8 @@ public class GamePlayers {
         player.addPotionEffect(saturation);
         player.addPotionEffect(regeneration);
         player.setHealth(20);
+        player.setLevel(0);
+        player.setExp(0.0f);
     }
 
     public void joinPlayer(Player player, MWTeam team) {
