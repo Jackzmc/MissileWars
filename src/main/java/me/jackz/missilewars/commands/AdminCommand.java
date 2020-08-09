@@ -106,28 +106,27 @@ public class AdminCommand implements CommandExecutor {
                     sender.sendMessage("§cYou do not have permission");
                     return true;
                 }
-                if(args[1].equalsIgnoreCase("scramble")) {
-                    List<Player> players = new ArrayList<>();
-                    for (Player player : plugin.getServer().getOnlinePlayers()) {
-                        if(player.getGameMode().equals(GameMode.CREATIVE) || player.getGameMode().equals(GameMode.SPECTATOR)) continue;
-                        if(MissileWars.gameManager.players().has(player)) {
-                            MissileWars.gameManager.players().remove(player);
+                List<Player> players = new ArrayList<>();
+                for (Player player : plugin.getServer().getOnlinePlayers()) {
+                    if(player.getGameMode().equals(GameMode.CREATIVE) || player.getGameMode().equals(GameMode.SPECTATOR)) continue;
+                    if(MissileWars.gameManager.players().has(player)) {
+                        MissileWars.gameManager.players().remove(player);
+                        players.add(player);
+                    }else {
+                        GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
+                        if (team == GamePlayers.MWTeam.NONE) {
                             players.add(player);
-                        }else {
-                            GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
-                            if (team == GamePlayers.MWTeam.NONE) {
-                                players.add(player);
-                            }
                         }
                     }
-                    //2 / 2.0 -> 1
-                    int first_team_size = (int) Math.floor(players.size() / 2.0);
-                    boolean greenTeamOverflow = Math.random() > .5;
+                }
+                //2 / 2.0 -> 1
+                int first_team_size = (int) Math.floor(players.size() / 2.0);
+                boolean greenTeamOverflow = Math.random() > .5;
 
-                    Collections.shuffle(players);
-                    int first_team_players = 0;
-                    GamePlayers.MWTeam firstTeam = greenTeamOverflow ? GamePlayers.MWTeam.GREEN : GamePlayers.MWTeam.RED;
-                    GamePlayers.MWTeam secondTeam = greenTeamOverflow ? GamePlayers.MWTeam.RED: GamePlayers.MWTeam.GREEN;
+                Collections.shuffle(players);
+                int first_team_players = 0;
+                GamePlayers.MWTeam firstTeam = greenTeamOverflow ? GamePlayers.MWTeam.GREEN : GamePlayers.MWTeam.RED;
+                GamePlayers.MWTeam secondTeam = greenTeamOverflow ? GamePlayers.MWTeam.RED: GamePlayers.MWTeam.GREEN;
 
                     for (Player player : players) {
                         if(first_team_players < first_team_size) {
