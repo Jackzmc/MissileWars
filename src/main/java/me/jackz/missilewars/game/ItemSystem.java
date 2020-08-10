@@ -69,36 +69,32 @@ public class ItemSystem {
     }
 
     public static void chooseItem() {
+        Random rand = new Random();
+        int randMode = MissileWars.gameManager.getConfig().getRandomizeMode();
+        if(randMode == 0) {
+            String itemName = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
+            ItemStack item = getItem(itemName);
+            for (Player player : MissileWars.gameManager.players().getAllPlayers()) {
+                giveItem(player, item, false);
+            }
+        }else if(randMode == 1) {
+            String red_item_str = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
+            String green_item_str = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
+            ItemStack red_item = getItem(red_item_str);
+            ItemStack green_item = getItem(green_item_str);
 
-        if(!MissileWars.gameManager.getConfig().isPrioritizeDefenseEnabled()) {
-            Random rand = new Random();
-            int randMode = MissileWars.gameManager.getConfig().getRandomizeMode();
-            if(randMode == 0) {
+            for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.RED)) {
+                giveItem(player, red_item, false);
+            }
+            for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.GREEN)) {
+                giveItem(player, green_item, false);
+            }
+        }else {
+            for (Player player : MissileWars.gameManager.players().getAllPlayers()) {
                 String itemName = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
                 ItemStack item = getItem(itemName);
-                for (Player player : MissileWars.gameManager.players().getAllPlayers()) {
-                    giveItem(player, item, false);
-                }
-            }else if(randMode == 1) {
-                String red_item_str = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
-                String green_item_str = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
-                ItemStack red_item = getItem(red_item_str);
-                ItemStack green_item = getItem(green_item_str);
-
-                for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.RED)) {
-                    giveItem(player, red_item, false);
-                }
-                for (Player player : MissileWars.gameManager.players().get(GamePlayers.MWTeam.GREEN)) {
-                    giveItem(player, green_item, false);
-                }
-            }else {
-                for (Player player : MissileWars.gameManager.players().getAllPlayers()) {
-                    String itemName = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
-                    ItemStack item = getItem(itemName);
-                    giveItem(player, item, false);
-                }
+                giveItem(player, item, false);
             }
-
         }
     }
 

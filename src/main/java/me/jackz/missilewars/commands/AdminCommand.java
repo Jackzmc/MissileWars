@@ -258,7 +258,6 @@ public class AdminCommand implements CommandExecutor {
                     sender.sendMessage("§cUsage: /mwa config <[property name]/help/save> [new value]");
                 }else {
                     switch(args[1].toLowerCase()) {
-                        case "1":
                         case "iteminterval": {
                             ConfigOption configOption = ConfigTextComponent.itemInterval;
                             if (args.length >= 3) {
@@ -278,27 +277,6 @@ public class AdminCommand implements CommandExecutor {
                             }
                             break;
                         }
-                        case "2":
-                        case "preferdefense": {
-                            ConfigOption configOption = ConfigTextComponent.prioritizeDefense;
-                            if (args.length >= 3) {
-                                if(sender.hasPermission("missilewars.admin.config.preferdefense")) {
-                                    boolean value = (Boolean) configOption.parseInput(args[2]);
-                                    MissileWars.gameManager.getConfig().setPrioritizeDefense(value);
-                                    if (value) {
-                                        sender.sendMessage("§aNow preferring defense items");
-                                    } else {
-                                        sender.sendMessage("§cAll items are randomized equally");
-                                    }
-                                }else{
-                                    sender.sendMessage("§cYou do not have permission to change this setting");
-                                }
-                            } else {
-                                sendConfig(sender, configOption, MissileWars.gameManager.getConfig().isPrioritizeDefenseEnabled());
-                            }
-                            break;
-                        }
-                        case "3":
                         case "midgamejoin": {
                             ConfigOption configOption = ConfigTextComponent.midGameJoins;
                             if (args.length >= 3) {
@@ -318,7 +296,6 @@ public class AdminCommand implements CommandExecutor {
                             }
                             break;
                         }
-                        case "4":
                         case "maxitemsize": {
                             ConfigOption configOption = ConfigTextComponent.maxItemSize;
                             if (args.length >= 3) {
@@ -338,7 +315,6 @@ public class AdminCommand implements CommandExecutor {
                             }
                             break;
                         }
-                        case "5":
                         case "randomizemode": {
                             ConfigOption configOption = ConfigTextComponent.randomizeMode;
                             if (args.length >= 3) {
@@ -362,7 +338,6 @@ public class AdminCommand implements CommandExecutor {
                             }
                             break;
                         }
-                        case "7":
                         case "showitemtimer": {
                             ConfigOption configOption = ConfigTextComponent.showItemTimer;
                             if (args.length >= 3) {
@@ -406,7 +381,6 @@ public class AdminCommand implements CommandExecutor {
                             sender.sendMessage("§6Available Settings: <Name> (<id>)");
                             sender.sendMessage("§6§o(Hover over an item to see information, click to set)");
                             sender.spigot().sendMessage(ConfigTextComponent.itemInterval.getTextComponent("§e"));
-                            sender.spigot().sendMessage(ConfigTextComponent.prioritizeDefense.getTextComponent("§e"));
                             sender.spigot().sendMessage(ConfigTextComponent.midGameJoins.getTextComponent("§e"));
                             sender.spigot().sendMessage(ConfigTextComponent.maxItemSize.getTextComponent("§e"));
                             sender.spigot().sendMessage(ConfigTextComponent.randomizeMode.getTextComponent("§e"));

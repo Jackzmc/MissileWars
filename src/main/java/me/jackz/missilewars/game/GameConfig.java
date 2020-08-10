@@ -12,14 +12,12 @@ import java.io.IOException;
 
 public class GameConfig {
     private int item_interval_sec = 20;
-    private boolean prioritize_defense = false;
     private boolean allow_midgame_joins = false;
     private int max_items = 1;
     private int randomize_mode = 0; //0 -> ALL, 1 -> Per team, 2 -> Per individual
     private boolean show_item_timer = true;
 
     public final static int DEFAULT_item_interval_sec = 15;
-    public final static boolean DEFAULT_prioritize_defense = false;
     public final static boolean DEFAULT_allow_midgame_joins = false;
     public final static int DEFAULT_max_items = 1;
     public final static int DEFAULT_randomize_mode = 0; //0 -> ALL, 1 -> Per team, 2 -> Per individual
@@ -43,7 +41,6 @@ public class GameConfig {
 
         config = YamlConfiguration.loadConfiguration(file);
         config.addDefault("item-interval-seconds", DEFAULT_item_interval_sec);
-        config.addDefault("prioritize-defense-items", DEFAULT_prioritize_defense);
         config.addDefault("max-item-count", DEFAULT_max_items);
         config.addDefault("randomize-mode", DEFAULT_randomize_mode);
         config.addDefault("allow-midgame-joins", DEFAULT_allow_midgame_joins);
@@ -55,7 +52,6 @@ public class GameConfig {
     public void reload() {
         //config options
         item_interval_sec = config.getInt("item-interval-seconds", DEFAULT_item_interval_sec);
-        prioritize_defense = config.getBoolean("prioritize-defense-items", DEFAULT_prioritize_defense);
         max_items = config.getInt("max-item-count", DEFAULT_max_items);
         randomize_mode = config.getInt("randomize-mode", DEFAULT_randomize_mode);
         allow_midgame_joins = config.getBoolean("allow-midgame-joins", DEFAULT_allow_midgame_joins);
@@ -82,9 +78,6 @@ public class GameConfig {
         return item_interval_sec;
     }
 
-    public boolean isPrioritizeDefenseEnabled() {
-        return prioritize_defense;
-    }
 
     public int getMaxItems() {
         return max_items;
@@ -107,9 +100,6 @@ public class GameConfig {
         this.item_interval_sec = item_interval_sec;
     }
 
-    public void setPrioritizeDefense(boolean prioritize_defense) {
-        this.prioritize_defense = prioritize_defense;
-    }
 
     public void setMidgameJoins(boolean allow_midgame_joins) {
         this.allow_midgame_joins = allow_midgame_joins;
