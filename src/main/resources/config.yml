@@ -3,10 +3,6 @@
 # Default: 15
 item-interval-seconds: 15
 
-# Should the item system prioritize defense based items (More barriers/fireballs/arrows given)
-# Default: false
-prioritize-defense-items: false
-
 # Maximum amount of each item you can have (arrows will be 4x this value)
 # Default: 1
 # Range: 1 - 64
@@ -22,3 +18,7 @@ randomize-mode: 0
 # Should players be allowed to join in the middle of a game?
 # Default: true
 allow-midgame-joins: true
+
+# Should players see an item timer countdown (their XP level), counting down to next item spawn
+# Default: true
+show-item-timer: true
