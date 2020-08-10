@@ -20,7 +20,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-public class MWUtil {
+public final class MWUtil {
     public static void updateSpawnStat(String statname, Player player) {
         GameManager.getStats().incStat("spawns." + statname + ".total");
         GameManager.getStats().incStat("spawns." + statname + "." + player.getUniqueId());
