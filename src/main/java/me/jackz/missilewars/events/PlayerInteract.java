@@ -75,7 +75,8 @@ public class PlayerInteract implements Listener {
 
 
     private void launchFireball(Player player) {
-        Location eye = player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(1.2));
+        //Location eye = player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(1.2));
+        Location eye = player.getTargetBlock(null, 250).getLocation();
         Fireball fireball = (Fireball) eye.getWorld().spawnEntity(eye, EntityType.FIREBALL);
         fireball.setVelocity(eye.getDirection().normalize().multiply(.8));
         fireball.setShooter(player);
