@@ -109,6 +109,7 @@ public class GamePlayers {
             redTeam.removeEntry(player.getName());
             redTeamPlayers.remove(player);
         }
+        processRemoval();
     }
     public void remove(Player player) {
         MWTeam team = getTeam(player);
@@ -118,6 +119,18 @@ public class GamePlayers {
         }else{
             redTeam.removeEntry(player.getName());
             redTeamPlayers.remove(player);
+        }
+        processRemoval();
+    }
+
+    private void processRemoval() {
+        if(MissileWars.gameManager.getState().isGameActive()) {
+            if(size() > 0) {
+                //TODO: Auto rebalance teams
+            }else{
+                MissileWars.gameManager.end();
+                Bukkit.broadcastMessage("§cLast player left, game has ended.");
+            }
         }
     }
 
