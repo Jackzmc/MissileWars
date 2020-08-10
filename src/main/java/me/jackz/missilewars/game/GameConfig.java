@@ -16,12 +16,14 @@ public class GameConfig {
     private boolean allow_midgame_joins = false;
     private int max_items = 1;
     private int randomize_mode = 0; //0 -> ALL, 1 -> Per team, 2 -> Per individual
+    private boolean show_item_timer = true;
 
     public final static int DEFAULT_item_interval_sec = 15;
     public final static boolean DEFAULT_prioritize_defense = false;
     public final static boolean DEFAULT_allow_midgame_joins = false;
     public final static int DEFAULT_max_items = 1;
     public final static int DEFAULT_randomize_mode = 0; //0 -> ALL, 1 -> Per team, 2 -> Per individual
+    public final static boolean DEFAULT_show_item_timer = true;
 
     private static File file;
     private static YamlConfiguration config;
@@ -45,6 +47,7 @@ public class GameConfig {
         config.addDefault("max-item-count", DEFAULT_max_items);
         config.addDefault("randomize-mode", DEFAULT_randomize_mode);
         config.addDefault("allow-midgame-joins", DEFAULT_allow_midgame_joins);
+        config.addDefault("show-item-timer", DEFAULT_show_item_timer);
         reload();
     }
 
@@ -55,7 +58,9 @@ public class GameConfig {
         prioritize_defense = config.getBoolean("prioritize-defense-items", DEFAULT_prioritize_defense);
         max_items = config.getInt("max-item-count", DEFAULT_max_items);
         randomize_mode = config.getInt("randomize-mode", DEFAULT_randomize_mode);
-        allow_midgame_joins =config.getBoolean("allow-midgame-joins", DEFAULT_allow_midgame_joins);
+        allow_midgame_joins = config.getBoolean("allow-midgame-joins", DEFAULT_allow_midgame_joins);
+        show_item_timer = config.getBoolean("show-item-timer", DEFAULT_show_item_timer);
+
 
         RED_LOBBY_SPAWNPOINT = MWUtil.getLocation("locations.lobby.red");
         GREEN_LOBBY_SPAWNPOINT = MWUtil.getLocation("locations.lobby.green");
@@ -93,6 +98,8 @@ public class GameConfig {
         return allow_midgame_joins;
     }
 
+    public boolean getShowItemTimer() { return show_item_timer; }
+
     //#endregion
 
     //#region setters
@@ -115,5 +122,7 @@ public class GameConfig {
     public void setRandomizeMode(int randomize_mode) {
         this.randomize_mode = randomize_mode;
     }
+
+    public void setShowItemTimer(boolean option) { this.show_item_timer = option; }
     //#endregion
 }

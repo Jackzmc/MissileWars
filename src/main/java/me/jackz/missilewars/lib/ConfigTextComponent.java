@@ -12,6 +12,7 @@ public class ConfigTextComponent {
     public final static ConfigOption midGameJoins = new ConfigOption("midgamejoin", ConfigOption.ConfigType.Boolean, true);
     public final static ConfigOption maxItemSize = new ConfigOption("maxitemsize", ConfigOption.ConfigType.Integer, 1);
     public final static ConfigOption randomizeMode = new ConfigOption("randomizemode", ConfigOption.ConfigType.Integer, 0);
+    public final static ConfigOption showItemTimer = new ConfigOption("showItemTimer", ConfigOption.ConfigType.Boolean, true);
 
 
     static {
@@ -28,5 +29,6 @@ public class ConfigTextComponent {
         randomizeMode.setMeta("Randomize Mode","Sets how items are distributed","0 -> Same items given to all players","1 -> Different items given per team","2 -> Different items for every player");
         randomizeMode.setRange(0,2,false);
 
+        showItemTimer.setMeta("Show XP Item Timer", "Displays a timer in player's XP bar showing when items are given.");
     }
 }
