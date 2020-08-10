@@ -1,15 +1,13 @@
 package me.jackz.missilewars.commands;
 
 import me.jackz.missilewars.MissileWars;
-import me.jackz.missilewars.game.GameManager;
-import me.jackz.missilewars.game.GamePlayers;
-import me.jackz.missilewars.game.Reset;
-import me.jackz.missilewars.game.StatsTracker;
+import me.jackz.missilewars.game.*;
 import me.jackz.missilewars.lib.Missile;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,17 +30,17 @@ public class GameCommand implements CommandExecutor  {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(args.length >= 1) {
             if(args[0].equalsIgnoreCase("join")) {
-                if(args.length < 2) {
+                if (args.length < 2) {
                     sender.sendMessage("§cUsage: /game join <red/green>");
                     return true;
-                }else if(Reset.isResetting()) {
+                } else if (Reset.isResetting()) {
                     sender.sendMessage("§cGame is currently resetting, please wait.");
                     return true;
                 }
                 boolean self = false;
                 Player player;
                 if (args.length >= 3) {
-                    if(!sender.hasPermission("missilewars.join.others") && !sender.isOp()) {
+                    if (!sender.hasPermission("missilewars.join.others") && !sender.isOp()) {
                         sender.sendMessage("§cYou do not have permission.");
                         return true;
                     }
@@ -53,10 +51,10 @@ public class GameCommand implements CommandExecutor  {
                     }
                 } else {
                     if (sender instanceof Player) {
-                        if(sender.hasPermission("missilewars.join")) {
+                        if (sender.hasPermission("missilewars.join")) {
                             player = (Player) sender;
                             self = true;
-                        }else{
+                        } else {
                             sender.sendMessage("§cYou do not have permission.");
                             return true;
                         }
@@ -65,13 +63,13 @@ public class GameCommand implements CommandExecutor  {
                         return true;
                     }
                 }
-                if(self && MissileWars.gameManager.getConfig().isMidGameJoinAllowed() && MissileWars.gameManager.getState().isGameActive()) {
-                    if(MissileWars.gameManager.players().has(player)) {
+                if (self && MissileWars.gameManager.getConfig().isMidGameJoinAllowed() && MissileWars.gameManager.getState().isGameActive()) {
+                    if (MissileWars.gameManager.players().has(player)) {
                         sender.sendMessage("§cCan't switch teams during a game.");
-                    }else{
+                    } else {
                         sender.sendMessage("§cCan't join a game that is in session");
                     }
-                }else {
+                } else {
                     if (args[1].equalsIgnoreCase("green")) {
                         MissileWars.gameManager.players().joinPlayer(player, GamePlayers.MWTeam.GREEN);
                     } else if (args[1].equalsIgnoreCase("red")) {
@@ -79,6 +77,21 @@ public class GameCommand implements CommandExecutor  {
                     }
                 }
                 return true;
+            }else if(args[0].equalsIgnoreCase("leave")) {
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    if(MissileWars.gameManager.players().has(player)) {
+                        MissileWars.gameManager.players().remove(player);
+                        MissileWars.gameManager.players().setupPlayer(player);
+                        player.setGameMode(GameMode.ADVENTURE);
+                        player.teleport(GameConfig.SPAWN_LOCATION);
+                    }else{
+                        sender.sendMessage("§cYou are not currently in a game.");
+                    }
+                } else {
+                    sender.sendMessage("§cCan not use this command in console. ");
+                    return true;
+                }
             }else if(args[0].equalsIgnoreCase("stats")) {
                 if(sender.hasPermission("missilewars.stats")) {
                     if (args.length >= 2) {
