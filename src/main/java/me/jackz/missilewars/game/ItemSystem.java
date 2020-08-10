@@ -34,7 +34,6 @@ public class ItemSystem {
         ItemMeta meta = ITEM_BOW.getItemMeta();
         meta.setUnbreakable(true);
         ITEM_BOW.setItemMeta(meta);
-
     }
 
     public void start() {
@@ -46,7 +45,7 @@ public class ItemSystem {
         );
     }
     public void stop() {
-        timerTask.cancel();
+        if(timerTask != null) timerTask.cancel();
         currentCount = 0;
     }
 

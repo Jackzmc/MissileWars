@@ -80,7 +80,6 @@ public class WinManager {
                 new TextComponent(color.toString() + name + " team §9has won the game!\n"),
                 new TextComponent("§6--------------------------------------------------\n"),
                 new TextComponent("§9Game Statistics:\n"),
-                new TextComponent("§7This game was a total of §e" + gametime + " minutes!"),
                 currentGameStat,
                 currentMyStat,
                 globalStat,

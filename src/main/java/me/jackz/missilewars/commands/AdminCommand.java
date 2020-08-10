@@ -231,7 +231,7 @@ public class AdminCommand implements CommandExecutor {
                             if(sender.hasPermission("missilewars.admin.game.stop")) {
                                 MissileWars.gameManager.end();
                             }else{
-                                sender.sendMessage("§cYou do not have permission to start the game.");
+                                sender.sendMessage("§cYou do not have permission to stop the game.");
                             }
                             break;
                         case "reload":
@@ -241,8 +241,7 @@ public class AdminCommand implements CommandExecutor {
                             sender.sendMessage("active: " + MissileWars.gameManager.getState().isGameActive());
                             String missileList = GameManager.getMissileLoader().getMissiles().stream().map(Missile::getId).collect(Collectors.joining(","));
                             sender.sendMessage("Missiles: " + missileList);
-                            sender.sendMessage("RED_LOBBY_SPAWNPOINT: " + GameConfig.RED_LOBBY_SPAWNPOINT);
-                            sender.sendMessage("RED_SPAWNPOINT: " + GameConfig.RED_SPAWNPOINT);
+                            sender.sendMessage("SPAWN_POINT: " + GameConfig.SPAWN_LOCATION);
                             break;
                         default:
                             sender.sendMessage("§cUnknown option, try: /mwa game <start/reset/stop/reload>");
@@ -297,6 +296,7 @@ public class AdminCommand implements CommandExecutor {
                             } else {
                                 sendConfig(sender, configOption, MissileWars.gameManager.getConfig().isPrioritizeDefenseEnabled());
                             }
+                            break;
                         }
                         case "3":
                         case "midgamejoin": {
@@ -362,6 +362,31 @@ public class AdminCommand implements CommandExecutor {
                             }
                             break;
                         }
+                        case "7":
+                        case "showitemtimer": {
+                            ConfigOption configOption = ConfigTextComponent.showItemTimer;
+                            if (args.length >= 3) {
+                                if(sender.hasPermission("missilewars.admin.config.showitemtimer")) {
+                                    boolean value = (Boolean) configOption.parseInput(args[2]);
+                                    MissileWars.gameManager.getConfig().setShowItemTimer(value);
+                                    if (value) {
+                                        sender.sendMessage("§aEnabled item XP timer");
+                                    } else {
+                                        sender.sendMessage("§cDisabled item XP timer");
+                                    }
+
+                                }else{
+                                    sender.sendMessage("§cYou do not have permission to change this setting");
+                                }
+                            } else {
+                                TextComponent tc = configOption.getTextComponent("§9§n", false);
+                                tc.addExtra(" §a[Hover for information]");
+                                sender.spigot().sendMessage(tc);
+                                sender.sendMessage("§eCurrent Value: §r§9" + MissileWars.gameManager.getConfig().getShowItemTimer());
+                                sender.sendMessage("§7§oSet value with §e/mwa config " + configOption.getId() + " <" + configOption.getType() + ">");
+                            }
+                            break;
+                        }
                         case "save": {
                             if(sender.hasPermission("missilewars.admin.game")) {
                                 try {
@@ -385,6 +410,7 @@ public class AdminCommand implements CommandExecutor {
                             sender.spigot().sendMessage(ConfigTextComponent.midGameJoins.getTextComponent("§e"));
                             sender.spigot().sendMessage(ConfigTextComponent.maxItemSize.getTextComponent("§e"));
                             sender.spigot().sendMessage(ConfigTextComponent.randomizeMode.getTextComponent("§e"));
+                            sender.spigot().sendMessage(ConfigTextComponent.showItemTimer.getTextComponent("§e"));
                             break;
                         default:
                             sender.sendMessage("§cUsage: /mwa config <[property name]/help/save> [new value]");

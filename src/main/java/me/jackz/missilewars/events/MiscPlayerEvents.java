@@ -50,6 +50,8 @@ public class MiscPlayerEvents implements Listener {
         GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
         if(team != GamePlayers.MWTeam.NONE && !MissileWars.gameManager.getState().isGameActive()) {
             MissileWars.gameManager.players().remove(player,team);
+            player.setExp(0);
+            player.setLevel(0);
             player.teleport(GameConfig.SPAWN_LOCATION);
         }
     }

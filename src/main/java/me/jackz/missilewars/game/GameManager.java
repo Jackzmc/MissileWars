@@ -29,13 +29,14 @@ public class GameManager {
     }
 
     public GameManager() {
-
         state = new GameState();
         itemSystem = new ItemSystem();
         players = new GamePlayers();
         config = new GameConfig();
-        stats = new StatsTracker();
         missileLoader = new MissileLoader();
+
+        ItemSystem.getTypes(); //initalize missiles
+        Bukkit.getLogger().info("Loaded " + missileLoader.getMissiles().size() + " missiles");
         initializeScoreboard();
     }
 
@@ -102,6 +103,7 @@ public class GameManager {
                 } else {
                     continue;
                 }
+                //TODO: add countdown?
                 player.sendMessage("§eMissile Wars game has started!");
                 player.sendMessage("§9Tip: §7Use §e/teammsg §7to chat with your team");
 

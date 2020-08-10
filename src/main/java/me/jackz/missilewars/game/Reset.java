@@ -39,7 +39,6 @@ public class Reset {
 
     private static boolean resetting = false;
 
-
     public static void reset() {
         if(isResetting()) {
             Bukkit.getLogger().warning("Already resetting, ignoring second reset request");
@@ -52,7 +51,7 @@ public class Reset {
         Bukkit.broadcastMessage("§6[Missile Wars] §eResetting the map, please wait...");
 
         World world = BukkitAdapter.adapt(GameManager.getWorld());
-        CuboidRegion region = new CuboidRegion(NoManLandPos1,NoManLandPos2);
+        CuboidRegion region = new CuboidRegion(NoManLandPos1, NoManLandPos2);
         BlockState airBlock = BlockTypes.AIR.getDefaultState();
         BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
         clearNML(world, region, airBlock, clipboard);
@@ -76,8 +75,8 @@ public class Reset {
         redCubeSchematic = "red-" + data.getString("regions.red-cube.schematic","cube3");
         redCubeOrigin = MWUtil.getVector("regions.red-cube");
 
-        NoManLandPos1 = MWUtil.getVector("regions.nomanland");
-        NoManLandPos2 = MWUtil.getVector("regions.pos2");
+        NoManLandPos1 = MWUtil.getVector("regions.nomanland.pos1");
+        NoManLandPos2 = MWUtil.getVector("regions.nomanland.pos2");
 
     }
 

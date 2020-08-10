@@ -23,6 +23,10 @@ import java.util.stream.Stream;
 
 public class MissileLoader {
     //Will manage the files, and the data.yml file and managing spawning
+    public MissileLoader() {
+        reload();
+    }
+
     private List<Missile> missileList = new ArrayList<>();
 
     public List<Missile> getMissiles() {
@@ -60,6 +64,9 @@ public class MissileLoader {
                         Bukkit.getLogger().warning("Missile id " + key + " has invalid material '" + materialName + "'");
                     }
                 }
+            }
+            if(missileList.size() == 0) {
+                Bukkit.getLogger().warning("No missiles were loaded");
             }
             ClipboardLoader.loadList(missileList);
         }else{
