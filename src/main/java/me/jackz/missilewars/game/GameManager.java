@@ -34,6 +34,7 @@ public class GameManager {
         players = new GamePlayers();
         config = new GameConfig();
         missileLoader = new MissileLoader();
+        stats = new StatsTracker();
 
         ItemSystem.getTypes(); //initalize missiles
         Bukkit.getLogger().info("Loaded " + missileLoader.getMissiles().size() + " missiles");

@@ -66,6 +66,7 @@ public class GamePlayers {
         player.addPotionEffect(regeneration);
         player.setHealth(20);
         player.setLevel(0);
+        player.setTotalExperience(0);
         player.setExp(0.0f);
     }
 
