@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.*;
 
 public class GameConfig {
     private int item_interval_sec = 20;
@@ -16,6 +17,7 @@ public class GameConfig {
     private int max_items = 1;
     private int randomize_mode = 0; //0 -> ALL, 1 -> Per team, 2 -> Per individual
     private boolean show_item_timer = true;
+    private HashMap<String, ConfigOption> options = new HashMap<>();
 
     public final static int DEFAULT_item_interval_sec = 15;
     public final static boolean DEFAULT_allow_midgame_joins = false;
@@ -45,17 +47,30 @@ public class GameConfig {
         config.addDefault("randomize-mode", DEFAULT_randomize_mode);
         config.addDefault("allow-midgame-joins", DEFAULT_allow_midgame_joins);
         config.addDefault("show-item-timer", DEFAULT_show_item_timer);
+
         reload();
+    }
+
+    public void registerOption(ConfigOption option) {
+        options.put(option.getSafeId(), option);
+    }
+    public void registerOptions(ConfigOption... option) {
+        for (ConfigOption configOption : option) {
+            options.put(configOption.getSafeId(), configOption);
+        }
     }
 
 
     public void reload() {
         //config options
-        item_interval_sec = config.getInt("item-interval-seconds", DEFAULT_item_interval_sec);
+        for (ConfigOption option : options.values()) {
+            reloadOption(option);
+        }
+        /*item_interval_sec = config.getInt("item-interval-seconds", DEFAULT_item_interval_sec);
         max_items = config.getInt("max-item-count", DEFAULT_max_items);
         randomize_mode = config.getInt("randomize-mode", DEFAULT_randomize_mode);
         allow_midgame_joins = config.getBoolean("allow-midgame-joins", DEFAULT_allow_midgame_joins);
-        show_item_timer = config.getBoolean("show-item-timer", DEFAULT_show_item_timer);
+        show_item_timer = config.getBoolean("show-item-timer", DEFAULT_show_item_timer);*/
 
 
         RED_LOBBY_SPAWNPOINT = MWUtil.getLocation("locations.lobby.red");
@@ -69,6 +84,31 @@ public class GameConfig {
         config.save(file);
     }
 
+    private void reloadOption(ConfigOption option) {
+        if(option.getType() == ConfigOption.ConfigType.Boolean) {
+            boolean value = config.getBoolean(option.getId(), (Boolean) option.getDefault());
+            option.setValue(value);
+        }else if(option.getType() == ConfigOption.ConfigType.Integer) {
+            int value = config.getInt(option.getId(), (Integer) option.getDefault());
+            if(option.hasRange()) {
+                if(value == -1 && option.canDisable()) {
+                    option.setValue(value);
+                }else {
+                    if (option.hasMin() && value <= option.getMin()) {
+                        Bukkit.getLogger().warning("Option " + option.getId() + " is below minimum value (min: " + option.getMin() + ")");
+                    }else if(option.hasMax() && value >= option.getMax()) {
+                        Bukkit.getLogger().warning("Option " + option.getId() + " is above maximum value (ax: " + option.getMax() + ")");
+                    }else{
+                        option.setValue(value);
+                    }
+                }
+            }
+        }else if(option.getType() == ConfigOption.ConfigType.String) {
+            String value = config.getString(option.getId(), (String) option.getDefault());
+            option.setValue(value);
+        }
+    }
+
     //#region getters
 
     public int getItemInterval() {
@@ -78,6 +118,12 @@ public class GameConfig {
         return item_interval_sec;
     }
 
+    public ConfigOption getOption(String id) {
+        return options.get(id);
+    }
+    public Set<String> getOptionIds() {
+        return options.keySet();
+    }
 
     public int getMaxItems() {
         return max_items;

@@ -257,111 +257,8 @@ public class AdminCommand implements CommandExecutor {
                 if(args.length < 2) {
                     sender.sendMessage("§cUsage: /mwa config <[property name]/help/save> [new value]");
                 }else {
-                    switch(args[1].toLowerCase()) {
-                        case "iteminterval": {
-                            ConfigOption configOption = ConfigTextComponent.itemInterval;
-                            if (args.length >= 3) {
-                                if(sender.hasPermission("missilewars.admin.config.iteminterval")) {
-                                    Integer number = (Integer) configOption.parseInput(args[2]);
-                                    if (number != null) {
-                                        MissileWars.gameManager.getConfig().setItemIntervalSec(number);
-                                        sender.sendMessage("§aChanged item interval to " + number);
-                                    } else {
-                                        sender.sendMessage("§cValue must be a valid number on the range " + configOption.getRangeText());
-                                    }
-                                }else{
-                                    sender.sendMessage("§cYou do not have permission to change this setting");
-                                }
-                            } else {
-                                sendConfig(sender, configOption, MissileWars.gameManager.getConfig().getItemInterval());
-                            }
-                            break;
-                        }
-                        case "midgamejoin": {
-                            ConfigOption configOption = ConfigTextComponent.midGameJoins;
-                            if (args.length >= 3) {
-                                if(sender.hasPermission("missilewars.admin.config.midgamejoin")) {
-                                    boolean value = (Boolean) configOption.parseInput(args[2]);
-                                    MissileWars.gameManager.getConfig().setMidgameJoins(value);
-                                    if (value) {
-                                        sender.sendMessage("§aEnabled joining a game in session.");
-                                    } else {
-                                        sender.sendMessage("§cDisabled joining a game in session");
-                                    }
-                                }else{
-                                    sender.sendMessage("§cYou do not have permission to change this setting");
-                                }
-                            } else {
-                                sendConfig(sender, configOption, MissileWars.gameManager.getConfig().isMidGameJoinAllowed());
-                            }
-                            break;
-                        }
-                        case "maxitemsize": {
-                            ConfigOption configOption = ConfigTextComponent.maxItemSize;
-                            if (args.length >= 3) {
-                                if(sender.hasPermission("missilewars.admin.config.maxitemsize")) {
-                                    Integer number = (Integer) configOption.parseInput(args[2]);
-                                    if (number != null) {
-                                        MissileWars.gameManager.getConfig().setMaxItems(number);
-                                        sender.sendMessage("§aChanged max item size to " + number);
-                                    } else {
-                                        sender.sendMessage("§cValue must be a valid number on the range " + configOption.getRangeText());
-                                    }
-                                }else{
-                                    sender.sendMessage("§cYou do not have permission to change this setting");
-                                }
-                            } else {
-                                sendConfig(sender, configOption, MissileWars.gameManager.getConfig().getMaxItems());
-                            }
-                            break;
-                        }
-                        case "randomizemode": {
-                            ConfigOption configOption = ConfigTextComponent.randomizeMode;
-                            if (args.length >= 3) {
-                                if(sender.hasPermission("missilewars.admin.config.randomizemode")) {
-                                    Integer number = (Integer) configOption.parseInput(args[2]);
-                                    if (number != null) {
-                                        MissileWars.gameManager.getConfig().setRandomizeMode(number);
-                                        sender.sendMessage("§aChanged randomize mode to " + number);
-                                    } else {
-                                        sender.sendMessage("§cValue must be a valid number on the range " + configOption.getRangeText());
-                                    }
-                                }else{
-                                    sender.sendMessage("§cYou do not have permission to change this setting");
-                                }
-                            } else {
-                                TextComponent tc = configOption.getTextComponent("§9§n", false);
-                                tc.addExtra(" §a[Hover for information]");
-                                sender.spigot().sendMessage(tc);
-                                sender.sendMessage("§eCurrent Value: §r§9" + MissileWars.gameManager.getConfig().getRandomizeMode());
-                                sender.sendMessage("§7§oSet value with §e/mwa config " + configOption.getId() + " <" + configOption.getType() + ">");
-                            }
-                            break;
-                        }
-                        case "showitemtimer": {
-                            ConfigOption configOption = ConfigTextComponent.showItemTimer;
-                            if (args.length >= 3) {
-                                if(sender.hasPermission("missilewars.admin.config.showitemtimer")) {
-                                    boolean value = (Boolean) configOption.parseInput(args[2]);
-                                    MissileWars.gameManager.getConfig().setShowItemTimer(value);
-                                    if (value) {
-                                        sender.sendMessage("§aEnabled item XP timer");
-                                    } else {
-                                        sender.sendMessage("§cDisabled item XP timer");
-                                    }
 
-                                }else{
-                                    sender.sendMessage("§cYou do not have permission to change this setting");
-                                }
-                            } else {
-                                TextComponent tc = configOption.getTextComponent("§9§n", false);
-                                tc.addExtra(" §a[Hover for information]");
-                                sender.spigot().sendMessage(tc);
-                                sender.sendMessage("§eCurrent Value: §r§9" + MissileWars.gameManager.getConfig().getShowItemTimer());
-                                sender.sendMessage("§7§oSet value with §e/mwa config " + configOption.getId() + " <" + configOption.getType() + ">");
-                            }
-                            break;
-                        }
+                    switch(args[1].toLowerCase()) {
                         case "save": {
                             if(sender.hasPermission("missilewars.admin.game")) {
                                 try {
@@ -387,7 +284,39 @@ public class AdminCommand implements CommandExecutor {
                             sender.spigot().sendMessage(ConfigTextComponent.showItemTimer.getTextComponent("§e"));
                             break;
                         default:
-                            sender.sendMessage("§cUsage: /mwa config <[property name]/help/save> [new value]");
+                            ConfigOption option = MissileWars.gameManager.getConfig().getOption(args[1]);
+                            if(option != null) {
+                                if (args.length >= 3) {
+                                    if(sender.hasPermission("missilewars.admin.config." + option.getSafeId())) {
+                                        Object result = option.parseInput(args[2]);
+                                        switch(option.getType()) {
+                                            case Boolean: {
+                                                option.setValue(result);
+                                                break;
+                                            }
+                                            case Integer: {
+                                                if(result != null) {
+                                                    option.setValue(result);
+                                                }else{
+                                                    option.getIntRangeText();
+                                                    return true;
+                                                }
+                                            }
+                                            default:
+                                                option.setValue(result);
+                                        }
+                                        sender.sendMessage("§aChanged option §9" + option.getId() + " §ato §9" + result + "§a successfully");
+                                    }else{
+                                        sender.sendMessage("§cYou do not have permission to change this setting");
+                                    }
+                                } else {
+                                    sendConfig(sender, option, option.getValue());
+                                }
+                                break;
+                                //todo: print option
+                            }else{
+                                sender.sendMessage("Could not find that option. §cUsage: /mwa config <[property name]/help/save> [new value]");
+                            }
                     }
                 }
                 break;

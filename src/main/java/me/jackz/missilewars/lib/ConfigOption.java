@@ -1,10 +1,10 @@
 package me.jackz.missilewars.lib;
 
 import me.jackz.missilewars.MissileWars;
-import me.jackz.missilewars.game.GameConfig;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +28,7 @@ public class ConfigOption {
     private Integer min_number = null;
     private Integer max_number = null;
     private boolean allow_disable = false;
+    private Object currentValue;
 
     public ConfigOption(String id, ConfigType type, Object defaultValue) {
         this.id = id;
@@ -46,10 +47,33 @@ public class ConfigOption {
     public String getId() {
         return id;
     }
+    public String getSafeId() {
+        return id.replaceAll("-", "").toLowerCase();
+    }
     public String[] getDescription() {
         String[] array = new String[description.size()];
         description.toArray(array);
         return array;
+    }
+    public Object getDefault() {
+        return this.defaultValue;
+    }
+    public Object getValue() {
+        return this.currentValue;
+    }
+    public boolean hasRange() {
+        return min_number != null || max_number != null;
+    }
+    public boolean hasMin() { return min_number != null; }
+    public boolean hasMax() { return max_number != null; }
+    public Integer getMin() {
+        return min_number;
+    }
+    public Integer getMax() {
+        return max_number;
+    }
+    public boolean canDisable() {
+        return allow_disable;
     }
 
     public TextComponent getTextComponent(String prefix, boolean includeID) {
@@ -57,7 +81,7 @@ public class ConfigOption {
         if(includeID) {
             baseText += " (" + id + ")";
         }
-        String rangeText = getRangeText();
+        String rangeText = getIntRangeText();
 
         TextComponent textComponent = new TextComponent(baseText);
         textComponent.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/mwa config " + id));
@@ -76,7 +100,7 @@ public class ConfigOption {
         return getTextComponent(prefix, true);
     }
 
-    public String getRangeText() {
+    public String getIntRangeText() {
         String text;
         if(min_number == null && max_number != null) {
             text = "<=" + max_number;
@@ -126,10 +150,12 @@ public class ConfigOption {
         description.addAll(Arrays.asList(args));
     }
 
-    public void setRange(int min, int max, boolean allowDisable) {
+    public void setIntRange(int min, int max, boolean allowDisable) {
         min_number = min;
         max_number = max;
         allow_disable = allowDisable;
     }
-
+    public void setValue(Object currentValue) {
+        this.currentValue = currentValue;
+    }
 }
