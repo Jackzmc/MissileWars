@@ -1,7 +1,6 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
-import me.jackz.missilewars.lib.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -172,6 +171,13 @@ public class GameManager {
         if(itemSystem != null) {
             itemSystem.stop();
             itemSystem = null;
+        }
+        for (Map.Entry<Player, GamePlayers.MWTeam> playerMWTeamEntry : players.getAll()) {
+            Player player = playerMWTeamEntry.getKey();
+            players.remove(player, playerMWTeamEntry.getValue());
+            players.setupPlayer(player);
+            player.setGameMode(GameMode.ADVENTURE);
+            player.teleport(GameConfig.SPAWN_LOCATION);
         }
         players = null;
         config = null;
