@@ -106,7 +106,7 @@ public class GameManager {
                 }
                 //TODO: add countdown?
                 player.sendMessage("§eMissile Wars game has started!");
-                player.sendMessage("§9Tip: §7Use §e/teammsg §7to chat with your team");
+                player.sendMessage("§9Tip: " + Tips.getRandomTip());
 
                 players.setupPlayer(player);
                 ItemSystem.giveItem(player, bow, false);
