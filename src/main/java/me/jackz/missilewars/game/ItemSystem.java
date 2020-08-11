@@ -40,7 +40,7 @@ public class ItemSystem {
         currentCount = MissileWars.gameManager.getConfig().getItemInterval();
         timerTask = Bukkit.getScheduler().runTaskTimer(MissileWars.getInstance(),
                 this::processTimer,
-                20 * 5,
+                0,
                 20
         );
     }

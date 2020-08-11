@@ -1,7 +1,7 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
-import me.jackz.missilewars.lib.DataLoader;
+import me.jackz.missilewars.lib.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -104,17 +104,21 @@ public class GameManager {
                 } else {
                     continue;
                 }
-                //TODO: add countdown?
-                player.sendMessage("§eMissile Wars game has started!");
-                player.sendMessage("§9Tip: " + Tips.getRandomTip());
-
+                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> player.sendTitle("§c3", "", 0, 20, 0), 20);
+                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> player.sendTitle("§e2", "", 0, 20, 0), 20 * 2);
+                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> player.sendTitle("§a1", "", 0, 20, 0), 20 * 3);
+                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> player.sendTitle("§aGO!", "Game has started", 0, 20, 0), 20 * 4);
+                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+                    player.sendMessage("§eMissile Wars has started!");
+                    player.sendMessage("§9Tip: " + Tips.getRandomTip());
+                }, 20 * 4);
                 players.setupPlayer(player);
                 ItemSystem.giveItem(player, bow, false);
                 player.setGameMode(GameMode.SURVIVAL);
             }
-            itemSystem.start();
             stats.resetGameTime();
             stats.clearSessionStats();
+            Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> itemSystem.start(), 20 * 5);
         }
     }
 
