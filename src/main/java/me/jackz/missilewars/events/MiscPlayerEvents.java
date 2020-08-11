@@ -5,13 +5,11 @@ import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameConfig;
-import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.lib.MWUtil;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,7 +47,7 @@ public class MiscPlayerEvents implements Listener {
 
         GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
         if(team != GamePlayers.MWTeam.NONE && !MissileWars.gameManager.getState().isGameActive()) {
-            MissileWars.gameManager.players().remove(player,team);
+            MissileWars.gameManager.players().remove(player, team);
             player.setExp(0);
             player.setLevel(0);
             player.teleport(GameConfig.SPAWN_LOCATION);
