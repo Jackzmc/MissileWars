@@ -94,6 +94,10 @@ public class GamePlayers {
     }
 
     public void add(Player player, MWTeam team) {
+        if(has(player)) {
+            remove(player);
+        }
+
         if(team.equals(MWTeam.GREEN)) {
             greenTeam.addEntry(player.getName());
             greenTeamPlayers.add(player);
@@ -101,7 +105,7 @@ public class GamePlayers {
             redTeam.addEntry(player.getName());
             redTeamPlayers.add(player);
         }
-        displayManager.refreshSidebar(true);
+        //displayManager.refreshSidebar(true);
     }
 
     public void remove(Player player, MWTeam team) {
@@ -135,7 +139,7 @@ public class GamePlayers {
                 Bukkit.broadcastMessage("§cLast player left, game has ended.");
             }
         }
-        displayManager.refreshSidebar(true);
+        //displayManager.refreshSidebar(true);
     }
 
     public List<Player> get(MWTeam team) {
