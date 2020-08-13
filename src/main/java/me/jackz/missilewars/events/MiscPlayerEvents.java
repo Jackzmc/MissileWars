@@ -1,8 +1,5 @@
 package me.jackz.missilewars.events;
 
-import com.sk89q.worldguard.LocalPlayer;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameConfig;
 import me.jackz.missilewars.game.GamePlayers;
@@ -11,11 +8,9 @@ import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
@@ -56,20 +51,6 @@ public class MiscPlayerEvents implements Listener {
         }
     }
 
-    @EventHandler
-    public void onDamage(EntityDamageEvent e) {
-        if(e.getEntity().getType() == EntityType.PLAYER) {
-            Player player = (Player) e.getEntity();
-            int new_health = (int) (player.getHealth() - e.getFinalDamage());
-            if(new_health <= 0) {
-                LocalPlayer wgPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
-                if (WorldGuard.getInstance().getPlatform().getRegionContainer().get(wgPlayer.getWorld()).hasRegion("spawnlobby")) {
-                    e.setDamage(0);
-                }
-            }
-
-        }
-    }
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
