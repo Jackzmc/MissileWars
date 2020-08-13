@@ -1,16 +1,16 @@
 package me.jackz.missilewars.events;
 
 import me.jackz.missilewars.MissileWars;
-import me.jackz.missilewars.game.*;
+import me.jackz.missilewars.game.GameConfig;
+import me.jackz.missilewars.game.GameManager;
+import me.jackz.missilewars.game.GamePlayers;
+import me.jackz.missilewars.lib.Configs;
 import me.jackz.missilewars.lib.MWUtil;
 import me.jackz.missilewars.lib.Util;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -75,12 +75,15 @@ public class PlayerInteract implements Listener {
 
 
     private void launchFireball(Player player) {
-        //Location eye = player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(1.2));
-        Location eye = player.getTargetBlock(null, 250).getLocation();
+        Location eye;
+        if((boolean) Configs.instantFireballs.getValue()) {
+            eye = player.getTargetBlock(null, 250).getLocation();
+        }else{
+            eye =  player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(1.2));
+        }
         Fireball fireball = (Fireball) eye.getWorld().spawnEntity(eye, EntityType.FIREBALL);
-        fireball.setVelocity(eye.getDirection().normalize().multiply(.8));
+        fireball.setVelocity(eye.getDirection().multiply(.8));
         fireball.setShooter(player);
-        fireball.setVelocity(fireball.getVelocity().multiply(1));
         fireball.setGravity(true);
         if(Math.random() < .01) {
             Entity Pig = player.getWorld().spawnEntity(player.getLocation(),EntityType.PIG);
