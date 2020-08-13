@@ -1,16 +1,15 @@
 package me.jackz.missilewars.events;
 
 import me.jackz.missilewars.MissileWars;
-import me.jackz.missilewars.game.*;
+import me.jackz.missilewars.game.GameConfig;
+import me.jackz.missilewars.game.GameManager;
+import me.jackz.missilewars.game.ReadyManager;
 import me.jackz.missilewars.lib.MWUtil;
 import me.jackz.missilewars.lib.Util;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -35,11 +34,8 @@ public class PlayerInteract implements Listener {
                 MissileWars.gameManager.players().remove(player);
                 Bukkit.broadcastMessage(player.getName() + " returned to the lobby.");
             }else if(lines[2].contains("ready")) {
-                GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
-                if(team == GamePlayers.MWTeam.GREEN) {
-                    MissileWars.gameManager.ready(GamePlayers.MWTeam.GREEN);
-                }else if(team == GamePlayers.MWTeam.RED) {
-                    MissileWars.gameManager.ready(GamePlayers.MWTeam.RED);
+                if(MissileWars.gameManager.players().has(player)) {
+                    ReadyManager.readyPlayer(player);
                 }else{
                     player.sendMessage("§cYou must be in a team to ready up!");
                 }
