@@ -22,3 +22,15 @@ allow-midgame-joins: true
 # Should players see an item timer countdown (their XP level), counting down to next item spawn
 # Default: true
 show-item-timer: true
+
+# Should fireballs instantly explode right-clicked block in the distance
+# True -> Fireballs instantly explode targetted block
+# False -> Fireballs are launched normally
+# Default: false
+instant-fireballs: false
+
+# Should instead of being killed, players be teleported back up?
+# True -> Players will be teleported back to their spawnpoint when below the map
+# False -> Players will be killed when below the map to respawn normally.
+# Default: false
+teleport-respawn: false
