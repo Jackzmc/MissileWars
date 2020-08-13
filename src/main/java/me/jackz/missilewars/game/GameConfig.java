@@ -9,22 +9,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
 public class GameConfig {
-    private int item_interval_sec = 20;
-    private boolean allow_midgame_joins = false;
-    private int max_items = 1;
-    private int randomize_mode = 0; //0 -> ALL, 1 -> Per team, 2 -> Per individual
-    private boolean show_item_timer = true;
-    private HashMap<String, ConfigOption> options = new HashMap<>();
-
-    public final static int DEFAULT_item_interval_sec = 15;
-    public final static boolean DEFAULT_allow_midgame_joins = false;
-    public final static int DEFAULT_max_items = 1;
-    public final static int DEFAULT_randomize_mode = 0; //0 -> ALL, 1 -> Per team, 2 -> Per individual
-    public final static boolean DEFAULT_show_item_timer = true;
+    private static HashMap<String, ConfigOption> options = new HashMap<>();
 
     private static File file;
     private static YamlConfiguration config;
@@ -38,7 +28,7 @@ public class GameConfig {
 
     public static Location SPAWN_LOCATION;
 
-    public GameConfig() {
+    static {
         file = new File(MissileWars.getInstance().getDataFolder(),"config.yml");
         if(!file.exists()) MissileWars.getInstance().saveResource("config.yml",false);
 
@@ -46,28 +36,23 @@ public class GameConfig {
         reload();
     }
 
-    public void registerOption(ConfigOption option) {
+    public static void registerOption(ConfigOption option) {
         options.put(option.getSafeId(), option);
         config.addDefault(option.getSafeId(), option.getDefault());
     }
-    public void registerOptions(ConfigOption... option) {
+    public static void registerOptions(ConfigOption... option) {
         for (ConfigOption configOption : option) {
            registerOption(configOption);
         }
+        Bukkit.getLogger().info("Registered " + option.length + " options.");
     }
 
 
-    public void reload() {
+    public static void reload() {
         //config options
         for (ConfigOption option : options.values()) {
             reloadOption(option);
         }
-        /*item_interval_sec = config.getInt("item-interval-seconds", DEFAULT_item_interval_sec);
-        max_items = config.getInt("max-item-count", DEFAULT_max_items);
-        randomize_mode = config.getInt("randomize-mode", DEFAULT_randomize_mode);
-        allow_midgame_joins = config.getBoolean("allow-midgame-joins", DEFAULT_allow_midgame_joins);
-        show_item_timer = config.getBoolean("show-item-timer", DEFAULT_show_item_timer);*/
-
 
         RED_LOBBY_SPAWNPOINT = MWUtil.getLocation("locations.lobby.red");
         GREEN_LOBBY_SPAWNPOINT = MWUtil.getLocation("locations.lobby.green");
@@ -76,11 +61,11 @@ public class GameConfig {
         SPAWN_LOCATION = MWUtil.getLocation("locations.spawns.default");
     }
 
-    public void save() throws IOException {
+    public static void save() throws IOException {
         config.save(file);
     }
 
-    private void reloadOption(ConfigOption option) {
+    private static void reloadOption(ConfigOption option) {
         if(option.getType() == ConfigOption.ConfigType.Boolean) {
             boolean value = config.getBoolean(option.getId(), (Boolean) option.getDefault());
             option.setValue(value);
@@ -107,18 +92,21 @@ public class GameConfig {
 
     //#region getters
 
-    public int getItemInterval() {
+    public static int getItemInterval() {
         //15+1.4x+Math.floor(x/2)
         int x = (2*MissileWars.gameManager.players().size()) + 2;
         double scale_amount = 15 + (1.4*x) + Math.floor((double)x/2);
-        return item_interval_sec;
+        return (int) scale_amount;
     }
 
-    public ConfigOption getOption(String id) {
+    public static ConfigOption getOption(String id) {
         return options.get(id);
     }
-    public Set<String> getOptionIds() {
+    public static Set<String> getOptionIds() {
         return options.keySet();
+    }
+    public static Collection<ConfigOption> getOptions() {
+        return options.values();
     }
 
 }

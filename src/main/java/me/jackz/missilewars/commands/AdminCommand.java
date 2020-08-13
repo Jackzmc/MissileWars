@@ -3,7 +3,6 @@ package me.jackz.missilewars.commands;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.*;
 import me.jackz.missilewars.lib.ConfigOption;
-import me.jackz.missilewars.lib.ConfigTextComponent;
 import me.jackz.missilewars.lib.DataLoader;
 import me.jackz.missilewars.lib.Missile;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -16,7 +15,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class AdminCommand implements CommandExecutor {
@@ -250,19 +251,19 @@ public class AdminCommand implements CommandExecutor {
                 break;
             }
             case "config": {
-                if(!sender.hasPermission("missilewars.admin.game")) {
-                    sender.sendMessage("§cYou do not have permission.");
-                    return true;
-                }
                 if(args.length < 2) {
+                    if(!sender.hasPermission("missilewars.admin.config")) {
+                        sender.sendMessage("§cYou do not have permission.");
+                        return true;
+                    }
                     sender.sendMessage("§cUsage: /mwa config <[property name]/help/save> [new value]");
                 }else {
 
                     switch(args[1].toLowerCase()) {
                         case "save": {
-                            if(sender.hasPermission("missilewars.admin.game")) {
+                            if(sender.hasPermission("missilewars.admin.config")) {
                                 try {
-                                    MissileWars.gameManager.getConfig().save();
+                                    GameConfig.save();
                                     sender.sendMessage("§aSuccessfully saved configuration.");
                                 } catch (Exception ex) {
                                     sender.sendMessage("§cSomething happened while attempting to save configuration. Check console for details.");
@@ -277,14 +278,13 @@ public class AdminCommand implements CommandExecutor {
                         case "help":
                             sender.sendMessage("§6Available Settings: <Name> (<id>)");
                             sender.sendMessage("§6§o(Hover over an item to see information, click to set)");
-                            sender.spigot().sendMessage(ConfigTextComponent.itemInterval.getTextComponent("§e"));
-                            sender.spigot().sendMessage(ConfigTextComponent.midGameJoins.getTextComponent("§e"));
-                            sender.spigot().sendMessage(ConfigTextComponent.maxItemSize.getTextComponent("§e"));
-                            sender.spigot().sendMessage(ConfigTextComponent.randomizeMode.getTextComponent("§e"));
-                            sender.spigot().sendMessage(ConfigTextComponent.showItemTimer.getTextComponent("§e"));
+                            for (ConfigOption option : GameConfig.getOptions()) {
+                                sender.spigot().sendMessage(option.getTextComponent("§e"));
+                            }
+                            sender.sendMessage(String.join("", GameConfig.getOptionIds()));
                             break;
                         default:
-                            ConfigOption option = MissileWars.gameManager.getConfig().getOption(args[1]);
+                            ConfigOption option = GameConfig.getOption(args[1]);
                             if(option != null) {
                                 if (args.length >= 3) {
                                     if(sender.hasPermission("missilewars.admin.config." + option.getSafeId())) {
@@ -335,7 +335,7 @@ public class AdminCommand implements CommandExecutor {
                             sender.sendMessage("§aSuccessfully reloaded statistics.");
                             break;
                         case "config":
-                            MissileWars.gameManager.getConfig().reload();
+                            GameConfig.reload();
                             sender.sendMessage("§aSuccessfully reloaded configuration.");
                             break;
                         case "data":
@@ -344,7 +344,7 @@ public class AdminCommand implements CommandExecutor {
                             sender.sendMessage("§aSuccessfully reloaded configuration.");
                         case "all":
                             GameManager.getStats().reload();
-                            MissileWars.gameManager.getConfig().reload();
+                            GameConfig.reload();
                             DataLoader.reload();
                             sender.sendMessage("§aSuccessfully reloaded.");
                             break;

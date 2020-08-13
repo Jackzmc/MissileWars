@@ -26,11 +26,11 @@ public class GameCommand implements CommandExecutor  {
     private MissileWars plugin;
     private ConfigOption isMidGameJoinAllowed;
 
-
     public GameCommand(MissileWars plugin) {
         this.plugin = plugin;
-        isMidGameJoinAllowed = MissileWars.gameManager.getConfig().getOption("allow-midgame-join");
+        isMidGameJoinAllowed =  GameConfig.getOption("allow-midgame-join");
     }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(args.length >= 1) {

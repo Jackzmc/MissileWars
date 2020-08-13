@@ -1,14 +1,14 @@
 package me.jackz.missilewars.lib;
 
-import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.GameConfig;
 
 public class ConfigTextComponent {
 
     public final static ConfigOption itemInterval = new ConfigOption("item-interval", ConfigOption.ConfigType.Integer, 15);
-    public final static ConfigOption midGameJoins = new ConfigOption("allow-midgame-join", ConfigOption.ConfigType.Boolean, true);
-    public final static ConfigOption maxItemSize = new ConfigOption("max-item-count", ConfigOption.ConfigType.Integer, 1);
-    public final static ConfigOption randomizeMode = new ConfigOption("randomize-mode", ConfigOption.ConfigType.Integer, 0);
-    public final static ConfigOption showItemTimer = new ConfigOption("show-item-timer", ConfigOption.ConfigType.Boolean, true);
+    private final static ConfigOption midGameJoins = new ConfigOption("allow-midgame-join", ConfigOption.ConfigType.Boolean, true);
+    private final static ConfigOption maxItemSize = new ConfigOption("max-item-count", ConfigOption.ConfigType.Integer, 1);
+    private final static ConfigOption randomizeMode = new ConfigOption("randomize-mode", ConfigOption.ConfigType.Integer, 0);
+    private final static ConfigOption showItemTimer = new ConfigOption("show-item-timer", ConfigOption.ConfigType.Boolean, true);
 
 
     static {
@@ -26,7 +26,7 @@ public class ConfigTextComponent {
 
         showItemTimer.setMeta("Show XP Item Timer", "Displays a timer in player's XP bar showing when items are given.");
 
-        MissileWars.gameManager.getConfig().registerOptions(
+        GameConfig.registerOptions(
                 itemInterval,
                 midGameJoins,
                 maxItemSize,

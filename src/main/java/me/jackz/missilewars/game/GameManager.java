@@ -1,7 +1,6 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
-import me.jackz.missilewars.lib.DataLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -17,7 +16,6 @@ import java.util.Set;
 public class GameManager {
     private GameState state;
     private GamePlayers players;
-    private static GameConfig config;
     private static MissileLoader missileLoader;
     private ItemSystem itemSystem;
     private static StatsTracker stats;
@@ -32,7 +30,6 @@ public class GameManager {
         state = new GameState();
         itemSystem = new ItemSystem();
         players = new GamePlayers();
-        config = new GameConfig();
         missileLoader = new MissileLoader();
         stats = new StatsTracker();
 
@@ -170,7 +167,6 @@ public class GameManager {
             itemSystem = null;
         }
         players = null;
-        config = null;
         if(stats != null) {
             stats.save();
             stats = null;
@@ -185,9 +181,6 @@ public class GameManager {
 
     public GamePlayers players() {
         return players;
-    }
-    public GameConfig getConfig() {
-        return config;
     }
     public static StatsTracker getStats() {
         return stats;

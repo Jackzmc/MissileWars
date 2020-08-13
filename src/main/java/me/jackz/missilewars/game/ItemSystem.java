@@ -37,12 +37,12 @@ public class ItemSystem {
         meta.setUnbreakable(true);
         ITEM_BOW.setItemMeta(meta);
 
-        randomizeMode = MissileWars.gameManager.getConfig().getOption("randomize-mode");
-        maxItemCount = MissileWars.gameManager.getConfig().getOption("max-item-count");
+        randomizeMode = GameConfig.getOption("randomize-mode");
+        maxItemCount = GameConfig.getOption("max-item-count");
     }
 
     public void start() {
-        currentCount = MissileWars.gameManager.getConfig().getItemInterval();
+        currentCount = GameConfig.getItemInterval();
         timerTask = Bukkit.getScheduler().runTaskTimer(MissileWars.getInstance(),
                 this::processTimer,
                 20 * 5,
@@ -55,14 +55,13 @@ public class ItemSystem {
     }
 
     public static List<String> getTypes() {
-        List<String> list = ITEM_TYPES;
         ITEM_TYPES.addAll(GameManager.getMissileLoader().getIds());
-        return list;
+        return ITEM_TYPES;
     }
 
     public void processTimer() {
         currentCount++;
-        final int INTERVAL = MissileWars.gameManager.getConfig().getItemInterval();
+        final int INTERVAL = GameConfig.getItemInterval();
         for (Player player : MissileWars.gameManager.players().getAllPlayers()) {
             player.setExp(currentCount == INTERVAL ? 1.0f : 0.0f);
             player.setLevel(INTERVAL - currentCount);
