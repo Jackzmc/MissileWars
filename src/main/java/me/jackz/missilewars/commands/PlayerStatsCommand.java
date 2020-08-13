@@ -8,16 +8,13 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-public class PlayerStatsCommand implements CommandExecutor  {
+public class PlayerStatsCommand implements TabExecutor {
     private MissileWars plugin;
     public PlayerStatsCommand(MissileWars plugin) {
         this.plugin = plugin;
@@ -60,6 +57,23 @@ public class PlayerStatsCommand implements CommandExecutor  {
         }
         return true;
     }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        /*
+        /stats <player>, /stats session, /stats <player> session
+         */
+        if(sender.hasPermission("missilewars.stats.others") || args.length == 0 || !args[0].equalsIgnoreCase("session")) {
+            if(args.length > 1) {
+                if(args.length > 2) return new ArrayList<>();
+                return new ArrayList<>(Collections.singletonList("session"));
+            }
+            return null;
+        }else {
+            return new ArrayList<>();
+        }
+    }
+
     private void printStats(CommandSender sender, UUID uuid, String username, boolean global) {
         int wins = GameManager.getStats().getStat("wins." + uuid, global);
         int loses = GameManager.getStats().getStat("loses." + uuid, global);
@@ -92,6 +106,6 @@ public class PlayerStatsCommand implements CommandExecutor  {
             components.toArray(componentArray);
             sender.spigot().sendMessage(componentArray);
         }
-
     }
+
 }
