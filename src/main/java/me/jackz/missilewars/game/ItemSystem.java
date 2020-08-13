@@ -1,10 +1,9 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.lib.ConfigOption;
 import me.jackz.missilewars.lib.Missile;
 import me.jackz.missilewars.lib.Util;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -23,6 +22,9 @@ public class ItemSystem {
     private BukkitTask timerTask;
     private int currentCount = 0;
 
+    private static ConfigOption randomizeMode;
+    private static ConfigOption maxItemCount;
+
     private final static ItemStack ITEM_FIREBALL = Util.getCustomItem(Material.BLAZE_SPAWN_EGG,"&9Launch Fireball","&7Spawns a Fireball.","&7Rightclick to shoot fireball in direction you are facing");
     private final static ItemStack ITEM_BOW = Util.getCustomItem(Material.BOW,"&9GunBlade","","&7A sharp Flame Bow","&7Use to ignite TNT remotely with arrows");
     private final static ItemStack ITEM_BARRIER = Util.getCustomItem(Material.SNOWBALL,"&9Deploy Barrier","&7Deploys a barrier after 1 second.");
@@ -34,6 +36,9 @@ public class ItemSystem {
         ItemMeta meta = ITEM_BOW.getItemMeta();
         meta.setUnbreakable(true);
         ITEM_BOW.setItemMeta(meta);
+
+        randomizeMode = MissileWars.gameManager.getConfig().getOption("randomize-mode");
+        maxItemCount = MissileWars.gameManager.getConfig().getOption("max-item-count");
     }
 
     public void start() {
@@ -70,7 +75,7 @@ public class ItemSystem {
 
     public static void chooseItem() {
         Random rand = new Random();
-        int randMode = MissileWars.gameManager.getConfig().getRandomizeMode();
+        int randMode = (int) randomizeMode.getValue();
         if(randMode == 0) {
             String itemName = ITEM_TYPES.get(rand.nextInt(ITEM_TYPES.size()));
             ItemStack item = getItem(itemName);
@@ -101,8 +106,8 @@ public class ItemSystem {
     public static void giveItem(Player player, ItemStack itemstack, boolean bypassLimit) {
         //maxAmount being -1 disables limit
         int item_count = Util.getAmount(player.getInventory(), itemstack);
-        if(MissileWars.gameManager.getConfig().getMaxItems() == -1) bypassLimit = true;
-        if(!bypassLimit && item_count >= MissileWars.gameManager.getConfig().getMaxItems()) {
+        if((int) maxItemCount.getValue() == -1) bypassLimit = true;
+        if(!bypassLimit && item_count >= (int) maxItemCount.getValue()) {
             player.sendMessage("§cYou already have a " + itemstack.getItemMeta().getDisplayName());
         }else{
             player.getInventory().addItem(itemstack);

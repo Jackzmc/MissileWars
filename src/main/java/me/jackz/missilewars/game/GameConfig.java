@@ -9,7 +9,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
 
 public class GameConfig {
     private int item_interval_sec = 20;
@@ -42,21 +43,16 @@ public class GameConfig {
         if(!file.exists()) MissileWars.getInstance().saveResource("config.yml",false);
 
         config = YamlConfiguration.loadConfiguration(file);
-        config.addDefault("item-interval-seconds", DEFAULT_item_interval_sec);
-        config.addDefault("max-item-count", DEFAULT_max_items);
-        config.addDefault("randomize-mode", DEFAULT_randomize_mode);
-        config.addDefault("allow-midgame-joins", DEFAULT_allow_midgame_joins);
-        config.addDefault("show-item-timer", DEFAULT_show_item_timer);
-
         reload();
     }
 
     public void registerOption(ConfigOption option) {
         options.put(option.getSafeId(), option);
+        config.addDefault(option.getSafeId(), option.getDefault());
     }
     public void registerOptions(ConfigOption... option) {
         for (ConfigOption configOption : option) {
-            options.put(configOption.getSafeId(), configOption);
+           registerOption(configOption);
         }
     }
 
@@ -125,40 +121,4 @@ public class GameConfig {
         return options.keySet();
     }
 
-    public int getMaxItems() {
-        return max_items;
-    }
-
-    public int getRandomizeMode() {
-        return randomize_mode;
-    }
-
-    public boolean isMidGameJoinAllowed() {
-        return allow_midgame_joins;
-    }
-
-    public boolean getShowItemTimer() { return show_item_timer; }
-
-    //#endregion
-
-    //#region setters
-    public void setItemIntervalSec(int item_interval_sec) {
-        this.item_interval_sec = item_interval_sec;
-    }
-
-
-    public void setMidgameJoins(boolean allow_midgame_joins) {
-        this.allow_midgame_joins = allow_midgame_joins;
-    }
-
-    public void setMaxItems(int max_items) {
-        this.max_items = max_items;
-    }
-
-    public void setRandomizeMode(int randomize_mode) {
-        this.randomize_mode = randomize_mode;
-    }
-
-    public void setShowItemTimer(boolean option) { this.show_item_timer = option; }
-    //#endregion
 }

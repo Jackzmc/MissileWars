@@ -2,6 +2,7 @@ package me.jackz.missilewars.commands;
 
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.*;
+import me.jackz.missilewars.lib.ConfigOption;
 import me.jackz.missilewars.lib.Missile;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -23,8 +24,12 @@ import java.util.stream.Collectors;
 
 public class GameCommand implements CommandExecutor  {
     private MissileWars plugin;
+    private ConfigOption isMidGameJoinAllowed;
+
+
     public GameCommand(MissileWars plugin) {
         this.plugin = plugin;
+        isMidGameJoinAllowed = MissileWars.gameManager.getConfig().getOption("allow-midgame-join");
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -63,7 +68,7 @@ public class GameCommand implements CommandExecutor  {
                         return true;
                     }
                 }
-                if (self && MissileWars.gameManager.getConfig().isMidGameJoinAllowed() && MissileWars.gameManager.getState().isGameActive()) {
+                if (self && (boolean) isMidGameJoinAllowed.getValue() && MissileWars.gameManager.getState().isGameActive()) {
                     if (MissileWars.gameManager.players().has(player)) {
                         sender.sendMessage("§cCan't switch teams during a game.");
                     } else {
