@@ -1,10 +1,7 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
@@ -96,18 +93,28 @@ public class GameManager {
                 GamePlayers.MWTeam team = entry.getValue();
                 if (team == GamePlayers.MWTeam.GREEN) {
                     player.teleport(GameConfig.GREEN_SPAWNPOINT);
-                    player.setBedSpawnLocation(GameConfig.GREEN_SPAWNPOINT);
+                    player.setBedSpawnLocation(GameConfig.GREEN_SPAWNPOINT, true);
                 } else if (team == GamePlayers.MWTeam.RED) {
                     player.teleport(GameConfig.RED_SPAWNPOINT);
-                    player.setBedSpawnLocation(GameConfig.RED_SPAWNPOINT);
+                    player.setBedSpawnLocation(GameConfig.RED_SPAWNPOINT, true);
                 } else {
                     continue;
                 }
-                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> player.sendTitle("§c3", "", 0, 20, 0), 20);
-                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> player.sendTitle("§e2", "", 0, 20, 0), 20 * 2);
-                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> player.sendTitle("§a1", "", 0, 20, 0), 20 * 3);
-                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> player.sendTitle("§aGO!", "Game has started", 0, 20, 0), 20 * 4);
                 Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+                    player.sendTitle("§c3", "", 0, 20, 0);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 0.0f);
+                }, 20);
+                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+                    player.sendTitle("§e2", "", 0, 20, 0);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 0.0f);
+                }, 20 * 2);
+                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+                    player.sendTitle("§a1", "", 0, 20, 0);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 0.0f);
+                }, 20 * 3);
+                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+                    player.sendTitle("§aGO!", "Game has started", 0, 20, 0);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 0.0f);
                     player.sendMessage("§eMissile Wars has started!");
                     player.sendMessage("§9Tip: " + Tips.getRandomTip());
                 }, 20 * 4);
@@ -133,20 +140,20 @@ public class GameManager {
         }else{
             Bukkit.broadcastMessage("§eGame was a total of §9" + duration_minutes + " minutes §elong!");
         }
-
+        itemSystem.stop();
         for (Player player : allPlayers) {
             players.setupPlayer(player);
             player.setGameMode(GameMode.SPECTATOR);
+            player.setBedSpawnLocation(GameConfig.SPAWN_LOCATION, true);
             stats.incSavedStat("gametime_min." + player.getUniqueId(),duration_minutes);
         }
         state.setActive(false);
 
-        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), this::reset , 20 * 15);
+        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), this::reset , 20 * 10);
     }
 
     public void reset() {
         Reset.reset();
-        itemSystem.stop();
         state.setTeamReady(GamePlayers.MWTeam.GREEN, false);
         state.setTeamReady(GamePlayers.MWTeam.RED, false);
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
@@ -156,8 +163,9 @@ public class GameManager {
                 player.teleport(GameConfig.SPAWN_LOCATION);
                 player.setGameMode(GameMode.ADVENTURE);
                 players.remove(player);
+                players.setupPlayer(player);
             }
-        }, 20 * 20);
+        }, 20 * 30);
     }
 
     public void reload() {
