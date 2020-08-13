@@ -36,6 +36,11 @@ public class GameManager {
         ItemSystem.getTypes(); //initalize missiles
         Bukkit.getLogger().info("Loaded " + missileLoader.getMissiles().size() + " missiles");
         initializeScoreboard();
+        try {
+            Class.forName("me.jackz.missilewars.lib.Configs");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void setWorld(World world) {

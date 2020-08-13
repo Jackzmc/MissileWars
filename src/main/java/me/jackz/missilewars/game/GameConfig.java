@@ -37,8 +37,9 @@ public class GameConfig {
     }
 
     public static void registerOption(ConfigOption option) {
-        options.put(option.getSafeId(), option);
+        options.put(option.getId(), option);
         config.addDefault(option.getSafeId(), option.getDefault());
+        reloadOption(option);
     }
     public static void registerOptions(ConfigOption... option) {
         for (ConfigOption configOption : option) {
@@ -75,9 +76,9 @@ public class GameConfig {
                 if(value == -1 && option.canDisable()) {
                     option.setValue(value);
                 }else {
-                    if (option.hasMin() && value <= option.getMin()) {
+                    if (option.hasMin() && value < option.getMin()) {
                         Bukkit.getLogger().warning("Option " + option.getId() + " is below minimum value (min: " + option.getMin() + ")");
-                    }else if(option.hasMax() && value >= option.getMax()) {
+                    }else if(option.hasMax() && value > option.getMax()) {
                         Bukkit.getLogger().warning("Option " + option.getId() + " is above maximum value (ax: " + option.getMax() + ")");
                     }else{
                         option.setValue(value);
@@ -100,7 +101,7 @@ public class GameConfig {
     }
 
     public static ConfigOption getOption(String id) {
-        return options.get(id);
+        return options.get(id.toLowerCase());
     }
     public static Set<String> getOptionIds() {
         return options.keySet();

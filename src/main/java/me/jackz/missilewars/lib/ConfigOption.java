@@ -1,10 +1,8 @@
 package me.jackz.missilewars.lib;
 
-import me.jackz.missilewars.MissileWars;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +10,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ConfigOption {
+    //id: example-id
+    //safeid: exampleid
 
     public enum ConfigType {
         String,
@@ -31,7 +31,7 @@ public class ConfigOption {
     private Object currentValue;
 
     public ConfigOption(String id, ConfigType type, Object defaultValue) {
-        this.id = id;
+        this.id = id.toLowerCase();
         this.type = type;
         this.defaultValue = defaultValue;
     }

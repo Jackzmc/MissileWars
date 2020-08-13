@@ -243,6 +243,10 @@ public class AdminCommand implements CommandExecutor {
                             String missileList = GameManager.getMissileLoader().getMissiles().stream().map(Missile::getId).collect(Collectors.joining(","));
                             sender.sendMessage("Missiles: " + missileList);
                             sender.sendMessage("SPAWN_POINT: " + GameConfig.SPAWN_LOCATION);
+                            sender.sendMessage("options:");
+                            for (ConfigOption option : GameConfig.getOptions()) {
+                                sender.sendMessage(option.getId() + " value: " + option.getValue());
+                            }
                             break;
                         default:
                             sender.sendMessage("§cUnknown option, try: /mwa game <start/reset/stop/reload>");
@@ -281,7 +285,6 @@ public class AdminCommand implements CommandExecutor {
                             for (ConfigOption option : GameConfig.getOptions()) {
                                 sender.spigot().sendMessage(option.getTextComponent("§e"));
                             }
-                            sender.sendMessage(String.join("", GameConfig.getOptionIds()));
                             break;
                         default:
                             ConfigOption option = GameConfig.getOption(args[1]);
@@ -310,7 +313,7 @@ public class AdminCommand implements CommandExecutor {
                                         sender.sendMessage("§cYou do not have permission to change this setting");
                                     }
                                 } else {
-                                    sendConfig(sender, option, option.getValue());
+                                    sendConfig(sender, option);
                                 }
                                 break;
                                 //todo: print option
@@ -360,11 +363,12 @@ public class AdminCommand implements CommandExecutor {
         return true;
     }
 
-    private void sendConfig(CommandSender sender, ConfigOption option, Object value) {
+    private void sendConfig(CommandSender sender, ConfigOption option) {
         TextComponent tc = option.getTextComponent("§9§n", false);
         tc.addExtra("§r §a[Hover for information]");
+        sender.sendMessage("");
         sender.spigot().sendMessage(tc);
-        sender.sendMessage("§eCurrent Value: §r§9" + value);
+        sender.sendMessage("§eCurrent Value: §r§9" + option.getValue());
         sender.sendMessage("§7§oSet value with §e/mwa config " + option.getId() + " <" + option.getType() + ">");
     }
 }
