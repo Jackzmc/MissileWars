@@ -1,8 +1,8 @@
-package me.jackz.missilewars.lib;
+package me.jackz.missilewars.game;
 
-import me.jackz.missilewars.game.GameConfig;
+import me.jackz.missilewars.lib.ConfigOption;
 
-public class Configs {
+public class Options {
 
     public final static ConfigOption itemInterval = new ConfigOption("item-interval", ConfigOption.ConfigType.Integer, 15);
     public final static ConfigOption midGameJoins = new ConfigOption("allow-midgame-join", ConfigOption.ConfigType.Boolean, true);

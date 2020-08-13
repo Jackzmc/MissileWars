@@ -4,7 +4,7 @@ import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameConfig;
 import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.game.GamePlayers;
-import me.jackz.missilewars.lib.Configs;
+import me.jackz.missilewars.game.Options;
 import me.jackz.missilewars.lib.MWUtil;
 import me.jackz.missilewars.lib.Util;
 import org.bukkit.Bukkit;
@@ -76,7 +76,7 @@ public class PlayerInteract implements Listener {
 
     private void launchFireball(Player player) {
         Location eye;
-        if((boolean) Configs.instantFireballs.getValue()) {
+        if((boolean) Options.instantFireballs.getValue()) {
             eye = player.getTargetBlock(null, 250).getLocation();
         }else{
             eye =  player.getEyeLocation().add(player.getEyeLocation().getDirection().multiply(1.2));

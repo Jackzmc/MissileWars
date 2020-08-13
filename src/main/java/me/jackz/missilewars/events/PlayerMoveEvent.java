@@ -9,7 +9,7 @@ import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameConfig;
 import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.game.ItemSystem;
-import me.jackz.missilewars.lib.Configs;
+import me.jackz.missilewars.game.Options;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ public class PlayerMoveEvent implements Listener {
         Player player = e.getPlayer();
         Location location = player.getLocation();
         if(location.getY() <= 0 && player.getGameMode() == GameMode.SURVIVAL) {
-            if((boolean) Configs.teleportRespawn.getValue()) {
+            if((boolean) Options.teleportRespawn.getValue()) {
                 GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
                 Location tpLocation = team == GamePlayers.MWTeam.GREEN ? GameConfig.GREEN_SPAWNPOINT : GameConfig.RED_SPAWNPOINT;
                 player.teleport(tpLocation);

@@ -2,7 +2,6 @@ package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.lib.ConfigOption;
-import me.jackz.missilewars.lib.Configs;
 import me.jackz.missilewars.lib.Missile;
 import me.jackz.missilewars.lib.Util;
 import org.bukkit.Bukkit;
@@ -38,8 +37,8 @@ public class ItemSystem {
         meta.setUnbreakable(true);
         ITEM_BOW.setItemMeta(meta);
 
-        randomizeMode = Configs.randomizeMode;
-        maxItemCount = Configs.maxItemSize;
+        randomizeMode = Options.randomizeMode;
+        maxItemCount = Options.maxItemSize;
     }
 
     public void start() {

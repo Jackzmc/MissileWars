@@ -3,7 +3,6 @@ package me.jackz.missilewars.commands;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.*;
 import me.jackz.missilewars.lib.ConfigOption;
-import me.jackz.missilewars.lib.Configs;
 import me.jackz.missilewars.lib.Missile;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -29,7 +28,7 @@ public class GameCommand implements CommandExecutor  {
 
     public GameCommand(MissileWars plugin) {
         this.plugin = plugin;
-        isMidGameJoinAllowed = Configs.midGameJoins;
+        isMidGameJoinAllowed = Options.midGameJoins;
     }
 
     @Override
