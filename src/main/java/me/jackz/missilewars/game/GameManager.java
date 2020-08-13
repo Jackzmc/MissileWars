@@ -13,7 +13,6 @@ import java.util.Set;
 public class GameManager {
     private GameState state;
     private GamePlayers players;
-    private static GameConfig config;
     private static MissileLoader missileLoader;
     private ItemSystem itemSystem;
     private static StatsTracker stats;
@@ -28,13 +27,17 @@ public class GameManager {
         state = new GameState();
         itemSystem = new ItemSystem();
         players = new GamePlayers();
-        config = new GameConfig();
         missileLoader = new MissileLoader();
         stats = new StatsTracker();
 
         ItemSystem.getTypes(); //initalize missiles
         Bukkit.getLogger().info("Loaded " + missileLoader.getMissiles().size() + " missiles");
         initializeScoreboard();
+        try {
+            Class.forName("me.jackz.missilewars.game.Options");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void setWorld(World world) {
@@ -188,7 +191,6 @@ public class GameManager {
             player.teleport(GameConfig.SPAWN_LOCATION);
         }
         players = null;
-        config = null;
         if(stats != null) {
             stats.save();
             stats = null;
@@ -203,9 +205,6 @@ public class GameManager {
 
     public GamePlayers players() {
         return players;
-    }
-    public GameConfig getConfig() {
-        return config;
     }
     public static StatsTracker getStats() {
         return stats;
