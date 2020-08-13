@@ -24,20 +24,20 @@ public class StatsTracker {
         file = new File(MissileWars.getInstance().getDataFolder(),"statistics.yml");
         reload();
     }
-    public void incSavedStat(String name) {
-        incSavedStat(name, 1);
+    public void increaseSavedStat(String name) {
+        increaseSavedStat(name, 1);
     }
-    public void incSavedStat(String name, int incAmount) {
+    public void increaseSavedStat(String name, int incAmount) {
         int prev = savedStats.getOrDefault(name, 0);
         setSavedStat(name,prev+incAmount);
     }
-    public void incSessionStat(String name) {
+    public void increaseSessionStat(String name) {
         int prev = memStats.getOrDefault(name, 0);
         memStats.put(name,prev+1);
     }
-    public void incStat(String name) {
-        incSavedStat(name);
-        incSessionStat(name);
+    public void increaseStat(String name) {
+        increaseSavedStat(name);
+        increaseSessionStat(name);
     }
 
     public Entry<Player, Integer> getHighestSessionStat(String statName) {

@@ -135,7 +135,7 @@ public class GameManager {
         Set<Player> allPlayers = players.getAllPlayers();
         int duration_minutes = (int) stats.getGameTimeMS() / 1000 / 60;
 
-        stats.incSavedStat("gametime_min.total",duration_minutes);
+        stats.increaseSavedStat("gametime_min.total",duration_minutes);
         int longest_game = stats.getSavedStat("gametime_min.longest");
         if(longest_game < duration_minutes) {
             stats.setSavedStat("gametime_min.longest", duration_minutes);
@@ -148,7 +148,7 @@ public class GameManager {
             players.setupPlayer(player);
             player.setGameMode(GameMode.SPECTATOR);
             player.setBedSpawnLocation(GameConfig.SPAWN_LOCATION, true);
-            stats.incSavedStat("gametime_min." + player.getUniqueId(),duration_minutes);
+            stats.increaseSavedStat("gametime_min." + player.getUniqueId(),duration_minutes);
         }
         state.setActive(false);
 
