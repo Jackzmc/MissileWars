@@ -11,6 +11,7 @@ public class Tips {
         tips.add("Break all the tnt from defused missiles to act as a shield for new missiles");
         tips.add("Learn the key weaknesses of certain missiles to easily defuse them");
         tips.add("You can't spawn missiles deep into enemy base");
+        tips.add("Missiles spawn 4 blocks from the block you clicked on.");
     }
     public static String getRandomTip() {
         Random rand = new Random();

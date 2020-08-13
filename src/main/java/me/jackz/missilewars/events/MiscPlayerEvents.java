@@ -10,6 +10,7 @@ import me.jackz.missilewars.lib.MWUtil;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -45,11 +46,12 @@ public class MiscPlayerEvents implements Listener {
         player.spigot().sendMessage(base);
         player.sendMessage("");
 
-        GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
-        if(team != GamePlayers.MWTeam.NONE && !MissileWars.gameManager.getState().isGameActive()) {
-            MissileWars.gameManager.players().remove(player, team);
+        if(!MissileWars.gameManager.getState().isGameActive()) {
+            MissileWars.gameManager.players().remove(player);
             player.setExp(0);
             player.setLevel(0);
+            player.setBedSpawnLocation(GameConfig.SPAWN_LOCATION, true);
+            player.setGameMode(GameMode.ADVENTURE);
             player.teleport(GameConfig.SPAWN_LOCATION);
         }
     }
@@ -84,11 +86,11 @@ public class MiscPlayerEvents implements Listener {
                 } else if (team == GamePlayers.MWTeam.GREEN) {
                     player.teleport(GameConfig.GREEN_SPAWNPOINT);
                 }
-                MWUtil.updateGenericStat("generic","deaths",player);
+                MWUtil.updateGenericStat("generic","deaths", player);
             }else{
                 player.teleport(GameConfig.SPAWN_LOCATION);
             }
-        },5);
+        },2);
 
     }
 }
