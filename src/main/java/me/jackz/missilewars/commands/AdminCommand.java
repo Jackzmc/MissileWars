@@ -36,7 +36,7 @@ public class AdminCommand implements CommandExecutor {
         if(args.length == 0 || args[0].equalsIgnoreCase("help") ) {
             sender.sendMessage("§6Missile Wars - Admin Menu");
             sender.sendMessage("§e/mwa give <player/red/green> <item> [bypass]§7- gives player or team an item");
-            sender.sendMessage("§e/mwa choose <item> §7- ctivate item spawn manually");
+            sender.sendMessage("§e/mwa choose [item] §7- activate item spawn manually");
             sender.sendMessage("§e/mwa items §7- get all items");
             sender.sendMessage("§e/mwa scramble §7- scramble the teams");
             sender.sendMessage("§e/mwa game <start/reset/stop/reload> §7- start, stop, and reload game");
@@ -55,6 +55,10 @@ public class AdminCommand implements CommandExecutor {
                     boolean bypass = (args.length >= 4) && args[3].equalsIgnoreCase("bypass");
                     if(bypass && !sender.hasPermission("missilewars.admin.bypass")) {
                         sender.sendMessage("§cYou do not have permission to bypass");
+                        return true;
+                    }
+                    if(!MissileWars.gameManager.getState().isGameActive()) {
+                        sender.sendMessage("§cGame has not started yet.");
                         return true;
                     }
                     if(args[1].equalsIgnoreCase("red")) {
@@ -149,6 +153,10 @@ public class AdminCommand implements CommandExecutor {
             case "choose": {
                 if(!sender.hasPermission("missilewars.admin.choose")) {
                     sender.sendMessage("§cYou do not have permission");
+                    return true;
+                }
+                if(!MissileWars.gameManager.getState().isGameActive()) {
+                    sender.sendMessage("§cGame has not started yet.");
                     return true;
                 }
                 if(args.length >= 2) {
@@ -371,4 +379,5 @@ public class AdminCommand implements CommandExecutor {
         sender.sendMessage("§eCurrent Value: §r§9" + option.getValue());
         sender.sendMessage("§7§oSet value with §e/mwa config " + option.getId() + " <" + option.getType() + ">");
     }
+
 }

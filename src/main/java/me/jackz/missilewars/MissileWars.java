@@ -4,6 +4,8 @@ import me.jackz.missilewars.commands.AdminCommand;
 import me.jackz.missilewars.commands.GameCommand;
 import me.jackz.missilewars.commands.PlayerStatsCommand;
 import me.jackz.missilewars.commands.SpectateCommand;
+import me.jackz.missilewars.commands.tabcompleter.AdminCommandCompleter;
+import me.jackz.missilewars.commands.tabcompleter.GameCommandCompleter;
 import me.jackz.missilewars.events.*;
 import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.lib.RestartManager;
@@ -45,8 +47,10 @@ public final class MissileWars extends JavaPlugin {
     private void registerCommands() {
         getCommand("spectate").setExecutor(new SpectateCommand());
         getCommand("game").setExecutor(new GameCommand(this));
+        getCommand("game").setTabCompleter(new GameCommandCompleter());
         getCommand("stats").setExecutor(new PlayerStatsCommand(this));
         getCommand("missilewarsadmin").setExecutor(new AdminCommand(this));
+        getCommand("missilewarsadmin").setTabCompleter(new AdminCommandCompleter());
     }
     private void registerListeners() {
         PluginManager pm = getServer().getPluginManager();

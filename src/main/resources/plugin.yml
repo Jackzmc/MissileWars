@@ -1,10 +1,12 @@
 name: MissileWars
+author: Jackzmc
 version: ${project.version}
-depend: [WorldEdit,WorldGuard]
+depend: [WorldEdit, WorldGuard]
 softdepend: [Vault]
 main: me.jackz.missilewars.MissileWars
 load: POSTWORLD
 api-version: 1.13
+website: https://github.com/jackzmc/MissileWars
 commands:
   spectate:
     description: Join the spectators
