@@ -27,6 +27,7 @@ public class MiscPlayerEvents implements Listener {
         Player player = e.getPlayer();
         player.addPotionEffect(nightVision);
         player.addPotionEffect(saturation);
+        player.addPotionEffect(regen);
         player.getInventory().clear();
 
         player.sendMessage("");
