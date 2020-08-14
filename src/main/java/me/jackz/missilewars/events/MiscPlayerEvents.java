@@ -1,22 +1,16 @@
 package me.jackz.missilewars.events;
 
-import com.sk89q.worldguard.LocalPlayer;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameConfig;
-import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.game.GamePlayers;
 import me.jackz.missilewars.lib.MWUtil;
 import me.jackz.missilewars.lib.Util;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
@@ -33,6 +27,7 @@ public class MiscPlayerEvents implements Listener {
         Player player = e.getPlayer();
         player.addPotionEffect(nightVision);
         player.addPotionEffect(saturation);
+        player.addPotionEffect(regen);
         player.getInventory().clear();
 
         player.sendMessage("");
@@ -47,29 +42,16 @@ public class MiscPlayerEvents implements Listener {
         player.spigot().sendMessage(base);
         player.sendMessage("");
 
-        GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
-        if(team != GamePlayers.MWTeam.NONE && !MissileWars.gameManager.getState().isGameActive()) {
-            MissileWars.gameManager.players().remove(player,team);
+        if(!MissileWars.gameManager.getState().isGameActive()) {
+            MissileWars.gameManager.players().remove(player);
             player.setExp(0);
             player.setLevel(0);
+            player.setBedSpawnLocation(GameConfig.SPAWN_LOCATION, true);
+            player.setGameMode(GameMode.ADVENTURE);
             player.teleport(GameConfig.SPAWN_LOCATION);
         }
     }
 
-    @EventHandler
-    public void onDamage(EntityDamageEvent e) {
-        if(e.getEntity().getType() == EntityType.PLAYER) {
-            Player player = (Player) e.getEntity();
-            int new_health = (int) (player.getHealth() - e.getFinalDamage());
-            if(new_health <= 0) {
-                LocalPlayer wgPlayer = WorldGuardPlugin.inst().wrapPlayer(player);
-                if (WorldGuard.getInstance().getPlatform().getRegionContainer().get(wgPlayer.getWorld()).hasRegion("spawnlobby")) {
-                    e.setDamage(0);
-                }
-            }
-
-        }
-    }
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
@@ -86,11 +68,11 @@ public class MiscPlayerEvents implements Listener {
                 } else if (team == GamePlayers.MWTeam.GREEN) {
                     player.teleport(GameConfig.GREEN_SPAWNPOINT);
                 }
-                MWUtil.updateGenericStat("generic","deaths",player);
+                MWUtil.updateGenericStat("generic","deaths", player);
             }else{
                 player.teleport(GameConfig.SPAWN_LOCATION);
             }
-        },5);
+        },2);
 
     }
 }

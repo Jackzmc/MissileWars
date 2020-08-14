@@ -2,7 +2,7 @@ package me.jackz.missilewars.events;
 
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameConfig;
-import me.jackz.missilewars.lib.Missile;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,7 +32,7 @@ public class PlayerDisconnectEvent implements Listener {
             MissileWars.gameManager.players().remove(player);
             MissileWars.gameManager.players().setupPlayer(player);
             player.teleport(GameConfig.SPAWN_LOCATION);
-
+            player.setGameMode(GameMode.ADVENTURE);
             //TODO: add disconnect message?
         }
     }

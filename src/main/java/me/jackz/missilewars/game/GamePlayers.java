@@ -1,6 +1,7 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.lib.TeamDisplayManager;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -11,7 +12,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import javax.imageio.stream.MemoryCacheImageOutputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,6 +23,7 @@ public class GamePlayers {
     }
     private List<Player> redTeamPlayers = new ArrayList<>();
     private List<Player> greenTeamPlayers = new ArrayList<>();
+    private TeamDisplayManager displayManager;
     //temporarily
     private Scoreboard scoreboard;
     private Team redTeam;
@@ -36,6 +37,7 @@ public class GamePlayers {
         scoreboard =  Bukkit.getScoreboardManager().getMainScoreboard();
         redTeam = scoreboard.getTeam("Red");
         greenTeam = scoreboard.getTeam("Green");
+        displayManager = MissileWars.getInstance().getDisplayManager();
     }
     //#region static methods
     public static String getTeamName(MWTeam team) {
@@ -92,6 +94,10 @@ public class GamePlayers {
     }
 
     public void add(Player player, MWTeam team) {
+        if(has(player)) {
+            remove(player);
+        }
+
         if(team.equals(MWTeam.GREEN)) {
             greenTeam.addEntry(player.getName());
             greenTeamPlayers.add(player);
@@ -99,6 +105,7 @@ public class GamePlayers {
             redTeam.addEntry(player.getName());
             redTeamPlayers.add(player);
         }
+        //displayManager.refreshSidebar(true);
     }
 
     public void remove(Player player, MWTeam team) {
@@ -132,6 +139,7 @@ public class GamePlayers {
                 Bukkit.broadcastMessage("§cLast player left, game has ended.");
             }
         }
+        //displayManager.refreshSidebar(true);
     }
 
     public List<Player> get(MWTeam team) {

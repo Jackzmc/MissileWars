@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Util {
+public final class Util {
     public static void removeOneFromHand(Player player) {
         if(player.getGameMode() == GameMode.CREATIVE) return;
         ItemStack item = player.getInventory().getItemInMainHand();
@@ -112,4 +112,15 @@ public class Util {
         }
         return amount;
     }
+    public static void printTitle(Player[] players, String title, String subtitle, long tickDelay) {
+        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+                for (Player player : players) {
+                    player.sendTitle(title, subtitle, 0, 20, 0);
+                }
+            }
+        }, tickDelay);
+    }
+
 }

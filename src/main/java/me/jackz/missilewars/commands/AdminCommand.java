@@ -3,7 +3,6 @@ package me.jackz.missilewars.commands;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.*;
 import me.jackz.missilewars.lib.ConfigOption;
-import me.jackz.missilewars.lib.ConfigTextComponent;
 import me.jackz.missilewars.lib.DataLoader;
 import me.jackz.missilewars.lib.Missile;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -16,7 +15,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class AdminCommand implements CommandExecutor {
@@ -35,7 +36,7 @@ public class AdminCommand implements CommandExecutor {
         if(args.length == 0 || args[0].equalsIgnoreCase("help") ) {
             sender.sendMessage("§6Missile Wars - Admin Menu");
             sender.sendMessage("§e/mwa give <player/red/green> <item> [bypass]§7- gives player or team an item");
-            sender.sendMessage("§e/mwa choose <item> §7- ctivate item spawn manually");
+            sender.sendMessage("§e/mwa choose [item] §7- activate item spawn manually");
             sender.sendMessage("§e/mwa items §7- get all items");
             sender.sendMessage("§e/mwa scramble §7- scramble the teams");
             sender.sendMessage("§e/mwa game <start/reset/stop/reload> §7- start, stop, and reload game");
@@ -54,6 +55,10 @@ public class AdminCommand implements CommandExecutor {
                     boolean bypass = (args.length >= 4) && args[3].equalsIgnoreCase("bypass");
                     if(bypass && !sender.hasPermission("missilewars.admin.bypass")) {
                         sender.sendMessage("§cYou do not have permission to bypass");
+                        return true;
+                    }
+                    if(!MissileWars.gameManager.getState().isGameActive()) {
+                        sender.sendMessage("§cGame has not started yet.");
                         return true;
                     }
                     if(args[1].equalsIgnoreCase("red")) {
@@ -150,6 +155,10 @@ public class AdminCommand implements CommandExecutor {
                     sender.sendMessage("§cYou do not have permission");
                     return true;
                 }
+                if(!MissileWars.gameManager.getState().isGameActive()) {
+                    sender.sendMessage("§cGame has not started yet.");
+                    return true;
+                }
                 if(args.length >= 2) {
                     String query = args[1].toLowerCase().trim();
                     boolean bypass = (args.length >= 3) && args[2].equalsIgnoreCase("bypass");
@@ -242,6 +251,10 @@ public class AdminCommand implements CommandExecutor {
                             String missileList = GameManager.getMissileLoader().getMissiles().stream().map(Missile::getId).collect(Collectors.joining(","));
                             sender.sendMessage("Missiles: " + missileList);
                             sender.sendMessage("SPAWN_POINT: " + GameConfig.SPAWN_LOCATION);
+                            sender.sendMessage("options:");
+                            for (ConfigOption option : GameConfig.getOptions()) {
+                                sender.sendMessage(option.getId() + " value: " + option.getValue());
+                            }
                             break;
                         default:
                             sender.sendMessage("§cUnknown option, try: /mwa game <start/reset/stop/reload>");
@@ -250,19 +263,19 @@ public class AdminCommand implements CommandExecutor {
                 break;
             }
             case "config": {
-                if(!sender.hasPermission("missilewars.admin.game")) {
-                    sender.sendMessage("§cYou do not have permission.");
-                    return true;
-                }
                 if(args.length < 2) {
+                    if(!sender.hasPermission("missilewars.admin.config")) {
+                        sender.sendMessage("§cYou do not have permission.");
+                        return true;
+                    }
                     sender.sendMessage("§cUsage: /mwa config <[property name]/help/save> [new value]");
                 }else {
 
                     switch(args[1].toLowerCase()) {
                         case "save": {
-                            if(sender.hasPermission("missilewars.admin.game")) {
+                            if(sender.hasPermission("missilewars.admin.config")) {
                                 try {
-                                    MissileWars.gameManager.getConfig().save();
+                                    GameConfig.save();
                                     sender.sendMessage("§aSuccessfully saved configuration.");
                                 } catch (Exception ex) {
                                     sender.sendMessage("§cSomething happened while attempting to save configuration. Check console for details.");
@@ -277,14 +290,12 @@ public class AdminCommand implements CommandExecutor {
                         case "help":
                             sender.sendMessage("§6Available Settings: <Name> (<id>)");
                             sender.sendMessage("§6§o(Hover over an item to see information, click to set)");
-                            sender.spigot().sendMessage(ConfigTextComponent.itemInterval.getTextComponent("§e"));
-                            sender.spigot().sendMessage(ConfigTextComponent.midGameJoins.getTextComponent("§e"));
-                            sender.spigot().sendMessage(ConfigTextComponent.maxItemSize.getTextComponent("§e"));
-                            sender.spigot().sendMessage(ConfigTextComponent.randomizeMode.getTextComponent("§e"));
-                            sender.spigot().sendMessage(ConfigTextComponent.showItemTimer.getTextComponent("§e"));
+                            for (ConfigOption option : GameConfig.getOptions()) {
+                                sender.spigot().sendMessage(option.getTextComponent("§e"));
+                            }
                             break;
                         default:
-                            ConfigOption option = MissileWars.gameManager.getConfig().getOption(args[1]);
+                            ConfigOption option = GameConfig.getOption(args[1]);
                             if(option != null) {
                                 if (args.length >= 3) {
                                     if(sender.hasPermission("missilewars.admin.config." + option.getSafeId())) {
@@ -310,7 +321,7 @@ public class AdminCommand implements CommandExecutor {
                                         sender.sendMessage("§cYou do not have permission to change this setting");
                                     }
                                 } else {
-                                    sendConfig(sender, option, option.getValue());
+                                    sendConfig(sender, option);
                                 }
                                 break;
                                 //todo: print option
@@ -335,7 +346,7 @@ public class AdminCommand implements CommandExecutor {
                             sender.sendMessage("§aSuccessfully reloaded statistics.");
                             break;
                         case "config":
-                            MissileWars.gameManager.getConfig().reload();
+                            GameConfig.reload();
                             sender.sendMessage("§aSuccessfully reloaded configuration.");
                             break;
                         case "data":
@@ -344,7 +355,7 @@ public class AdminCommand implements CommandExecutor {
                             sender.sendMessage("§aSuccessfully reloaded configuration.");
                         case "all":
                             GameManager.getStats().reload();
-                            MissileWars.gameManager.getConfig().reload();
+                            GameConfig.reload();
                             DataLoader.reload();
                             sender.sendMessage("§aSuccessfully reloaded.");
                             break;
@@ -360,11 +371,13 @@ public class AdminCommand implements CommandExecutor {
         return true;
     }
 
-    private void sendConfig(CommandSender sender, ConfigOption option, Object value) {
+    private void sendConfig(CommandSender sender, ConfigOption option) {
         TextComponent tc = option.getTextComponent("§9§n", false);
         tc.addExtra("§r §a[Hover for information]");
+        sender.sendMessage("");
         sender.spigot().sendMessage(tc);
-        sender.sendMessage("§eCurrent Value: §r§9" + value);
+        sender.sendMessage("§eCurrent Value: §r§9" + option.getValue());
         sender.sendMessage("§7§oSet value with §e/mwa config " + option.getId() + " <" + option.getType() + ">");
     }
+
 }

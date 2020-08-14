@@ -41,20 +41,20 @@ public class WinManager {
     private static void updateStats(GamePlayers.MWTeam winning) {
         StatsTracker stats = GameManager.getStats();
         if(winning == GamePlayers.MWTeam.GREEN) {
-            stats.incSavedStat("wins.team_green");
-            stats.incSavedStat("loses.team_red");
+            stats.increaseSavedStat("wins.team_green");
+            stats.increaseSavedStat("loses.team_red");
         }else{
-            stats.incSavedStat("wins.team_red");
-            stats.incSavedStat("loses.team_green");
+            stats.increaseSavedStat("wins.team_red");
+            stats.increaseSavedStat("loses.team_green");
         }
         for (Map.Entry<Player, GamePlayers.MWTeam> playerMWTeamEntry : MissileWars.gameManager.players().getAll()) {
             GamePlayers.MWTeam team = playerMWTeamEntry.getValue();
             Player player = playerMWTeamEntry.getKey();
             //If team was winning team
             if (team == winning) {
-                stats.incSavedStat("wins." + player.getUniqueId());
+                stats.increaseSavedStat("wins." + player.getUniqueId());
             } else {
-                stats.incSavedStat("loses." + player.getUniqueId());
+                stats.increaseSavedStat("loses." + player.getUniqueId());
             }
         }
         stats.save();

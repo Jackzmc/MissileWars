@@ -1,11 +1,7 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
-import me.jackz.missilewars.lib.DataLoader;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
@@ -17,7 +13,6 @@ import java.util.Set;
 public class GameManager {
     private GameState state;
     private GamePlayers players;
-    private static GameConfig config;
     private static MissileLoader missileLoader;
     private ItemSystem itemSystem;
     private static StatsTracker stats;
@@ -32,13 +27,17 @@ public class GameManager {
         state = new GameState();
         itemSystem = new ItemSystem();
         players = new GamePlayers();
-        config = new GameConfig();
         missileLoader = new MissileLoader();
         stats = new StatsTracker();
 
         ItemSystem.getTypes(); //initalize missiles
         Bukkit.getLogger().info("Loaded " + missileLoader.getMissiles().size() + " missiles");
         initializeScoreboard();
+        try {
+            Class.forName("me.jackz.missilewars.game.Options");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void setWorld(World world) {
@@ -97,24 +96,38 @@ public class GameManager {
                 GamePlayers.MWTeam team = entry.getValue();
                 if (team == GamePlayers.MWTeam.GREEN) {
                     player.teleport(GameConfig.GREEN_SPAWNPOINT);
-                    player.setBedSpawnLocation(GameConfig.GREEN_SPAWNPOINT);
+                    player.setBedSpawnLocation(GameConfig.GREEN_SPAWNPOINT, true);
                 } else if (team == GamePlayers.MWTeam.RED) {
                     player.teleport(GameConfig.RED_SPAWNPOINT);
-                    player.setBedSpawnLocation(GameConfig.RED_SPAWNPOINT);
+                    player.setBedSpawnLocation(GameConfig.RED_SPAWNPOINT, true);
                 } else {
                     continue;
                 }
-                //TODO: add countdown?
-                player.sendMessage("§eMissile Wars game has started!");
-                player.sendMessage("§9Tip: §7Use §e/teammsg §7to chat with your team");
-
+                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+                    player.sendTitle("§c3", "", 0, 20, 0);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 0.0f);
+                }, 20);
+                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+                    player.sendTitle("§e2", "", 0, 20, 0);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 0.0f);
+                }, 20 * 2);
+                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+                    player.sendTitle("§a1", "", 0, 20, 0);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 0.0f);
+                }, 20 * 3);
+                Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
+                    player.sendTitle("§aGO!", "Game has started", 0, 20, 0);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 0.0f);
+                    player.sendMessage("§eMissile Wars has started!");
+                    player.sendMessage("§9Tip: " + Tips.getRandomTip());
+                }, 20 * 4);
                 players.setupPlayer(player);
                 ItemSystem.giveItem(player, bow, false);
                 player.setGameMode(GameMode.SURVIVAL);
             }
-            itemSystem.start();
             stats.resetGameTime();
             stats.clearSessionStats();
+            Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> itemSystem.start(), 20 * 5);
         }
     }
 
@@ -122,7 +135,7 @@ public class GameManager {
         Set<Player> allPlayers = players.getAllPlayers();
         int duration_minutes = (int) stats.getGameTimeMS() / 1000 / 60;
 
-        stats.incSavedStat("gametime_min.total",duration_minutes);
+        stats.increaseSavedStat("gametime_min.total",duration_minutes);
         int longest_game = stats.getSavedStat("gametime_min.longest");
         if(longest_game < duration_minutes) {
             stats.setSavedStat("gametime_min.longest", duration_minutes);
@@ -130,20 +143,20 @@ public class GameManager {
         }else{
             Bukkit.broadcastMessage("§eGame was a total of §9" + duration_minutes + " minutes §elong!");
         }
-
+        itemSystem.stop();
         for (Player player : allPlayers) {
             players.setupPlayer(player);
             player.setGameMode(GameMode.SPECTATOR);
-            stats.incSavedStat("gametime_min." + player.getUniqueId(),duration_minutes);
+            player.setBedSpawnLocation(GameConfig.SPAWN_LOCATION, true);
+            stats.increaseSavedStat("gametime_min." + player.getUniqueId(),duration_minutes);
         }
         state.setActive(false);
 
-        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), this::reset , 20 * 15);
+        Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), this::reset , 20 * 10);
     }
 
     public void reset() {
         Reset.reset();
-        itemSystem.stop();
         state.setTeamReady(GamePlayers.MWTeam.GREEN, false);
         state.setTeamReady(GamePlayers.MWTeam.RED, false);
         Bukkit.getScheduler().runTaskLater(MissileWars.getInstance(), () -> {
@@ -153,8 +166,9 @@ public class GameManager {
                 player.teleport(GameConfig.SPAWN_LOCATION);
                 player.setGameMode(GameMode.ADVENTURE);
                 players.remove(player);
+                players.setupPlayer(player);
             }
-        }, 20 * 20);
+        }, 20 * 30);
     }
 
     public void reload() {
@@ -169,8 +183,14 @@ public class GameManager {
             itemSystem.stop();
             itemSystem = null;
         }
+        for (Map.Entry<Player, GamePlayers.MWTeam> playerMWTeamEntry : players.getAll()) {
+            Player player = playerMWTeamEntry.getKey();
+            players.remove(player, playerMWTeamEntry.getValue());
+            players.setupPlayer(player);
+            player.setGameMode(GameMode.ADVENTURE);
+            player.teleport(GameConfig.SPAWN_LOCATION);
+        }
         players = null;
-        config = null;
         if(stats != null) {
             stats.save();
             stats = null;
@@ -185,9 +205,6 @@ public class GameManager {
 
     public GamePlayers players() {
         return players;
-    }
-    public GameConfig getConfig() {
-        return config;
     }
     public static StatsTracker getStats() {
         return stats;

@@ -22,12 +22,12 @@ import org.bukkit.entity.Player;
 
 public final class MWUtil {
     public static void updateSpawnStat(String statname, Player player) {
-        GameManager.getStats().incStat("spawns." + statname + ".total");
-        GameManager.getStats().incStat("spawns." + statname + "." + player.getUniqueId());
+        GameManager.getStats().increaseStat("spawns." + statname + ".total");
+        GameManager.getStats().increaseStat("spawns." + statname + "." + player.getUniqueId());
     }
     public static void updateGenericStat(String prefix, String statname, Player player) {
-        GameManager.getStats().incStat(prefix + "." + statname + ".total");
-        GameManager.getStats().incStat(prefix + "." + statname + "." + player.getUniqueId());
+        GameManager.getStats().increaseStat(prefix + "." + statname + ".total");
+        GameManager.getStats().increaseStat(prefix + "." + statname + "." + player.getUniqueId());
     }
     public static boolean isPortalInLocation(Location start, boolean negZ) {
         final int z_radius = 15;
