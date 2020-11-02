@@ -32,4 +32,8 @@ public final class ReadyManager {
             }
         }
     }
+
+    public static void reset() {
+        readyUpPlayers.clear();
+    }
 }
