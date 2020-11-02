@@ -61,7 +61,7 @@ public class ItemSystem {
 
     public void processTimer() {
         currentCount++;
-        final int INTERVAL = GameConfig.getItemInterval();
+        final int INTERVAL = (int) Options.itemInterval.getValue();
         for (Player player : MissileWars.gameManager.players().getAllPlayers()) {
             player.setExp(currentCount == INTERVAL ? 1.0f : 0.0f);
             player.setLevel(INTERVAL - currentCount);

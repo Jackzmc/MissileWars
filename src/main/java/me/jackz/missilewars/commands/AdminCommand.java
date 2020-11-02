@@ -309,7 +309,7 @@ public class AdminCommand implements CommandExecutor {
                                                 if(result != null) {
                                                     option.setValue(result);
                                                 }else{
-                                                    option.getIntRangeText();
+                                                    sender.sendMessage(option.getIntRangeText());
                                                     return true;
                                                 }
                                             }

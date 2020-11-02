@@ -18,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupArrowEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 public class PlayerMoveEvent implements Listener {
     @EventHandler
@@ -29,6 +30,7 @@ public class PlayerMoveEvent implements Listener {
                 GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
                 Location tpLocation = team == GamePlayers.MWTeam.GREEN ? GameConfig.GREEN_SPAWNPOINT : GameConfig.RED_SPAWNPOINT;
                 player.teleport(tpLocation);
+                player.setVelocity(new Vector(0, 0, 0));
             }else {
                 player.setHealth(0);
             }
