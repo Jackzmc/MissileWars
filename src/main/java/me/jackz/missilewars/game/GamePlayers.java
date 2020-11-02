@@ -117,6 +117,8 @@ public class GamePlayers {
             redTeamPlayers.remove(player);
         }
         processRemoval();
+        redTeam.removeEntry(player.getName());
+        greenTeam.removeEntry(player.getName());
     }
     public void remove(Player player) {
         MWTeam team = getTeam(player);
