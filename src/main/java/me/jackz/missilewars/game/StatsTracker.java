@@ -12,8 +12,14 @@ import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
+
 
 public class StatsTracker {
+    public enum StatisticType {
+        Session,
+        Saved
+    }
 
     private Map<String,Integer> savedStats = new HashMap<>();
     private Map<String,Integer> memStats = new HashMap<>();
@@ -117,4 +123,31 @@ public class StatsTracker {
         game_start_time = System.currentTimeMillis();
     }
 
+    private String formatNumber(int number) {
+        return String.format("%,d", number);
+    }
+    public int get(StatisticType type, String name) {
+        if(type == StatisticType.Session) {
+            return getSessionStat(name);
+        }else{
+            return getSavedStat(name);
+        }
+    }
+    public int get(StatisticType type, String prefix, String id) {
+        return get(type, prefix + "." + id);
+    }
+    public int get(StatisticType type, String name, UUID id) {
+        return get(type, name, id.toString());
+    }
+    public String getFormatted(StatisticType type, String name) {
+        int number = get(type, name);
+        return String.format("%,d", number);
+    }
+    public String getFormatted(StatisticType type, String prefix, String id) {
+        int number = get(type, prefix, id);
+        return String.format("%,d", number);
+    }
+    public String getFormatted(StatisticType type, String prefix, UUID id) {
+        return getFormatted(type, prefix, id.toString());
+    }
 }

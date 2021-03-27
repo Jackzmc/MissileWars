@@ -2,6 +2,7 @@ package me.jackz.missilewars.commands;
 
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameManager;
+import me.jackz.missilewars.game.StatsTracker;
 import me.jackz.missilewars.lib.Missile;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -75,8 +76,9 @@ public class PlayerStatsCommand implements TabExecutor {
     }
 
     private void printStats(CommandSender sender, UUID uuid, String username, boolean global) {
-        int wins = GameManager.getStats().getStat("wins." + uuid, global);
-        int loses = GameManager.getStats().getStat("loses." + uuid, global);
+        StatsTracker.StatisticType type = global ? StatsTracker.StatisticType.Saved : StatsTracker.StatisticType.Session;
+        int wins = GameManager.getStats().get(type, "wins", uuid.toString());
+        int loses = GameManager.getStats().get(type, "loses", uuid.toString());
         if (wins == 0 && loses == 0) {
             if(sender.getName().equals(username)) {
                 sender.sendMessage("§cYou have not played any games.");
@@ -84,10 +86,10 @@ public class PlayerStatsCommand implements TabExecutor {
                 sender.sendMessage("§cPlayer has not played any games");
             }
         }else{
-            int deaths = GameManager.getStats().getStat("generic.deaths." + uuid, global);
-            int shield_spawns = GameManager.getStats().getStat("spawns.barrier." + uuid, global);
-            int fireball_launches = GameManager.getStats().getStat("spawns.fireball." + uuid, global);
-            int minutes_played = GameManager.getStats().getStat("gametime_min." + uuid, global);
+            String deaths = GameManager.getStats().getFormatted(type, "generic.deaths", uuid);
+            String shield_spawns = GameManager.getStats().getFormatted(type, "spawns.barrier", uuid);
+            String fireball_launches = GameManager.getStats().getFormatted(type, "spawns.fireball", uuid);
+            String minutes_played = GameManager.getStats().getFormatted(type, "gametime_min", uuid);
             List<BaseComponent> components = new ArrayList<>(Arrays.asList(
                     new TextComponent("§6§nGame Statistics for " + username),
                     new TextComponent(String.format("\n§e%d Wins §9and §e%d Loses", wins, loses)),
@@ -97,7 +99,7 @@ public class PlayerStatsCommand implements TabExecutor {
                     new TextComponent("\n§9Barriers Deployed: §e" + shield_spawns)
             ));
             for (Missile missile : GameManager.getMissileLoader().getMissiles()) {
-                int spawns = GameManager.getStats().getStat("spawns." + missile.getId() + "." + uuid,global);
+                String spawns = GameManager.getStats().getFormatted(type, "spawns", missile.getId());
                 TextComponent tc = new TextComponent("\n§9" + missile.getDisplay() + "s Deployed: §e" + spawns);
                 components.add(tc);
             }

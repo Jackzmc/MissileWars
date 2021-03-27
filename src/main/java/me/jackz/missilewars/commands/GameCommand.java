@@ -159,14 +159,14 @@ public class GameCommand implements CommandExecutor  {
         int minutes_played_highest = stats.getStat("gametime_min.longest", global);
         List<BaseComponent> components = new ArrayList<>(Arrays.asList(
                 new TextComponent("§6§n" + (global? "Global" : "Session") + " Statistics"),
-                new TextComponent(String.format("\n§9Minutes Played Total: §e%d §9(Highest per game: §e%d§9)",minutes_played, minutes_played_highest)),
+                new TextComponent(String.format("\n§9Minutes Played Total: §e%d §9(Longest game: §e%d§9)",minutes_played, minutes_played_highest)),
                 new TextComponent("\n§9Deaths: §e" + deaths),
                 new TextComponent("\n§9Fireball Launches: §e" + fireball_launches),
                 new TextComponent("\n§9Barriers Deployed: §e" + shield_spawns)
         ));
         if(global) {
-            components.add(1, new TextComponent(String.format("\n§aGreen -> Wins: §e%d §a| Loses: §e%d", green_wins, green_loses)));
-            components.add(2, new TextComponent(String.format("\n§cRed    -> Wins: §e%d §c| Loses: §e%d", red_wins, red_loses)));
+            components.add(1, new TextComponent(String.format("\n§aGreen has §e%d wins §aand §e%d loses", green_wins, green_loses)));
+            components.add(2, new TextComponent(String.format("\n§cRed has §e%d wins §aand §e%d loses", red_wins, red_loses)));
         }
         for (Missile missile : GameManager.getMissileLoader().getMissiles()) {
             int spawns = GameManager.getStats().getStat("spawns." + missile.getId() + ".total",global);
