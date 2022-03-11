@@ -6,16 +6,15 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GamePlayers;
+import me.jackz.missilewars.game.missile.SpawnableMissile;
 import org.bukkit.Bukkit;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ClipboardLoader {
     private static File[] schematics;
@@ -35,8 +34,8 @@ public class ClipboardLoader {
         }
     }
 
-    public static void loadList(List<Missile> list) {
-        for (Missile missile : list) {
+    public static void loadList(List<SpawnableMissile> list) {
+        for (SpawnableMissile missile : list) {
             String greenName = missile.getFullSchematic(GamePlayers.MWTeam.GREEN);
             String redName = missile.getFullSchematic(GamePlayers.MWTeam.RED);
             clips.put(greenName, fetchClipboard(greenName));

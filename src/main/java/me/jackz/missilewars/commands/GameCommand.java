@@ -3,7 +3,7 @@ package me.jackz.missilewars.commands;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.*;
 import me.jackz.missilewars.lib.ConfigOption;
-import me.jackz.missilewars.lib.Missile;
+import me.jackz.missilewars.game.missile.SpawnableMissile;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -168,7 +168,7 @@ public class GameCommand implements CommandExecutor  {
             components.add(1, new TextComponent(String.format("\n§aGreen has §e%d wins §aand §e%d loses", green_wins, green_loses)));
             components.add(2, new TextComponent(String.format("\n§cRed has §e%d wins §aand §e%d loses", red_wins, red_loses)));
         }
-        for (Missile missile : GameManager.getMissileLoader().getMissiles()) {
+        for (SpawnableMissile missile : GameManager.getMissileLoader().getMissiles()) {
             int spawns = GameManager.getStats().getStat("spawns." + missile.getId() + ".total",global);
             TextComponent tc = new TextComponent("\n§9" + missile.getDisplay() + "s Deployed: §e" + spawns);
             components.add(tc);

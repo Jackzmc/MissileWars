@@ -1,6 +1,7 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.missile.MissileManager;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,6 +17,7 @@ public class GameManager {
     private static MissileLoader missileLoader;
     private ItemSystem itemSystem;
     private static StatsTracker stats;
+    private MissileManager missileManager;
 
     private static World WORLD;
 
@@ -29,6 +31,7 @@ public class GameManager {
         players = new GamePlayers();
         missileLoader = new MissileLoader();
         stats = new StatsTracker();
+        missileManager = new MissileManager();
 
         ItemSystem.getTypes(); //initalize missiles
         Bukkit.getLogger().info("Loaded " + missileLoader.getMissiles().size() + " missiles");
@@ -217,4 +220,5 @@ public class GameManager {
     public static World getWorld() {
         return WORLD;
     }
+    public MissileManager missiles() { return missileManager; }
 }

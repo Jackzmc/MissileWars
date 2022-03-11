@@ -2,7 +2,7 @@ package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.lib.ConfigOption;
-import me.jackz.missilewars.lib.Missile;
+import me.jackz.missilewars.game.missile.SpawnableMissile;
 import me.jackz.missilewars.lib.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -136,7 +136,7 @@ public class ItemSystem {
             case "bow":
                 return ITEM_BOW;
             default:
-                Missile missile = GameManager.getMissileLoader().findMissile(name.toLowerCase());
+                SpawnableMissile missile = GameManager.getMissileLoader().findMissile(name.toLowerCase());
                 if(missile != null) {
                     List<String> lore = new ArrayList<>();
                     String hint = missile.getHint();

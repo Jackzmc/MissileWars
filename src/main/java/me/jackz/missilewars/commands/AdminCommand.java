@@ -4,7 +4,7 @@ import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.*;
 import me.jackz.missilewars.lib.ConfigOption;
 import me.jackz.missilewars.lib.DataLoader;
-import me.jackz.missilewars.lib.Missile;
+import me.jackz.missilewars.game.missile.SpawnableMissile;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -248,7 +248,7 @@ public class AdminCommand implements CommandExecutor {
                             break;
                         case "debug":
                             sender.sendMessage("active: " + MissileWars.gameManager.getState().isGameActive());
-                            String missileList = GameManager.getMissileLoader().getMissiles().stream().map(Missile::getId).collect(Collectors.joining(","));
+                            String missileList = GameManager.getMissileLoader().getMissiles().stream().map(SpawnableMissile::getId).collect(Collectors.joining(","));
                             sender.sendMessage("Missiles: " + missileList);
                             sender.sendMessage("SPAWN_POINT: " + GameConfig.SPAWN_LOCATION);
                             sender.sendMessage("options:");

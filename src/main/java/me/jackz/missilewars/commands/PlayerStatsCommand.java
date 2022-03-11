@@ -3,7 +3,7 @@ package me.jackz.missilewars.commands;
 import me.jackz.missilewars.MissileWars;
 import me.jackz.missilewars.game.GameManager;
 import me.jackz.missilewars.game.StatsTracker;
-import me.jackz.missilewars.lib.Missile;
+import me.jackz.missilewars.game.missile.SpawnableMissile;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -98,7 +98,7 @@ public class PlayerStatsCommand implements TabExecutor {
                     new TextComponent("\n§9Fireball Launches: §e" + fireball_launches),
                     new TextComponent("\n§9Barriers Deployed: §e" + shield_spawns)
             ));
-            for (Missile missile : GameManager.getMissileLoader().getMissiles()) {
+            for (SpawnableMissile missile : GameManager.getMissileLoader().getMissiles()) {
                 String spawns = GameManager.getStats().getFormatted(type, "spawns", missile.getId());
                 TextComponent tc = new TextComponent("\n§9" + missile.getDisplay() + "s Deployed: §e" + spawns);
                 components.add(tc);

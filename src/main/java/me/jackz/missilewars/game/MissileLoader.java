@@ -1,25 +1,22 @@
 package me.jackz.missilewars.game;
 
 import me.jackz.missilewars.MissileWars;
+import me.jackz.missilewars.game.missile.SpawnableMissile;
 import me.jackz.missilewars.lib.*;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MissileLoader {
     //Will manage the files, and the data.yml file and managing spawning
@@ -27,17 +24,17 @@ public class MissileLoader {
         reload();
     }
 
-    private List<Missile> missileList = new ArrayList<>();
+    private List<SpawnableMissile> missileList = new ArrayList<>();
 
-    public List<Missile> getMissiles() {
+    public List<SpawnableMissile> getMissiles() {
         return missileList;
     }
     public List<String> getIds() {
-        return missileList.stream().map(Missile::getId).collect(Collectors.toList());
+        return missileList.stream().map(SpawnableMissile::getId).collect(Collectors.toList());
     }
 
-    public Missile findMissile(String id) {
-        for (Missile missile : missileList) {
+    public SpawnableMissile findMissile(String id) {
+        for (SpawnableMissile missile : missileList) {
             if(missile.getId().equalsIgnoreCase(id)) {
                 return missile;
             }
@@ -48,18 +45,30 @@ public class MissileLoader {
     public void reload() {
         YamlConfiguration data = DataLoader.getData();
         ConfigurationSection missiles = data.getConfigurationSection("missiles");
+        missileList.clear();
         if(missiles != null) {
             for (String key : missiles.getKeys(false)) {
                 ConfigurationSection section = missiles.getConfigurationSection(key);
+                assert section != null;
                 String materialName = section.getString("item");
                 if(materialName != null) {
                     Material material = Material.getMaterial(materialName);
                     if(material != null) {
-                        Missile missile = new Missile(key, material);
+                        int rot = section.getInt("rotation", 0);
+                        int offset = section.getInt("offset", 4);
+                        SpawnableMissile missile = new SpawnableMissile(key, material, rot, offset);
+
                         missile.setHint(section.getString("hint"));
                         missile.setDisplay(section.getString("display"));
-                        missile.setSchematic(section.getString("schematic"));
-                        missileList.add(missile);
+                        missile.setSchematicName(section.getString("schematic"));
+
+                        try {
+                            missile.loadSchematic();
+                            missileList.add(missile);
+                        } catch(IOException except) {
+                            Bukkit.getLogger().warning("Missile id " + key + " failed to load schematic");
+                        }
+
                     }else{
                         Bukkit.getLogger().warning("Missile id " + key + " has invalid material '" + materialName + "'");
                     }
@@ -69,7 +78,7 @@ public class MissileLoader {
                 Bukkit.getLogger().warning("No missiles were loaded");
             }
             ClipboardLoader.loadList(missileList);
-        }else{
+        } else {
             Bukkit.getLogger().severe("data.yml is missing 'missiles' section: Missile spawning disabled");
         }
     }
@@ -77,14 +86,15 @@ public class MissileLoader {
     public void processRightClick(PlayerInteractEvent e) {
         Player player = e.getPlayer();
         if(e.getItem() == null || e.getClickedBlock() == null) return;
-        for (Missile missile : missileList) {
+        for (SpawnableMissile missile : missileList) {
             if(missile.getMaterial().equals(e.getItem().getType())) {
                 e.setCancelled(true);
                 spawnMissile(missile, player, e.getClickedBlock().getLocation());
             }
         }
     }
-    private void spawnMissile(Missile missile, Player player, Location startPos) {
+
+    private void spawnMissile(SpawnableMissile missile, Player player, Location startPos) {
         GamePlayers.MWTeam team = MissileWars.gameManager.players().getTeam(player);
         boolean isLightning = missile.getId().equalsIgnoreCase("lightning");
         boolean isGreenTeam = team == GamePlayers.MWTeam.GREEN;

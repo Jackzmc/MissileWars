@@ -21,6 +21,8 @@ missiles:
   lightning: 
     item: OCELOT_SPAWN_EGG
     hint: Is the fastest missile
+    rotation: 180
+    offset: 1
   guardian: 
     item: GUARDIAN_SPAWN_EGG
 
